@@ -22,15 +22,19 @@ function calculate() {
     ? `${attemptsNeeded.toLocaleString()} attempts`
     : "not reachable with a 0% drop chance";
 
+  const targetResult = targetDrops > 1 ? `
+    <div class="result-card">
+      <span class="label">Chance of at least ${targetDrops} drops</span>
+      <strong>${lootCalculator.formatPercent(atLeastTarget)}</strong>
+    </div>
+  ` : "";
+
   output.innerHTML = `
     <div class="result-card">
       <span class="label">Chance of at least one drop</span>
       <strong>${lootCalculator.formatPercent(atLeastOne)}</strong>
     </div>
-    <div class="result-card">
-      <span class="label">Chance of at least ${targetDrops} drop${targetDrops === 1 ? "" : "s"}</span>
-      <strong>${lootCalculator.formatPercent(atLeastTarget)}</strong>
-    </div>
+    ${targetResult}
     <div class="result-card">
       <span class="label">Expected drops</span>
       <strong>${expected.toFixed(2)}</strong>
@@ -63,4 +67,3 @@ copyButton.addEventListener("click", async () => {
 });
 
 calculate();
-
