@@ -1,0 +1,52 @@
+{
+  "product_id": "shop-inventory-generator",
+  "version": "1.0.0-rc1",
+  "public_release_requires_review": true,
+  "deployment_allowed": false,
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/",
+  "paid_destination": "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit",
+  "source_merchants": 15,
+  "source_stock_records": 150,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 962,
+      "sha256": "40a14153b176b344c94915d64ced416b2a9e89cc284d1fc4c7130969e4f1895d"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 5917,
+      "sha256": "e64ba7f7606e26a95b54bd8c012b4907b19cd4b4e6a0b5b56ce61c79a7e87915"
+    },
+    {
+      "path": "assets/loot-table-works-avatar-512.png",
+      "bytes": 3757,
+      "sha256": "ce4d6db49f9b7914635ae9dd4d74f4ed104976f2f2f087ff16beed325d97388c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 7221,
+      "sha256": "94cdc715ae5313e97d6df52aeefbe0654bdeddedc3c373e2758efb74da1da43a"
+    },
+    {
+      "path": "shop-data.js",
+      "bytes": 13747,
+      "sha256": "542217fd32df945483d0e6c26510ed58cdb53b268253c7a6ed7f4f3851097a8e"
+    },
+    {
+      "path": "shop-generator-core.js",
+      "bytes": 5791,
+      "sha256": "de4e7c6d0a4c1d088925730981c8137ab0c28fe5ca61760a149d06f293ff86e9"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 9565,
+      "sha256": "0174705b334e3033c610cde030547c5386a2f8a2f28e10e1eb22878e4f1dad57"
+    }
+  ]
+}

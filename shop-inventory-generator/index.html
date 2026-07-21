@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate deterministic fantasy shop inventories with prices, quantities, stable item IDs, JSON, and CSV export. Free and no login required.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#20282c">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="Free Fantasy Shop Inventory Generator">
+    <meta property="og:description" content="Build repeatable RPG and game-dev shop inventories, then export clean JSON or CSV.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/">
+    <meta property="og:image" content="assets/loot-table-works-avatar-512.png">
+    <meta name="twitter:card" content="summary">
+    <title>Free Fantasy Shop Inventory Generator | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Fantasy Shop Inventory Generator","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../" aria-label="Loot Table Works free game design tools">
+        <img src="assets/loot-table-works-avatar-512.png" alt="Loot Table Works">
+        <span><strong>Loot Table Works</strong><small>World Foundry utilities</small></span>
+      </a>
+      <nav class="tool-nav" aria-label="Free game design tools">
+        <a href="../">Loot Odds</a>
+        <a class="active" href="./" aria-current="page">Shop Generator</a>
+      </nav>
+      <a class="header-cta" href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=shop_inventory_generator&amp;utm_medium=free_tool&amp;utm_campaign=world_foundry_traffic_test&amp;utm_content=header">Get 150 Shops - $3</a>
+    </header>
+
+    <main class="workspace">
+      <aside class="control-rail" aria-label="Generator controls">
+        <div class="control-heading">
+          <p>Free system-neutral tool</p>
+          <h1>Fantasy Shop Inventory Generator</h1>
+          <span>Repeatable stock, pricing, and export for prototypes and tabletop prep.</span>
+        </div>
+
+        <label class="field" for="seed">
+          <span>Shop seed</span>
+          <div class="seed-row">
+            <input id="seed" value="breakwater-17" maxlength="64" autocomplete="off">
+            <button id="new-seed" class="secondary-button" type="button">New</button>
+          </div>
+        </label>
+
+        <label class="field" for="shop-type">
+          <span>Shop type</span>
+          <select id="shop-type"></select>
+        </label>
+
+        <label class="field" for="tier">
+          <span>Shop tier <output id="tier-output" for="tier">2</output></span>
+          <input id="tier" type="range" min="1" max="5" step="1" value="2">
+        </label>
+
+        <label class="field" for="market">
+          <span>Market condition</span>
+          <select id="market">
+            <option value="stable">Stable trade</option>
+            <option value="scarce">Scarce supply</option>
+            <option value="festival">Festival demand</option>
+            <option value="surplus">Market surplus</option>
+            <option value="wartime">Wartime pressure</option>
+          </select>
+        </label>
+
+        <label class="field" for="slots">
+          <span>Inventory slots</span>
+          <input id="slots" type="number" min="5" max="12" step="1" value="8">
+        </label>
+
+        <button id="generate" class="generate-button" type="button">Generate shop</button>
+        <p class="boundary-note">Built from the validated 15-shop free demo. The paid pack contains 150 canonical merchants and 1,500 stock relationships.</p>
+      </aside>
+
+      <section class="result-stage">
+        <div class="result-heading">
+          <div>
+            <p class="status"><span></span>Generated locally</p>
+            <h2 id="shop-name">Preparing shop...</h2>
+            <p id="shop-meta"></p>
+          </div>
+          <div class="result-actions">
+            <button id="copy-link" class="secondary-button" type="button">Copy link</button>
+            <button id="copy-json" class="secondary-button" type="button">Copy JSON</button>
+            <button id="download-csv" class="primary-button" type="button">Download CSV</button>
+          </div>
+        </div>
+
+        <section id="stats" class="stats-band" aria-label="Shop inventory summary"></section>
+
+        <section class="shop-brief" aria-label="Generated merchant brief">
+          <div><span>Proprietor</span><strong id="proprietor"></strong></div>
+          <div><span>Customers</span><strong id="customers"></strong></div>
+          <div><span>Stock policy</span><strong id="stock-policy"></strong></div>
+          <div><span>Negotiation</span><strong id="negotiation"></strong></div>
+        </section>
+
+        <nav class="result-tabs" aria-label="Generated output views">
+          <button class="active" type="button" data-tab="inventory">Inventory</button>
+          <button type="button" data-tab="json">JSON</button>
+        </nav>
+
+        <section id="inventory-panel" class="result-panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Item</th><th>ID</th><th>Category</th><th>Rarity</th><th>Qty</th><th>Shop price</th><th>Buyback</th></tr></thead>
+              <tbody id="inventory-rows"></tbody>
+            </table>
+          </div>
+        </section>
+        <section id="json-panel" class="result-panel json-panel" hidden><pre id="json-output"></pre></section>
+
+        <section class="upgrade-band">
+          <div>
+            <p>Production-ready merchant data</p>
+            <h2>Replace one generated shop with a coherent 150-shop commerce system.</h2>
+            <span>Includes JSON, CSV, offline browsers, simulation tools, Unity, Godot, and TypeScript loaders, plus commercial-use terms.</span>
+          </div>
+          <a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=shop_inventory_generator&amp;utm_medium=free_tool&amp;utm_campaign=world_foundry_traffic_test&amp;utm_content=results">Open Merchant &amp; Shop Kit - $3</a>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Loot Table Works</span>
+      <span>Original system-neutral fantasy data</span>
+      <span>No login, tracking script, or external runtime</span>
+    </footer>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="shop-data.js"></script>
+    <script src="shop-generator-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
