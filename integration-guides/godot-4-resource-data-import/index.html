@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Godot 4 Resource Import from RPG JSON | Loot Table Works</title>
+  <meta name="description" content="Import RPG JSON into typed Godot 4 Resource objects with stable IDs, explicit validation, two-pass reference resolution, and deterministic editor or runtime workflows.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/godot-4-resource-data-import/">
+  <meta property="og:type" content="article"><meta property="og:title" content="Godot 4 Resource Import from RPG JSON"><meta property="og:description" content="Parse, validate, convert, and resolve stable RPG data into typed Godot 4 Resources."><meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/godot-4-resource-data-import/"><meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Godot 4 Resource Import from RPG JSON","description":"Import RPG JSON into typed Godot 4 Resource objects with stable IDs, explicit validation, and two-pass reference resolution.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/godot-4-resource-data-import/","datePublished":"2026-07-21","dateModified":"2026-07-21","author":{"@type":"Organization","name":"Loot Table Works"},"publisher":{"@type":"Organization","name":"Loot Table Works"},"proficiencyLevel":"Intermediate"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="../" aria-label="Integration guides home"><img src="../assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a><nav class="site-nav" aria-label="Primary navigation"><a href="../">All guides</a><a href="#tools">Free tools</a><a href="#modules">Data modules</a></nav></div></header>
+  <main>
+    <header class="article-hero"><div class="article-hero-inner"><p class="breadcrumbs"><a href="../">Integration guides</a> / Godot 4 Resource data import</p><p class="eyebrow">Godot 4 import</p><h1>Turn external RPG JSON into typed Godot 4 Resources</h1><p class="article-lead">Parse external data as untrusted Variants, validate the wire contract, and convert records into project-owned Resources. Stable source IDs remain the join key; resource paths remain an implementation detail.</p><div class="article-meta"><span>13 minute read</span><span>Updated July 21, 2026</span><span>Godot 4 GDScript + JSON</span></div></div></header>
+    <div class="page-shell" id="article">
+      <aside class="toc" aria-label="On this page"><strong>On this page</strong><a href="#architecture">Choose the architecture</a><a href="#resources">Define Resources</a><a href="#parse">Parse and validate</a><a href="#resolve">Resolve references</a><a href="#editor">Editor generation</a><a href="#tests">Test the pipeline</a></aside>
+      <article class="article-body">
+        <section id="architecture"><p class="kicker">Before code</p><h2>Keep the wire model separate from the game model</h2>
+          <p>Godot's JSON parser returns Variants: dictionaries, arrays, strings, numbers, booleans, and null values. That flexibility is useful at the boundary but weak inside gameplay code. A production pipeline should have three explicit stages: parse JSON into Variants, validate and normalize the contract, then construct typed Resources or plain runtime objects.</p>
+          <p>Do not make source JSON carry Godot resource paths or script class names. A content record should identify an item as <code>item.emberglass_vial</code>, not <code>res://items/emberglass_vial.tres</code>. Stable IDs belong to the content domain and can survive a folder move. Resource paths belong to one Godot project and can be regenerated.</p>
+          <pre><code>{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "item.emberglass_vial",
+      "name": "Emberglass Vial",
+      "baseValue": 48,
+      "tags": ["alchemy", "fragile"]
+    }
+  ],
+  "shopRows": [
+    {
+      "merchantId": "merchant.cold_lantern",
+      "itemId": "item.emberglass_vial",
+      "stockWeight": 18
+    }
+  ]
+}</code></pre>
+          <div class="callout"><strong>Pipeline rule</strong><p>The parsed Dictionary is evidence from the wire. A typed Resource is the project-approved result of validation and conversion.</p></div>
+        </section>
+
+        <section id="resources"><p class="kicker">Step 1</p><h2>Define narrow Resource types</h2>
+          <p>Resources work well for immutable or mostly immutable definitions that several scenes and systems share. Give each definition its source ID and typed fields. Avoid embedding mutable inventory quantities, generated rolls, or per-save discoveries in the definition Resource.</p>
+          <pre><code>class_name ItemDefinition
+extends Resource
+
+@export var source_id: StringName
+@export var display_name: String
+@export var base_value: int
+@export var tags: Array[StringName] = []
+
+func is_valid() -&gt; bool:
+    return not source_id.is_empty() \
+        and not display_name.is_empty() \
+        and base_value &gt;= 0</code></pre>
+          <p><code>StringName</code> is useful for repeated identifiers inside the running project, but the wire value remains a string. Convert after checking that the input is a non-empty string. If a relationship needs additional edge data, model the edge as its own Resource or value object instead of maintaining parallel arrays.</p>
+          <pre><code>class_name ShopStockRule
+extends Resource
+
+@export var merchant_id: StringName
+@export var item_id: StringName
+@export var stock_weight: int
+
+# Resolved at catalog assembly time; never serialized from JSON.
+var item: ItemDefinition</code></pre>
+          <p>Keeping <code>item_id</code> after resolution helps save compatibility and diagnostics. The resolved <code>item</code> reference is a runtime convenience, not the identity.</p>
+        </section>
+
+        <section id="parse"><p class="kicker">Step 2</p><h2>Validate Variants before constructing Resources</h2>
+          <p>Use <code>JSON.parse_string</code> for a simple boundary or a <code>JSON</code> instance when you need parser error detail. Check the root type, schema version, collection types, required fields, and numeric ranges. JSON numbers arrive without your design semantics, so reject fractional values where the contract requires an integer.</p>
+          <pre><code>static func parse_catalog(text: String) -&gt; Dictionary:
+    var root: Variant = JSON.parse_string(text)
+    if typeof(root) != TYPE_DICTIONARY:
+        push_error("Catalog root must be an object.")
+        return {}
+    if root.get("schemaVersion", -1) != 1:
+        push_error("Unsupported catalog schema version.")
+        return {}
+    if typeof(root.get("items")) != TYPE_ARRAY:
+        push_error("Catalog items must be an array.")
+        return {}
+    return root</code></pre>
+          <p>Do not use <code>as Dictionary</code> or a typed variable as a substitute for validation. Verify each field before reading it. A helper that returns a result object with a list of issues is often better than stopping at the first problem because content authors can repair a complete batch in one pass.</p>
+          <pre><code>static func item_from_row(row: Dictionary, path: String) -&gt; ItemDefinition:
+    var raw_id: Variant = row.get("id")
+    if typeof(raw_id) != TYPE_STRING or raw_id.strip_edges().is_empty():
+        push_error(path + ".id must be a non-empty string")
+        return null
+    if typeof(row.get("baseValue")) != TYPE_FLOAT:
+        push_error(path + ".baseValue must be a JSON number")
+        return null
+
+    var item := ItemDefinition.new()
+    item.source_id = StringName(raw_id)
+    item.display_name = str(row.get("name", raw_id))
+    item.base_value = int(row.baseValue)
+    if float(item.base_value) != row.baseValue or not item.is_valid():
+        push_error(path + " contains an invalid integer value")
+        return null
+    return item</code></pre>
+          <p>When importing local user-selected data, enforce a byte cap before reading and parsing. Do not send the document to a network endpoint, analytics service, or error logger.</p>
+        </section>
+
+        <section id="resolve"><p class="kicker">Step 3</p><h2>Resolve relationships in a second pass</h2>
+          <p>Create all item Resources and index them by source ID before processing any shop, recipe, quest, or loot relationship. Then validate each target against the completed dictionary. This supports forward references and makes source ordering irrelevant.</p>
+          <pre><code>static func index_items(rows: Array) -&gt; Dictionary:
+    var by_id: Dictionary = {}
+    for index in rows.size():
+        var item := item_from_row(rows[index], "items[%d]" % index)
+        if item == null:
+            continue
+        if by_id.has(item.source_id):
+            push_error("Duplicate item ID: %s" % item.source_id)
+            continue
+        by_id[item.source_id] = item
+    return by_id
+
+static func resolve_stock(rule: ShopStockRule, items: Dictionary) -&gt; bool:
+    if not items.has(rule.item_id):
+        push_error("Missing item %s for merchant %s" % [rule.item_id, rule.merchant_id])
+        return false
+    rule.item = items[rule.item_id] as ItemDefinition
+    return true</code></pre>
+          <p>Decide whether any validation error invalidates the catalog. For global definitions, all-or-nothing import is usually safer. If partial import is allowed for mod content, isolate it by package and make skipped records visible to the player or author. Silent skipping creates hard-to-reproduce gameplay gaps.</p>
+        </section>
+
+        <section id="editor"><p class="kicker">Step 4</p><h2>Generate <code>.tres</code> files only when the workflow benefits</h2>
+          <p>Runtime conversion is appropriate when content changes frequently, comes from approved mods, or does not need inspector references. Editor generation is appropriate when designers need native Resources, import errors should block export, or other assets need direct Resource references.</p>
+          <p>For editor generation, keep output in a dedicated generated directory, derive safe filenames from stable IDs, and call <code>ResourceSaver.save</code> only after the entire catalog validates. Maintain a manifest from source ID to generated path. On rebuild, update known IDs and remove generated files whose IDs are no longer present. Never delete outside the dedicated output directory.</p>
+          <pre><code>@tool
+static func save_item(item: ItemDefinition, output_dir: String) -&gt; Error:
+    var safe_name := String(item.source_id).replace(".", "_")
+    if not safe_name.is_valid_filename():
+        return ERR_INVALID_DATA
+    var path := output_dir.path_join(safe_name + ".tres")
+    return ResourceSaver.save(item, path)</code></pre>
+          <p>Generated Resources should be treated like build artifacts. Either commit them under a clear generation policy or reproduce them during build preparation. Do not make them a second hand-edited source of truth.</p>
+          <div class="warning"><strong>Security boundary</strong><p>Do not call <code>load()</code> or instantiate scripts from a path named in imported JSON. Map approved content IDs through project-owned code.</p></div>
+        </section>
+
+        <section id="tests"><p class="kicker">Preflight</p><h2>Test parsing, conversion, and resolution separately</h2>
+          <ul class="checklist"><li>Malformed JSON and non-object roots fail cleanly.</li><li>Unsupported schema versions stop before Resource construction.</li><li>Missing, blank, and duplicate source IDs produce precise issues.</li><li>Fractional values are rejected for integer contract fields.</li><li>Forward references work after the complete item index exists.</li><li>Broken relationships report source and target IDs.</li><li>Reordering source arrays does not change resolved results.</li><li>Generated paths remain inside the dedicated output directory.</li><li>Two imports of the same source produce equivalent Resources.</li><li>Per-save state never leaks into definition Resources.</li></ul>
+          <div class="tool-callout"><strong>Start from inspected data</strong><p>Run the full document through the Doctor, then generate a Godot 4 starter contract in the Bridge. Review GDScript against the exact Godot 4 minor version used by the project.</p></div>
+        </section>
+
+        <section id="tools"><p class="kicker">Relevant free tools</p><h2>Audit and map the Godot boundary</h2><div class="tools-strip"><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Inspect IDs, types, optional fields, and relationship evidence.</span></a><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_gdscript_bridge"><strong>RPG Data Bridge</strong><span>Generate a reviewable Godot 4 Resource starting point.</span></a></div></section>
+
+        <section id="modules"><p class="kicker">Structured test inputs</p><h2>Six public $3 data modules</h2><div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>Typed item definitions</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>Stock relationship data</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>Recipe Resource inputs</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>Reward table records</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>Quest state references</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>Phase definition data</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=godot_4_resource_data_import&amp;utm_content=godot_encounter_threats">$3 module</a></article>
+        </div></section>
+        <section><p class="kicker">Continue the workflow</p><h2>Related integration guides</h2><div class="related-guides"><a href="../rpg-json-schema-design/">RPG JSON schema design</a><a href="../unity-jsonutility-stable-id-import/">Unity JsonUtility stable-ID import</a><a href="../typescript-rpg-data-models/">TypeScript RPG data models</a><a href="../game-economy-shop-data-integration/">Game economy and shop integration</a></div></section>
+        <div class="disclosure"><strong>Content disclosure:</strong> This original guide was produced with AI assistance and prepared for internal technical QA. Run the GDScript examples in the exact Godot 4 version used by your project before shipping.</div>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="../">All integration guides</a></div></footer>
+</body>
+</html>

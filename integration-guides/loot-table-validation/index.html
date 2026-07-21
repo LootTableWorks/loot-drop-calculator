@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loot Table Validation: Weights, Drops, and Simulation | Loot Table Works</title>
+  <meta name="description" content="Validate RPG loot tables by distinguishing weighted picks from independent drops, checking unreachable rows and duplicate IDs, calculating exact odds, and auditing simulations.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/loot-table-validation/">
+  <meta property="og:type" content="article"><meta property="og:title" content="Loot Table Validation: Weights, Drops, and Simulation"><meta property="og:description" content="A practical audit for exact loot probabilities, structural faults, repeated rolls, and deterministic simulation."><meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/loot-table-validation/"><meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Loot Table Validation: Weights, Drops, and Simulation","description":"Validate RPG loot tables by distinguishing weighted picks from independent drops, checking unreachable rows, calculating exact odds, and auditing simulation.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/loot-table-validation/","datePublished":"2026-07-21","dateModified":"2026-07-21","author":{"@type":"Organization","name":"Loot Table Works"},"publisher":{"@type":"Organization","name":"Loot Table Works"},"proficiencyLevel":"Intermediate"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="../" aria-label="Integration guides home"><img src="../assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a><nav class="site-nav" aria-label="Primary navigation"><a href="../">All guides</a><a href="#tools">Free tools</a><a href="#modules">Data modules</a></nav></div></header>
+  <main>
+    <header class="article-hero"><div class="article-hero-inner"><p class="breadcrumbs"><a href="../">Integration guides</a> / Loot table validation</p><p class="eyebrow">Probability QA</p><h1>Validate loot tables before players discover the math is broken</h1><p class="article-lead">A table can total 100 and still be wrong. First identify the roll model, then validate structure, calculate exact outcomes, run seeded simulations, and compare observed results with statistically reasonable ranges.</p><div class="article-meta"><span>15 minute read</span><span>Updated July 21, 2026</span><span>JSON + probability + JavaScript</span></div></div></header>
+    <div class="page-shell" id="article">
+      <aside class="toc" aria-label="On this page"><strong>On this page</strong><a href="#model">Name the roll model</a><a href="#structure">Validate structure</a><a href="#math">Calculate exact odds</a><a href="#rolls">Repeated rolls</a><a href="#simulation">Audit simulation</a><a href="#progression">Progression controls</a></aside>
+      <article class="article-body">
+        <section id="model"><p class="kicker">Step 1</p><h2>State what one roll means</h2>
+          <p>"Chance" is incomplete without a selection model. In a weighted single-pick table, one row wins and its probability is its weight divided by the sum of positive weights. In an independent-drop table, every row receives its own roll, so several items or no items can drop. In a pick-without-replacement table, several distinct rows win and later probabilities depend on earlier picks.</p>
+          <table class="decision-table"><thead><tr><th>Model</th><th>Possible result from one event</th><th>Core calculation</th></tr></thead><tbody><tr><td>Weighted single pick</td><td>Exactly one eligible row</td><td><code>weight / totalWeight</code></td></tr><tr><td>Independent drops</td><td>Zero, one, or many rows</td><td>Each row uses its own probability</td></tr><tr><td>Weighted picks with replacement</td><td>Fixed count; duplicates possible</td><td>Repeat the single-pick distribution</td></tr><tr><td>Weighted picks without replacement</td><td>Fixed count; distinct rows</td><td>Recalculate after each removal</td></tr></tbody></table>
+          <p>Do not place a field called <code>chance</code> in one table and interpret it as a relative weight in code. Name fields according to semantics: <code>weight</code>, <code>dropChanceBasisPoints</code>, or <code>guaranteedQuantity</code>. If a table includes a no-drop outcome, model it explicitly as a row or define it as the remaining probability by contract.</p>
+          <pre><code>{
+  "id": "loot.bandit_scout",
+  "rollModel": "weighted_single_pick",
+  "rolls": 1,
+  "entries": [
+    { "itemId": "item.copper_marks", "weight": 60, "quantity": [4, 9] },
+    { "itemId": "item.field_tonic", "weight": 25, "quantity": [1, 1] },
+    { "itemId": "item.smoke_salt", "weight": 10, "quantity": [1, 2] },
+    { "itemId": null, "weight": 5, "quantity": [0, 0] }
+  ]
+}</code></pre>
+        </section>
+
+        <section id="structure"><p class="kicker">Step 2</p><h2>Reject structural faults before doing probability math</h2>
+          <p>Every table needs a stable ID, recognized model, valid roll count, and non-empty entry list. Every reward row needs either a resolvable target ID or an explicit no-drop marker. Weights must be finite and non-negative; independent chances must stay inside the documented scale. Quantity minima cannot exceed maxima.</p>
+          <p>Zero-weight rows are unreachable. That may be intentional for disabled content, but the state should be explicit rather than silently shipping dead rows. Negative weights, NaN, infinity, duplicate row IDs, missing item references, and a total positive weight of zero are hard failures.</p>
+          <pre><code>function validateWeightedTable(table, knownItemIds) {
+  const issues = [];
+  let positiveWeight = 0;
+  for (const [index, row] of table.entries.entries()) {
+    const path = `entries[${index}]`;
+    if (!Number.isFinite(row.weight) || row.weight &lt; 0)
+      issues.push(`${path}.weight must be finite and non-negative`);
+    else positiveWeight += row.weight;
+    if (row.itemId !== null &amp;&amp; !knownItemIds.has(row.itemId))
+      issues.push(`${path}.itemId is missing: ${row.itemId}`);
+    if (row.quantity[0] &gt; row.quantity[1])
+      issues.push(`${path}.quantity minimum exceeds maximum`);
+  }
+  if (positiveWeight &lt;= 0) issues.push("table has no selectable weight");
+  return issues;
+}</code></pre>
+          <div class="warning"><strong>Total-100 myth</strong><p>Relative weights do not need to total 100. Forcing them to 100 can add rounding drift without improving the distribution. Validate the model, not a cosmetic total.</p></div>
+        </section>
+
+        <section id="math"><p class="kicker">Step 3</p><h2>Calculate exact per-roll outcomes</h2>
+          <p>For a weighted single pick, divide each positive row weight by the total. The example total is 100, so the field tonic is 25 percent. If all weights were doubled, the probabilities would remain unchanged. Display enough precision to explain the result, but keep the source weights as authored integers when possible.</p>
+          <pre><code>function weightedProbabilities(entries) {
+  const total = entries.reduce((sum, row) =&gt;
+    sum + (row.weight &gt; 0 ? row.weight : 0), 0);
+  if (total &lt;= 0) throw new Error("No positive loot weight");
+  return entries.map(row =&gt; ({
+    itemId: row.itemId,
+    probability: Math.max(0, row.weight) / total
+  }));
+}</code></pre>
+          <p>For independent drops, sum is not constrained to 100 percent. Three independent items at 50 percent can all drop together. Expected item count is the sum of individual probabilities, but that is an average, not a guarantee. To find the chance of no drops, multiply each failure probability. The chance of at least one drop is one minus that product.</p>
+          <pre><code>function chanceOfAtLeastOne(independentChances) {
+  const chanceOfNone = independentChances.reduce(
+    (product, p) =&gt; product * (1 - p), 1);
+  return 1 - chanceOfNone;
+}</code></pre>
+        </section>
+
+        <section id="rolls"><p class="kicker">Step 4</p><h2>Handle repeated rolls without adding probabilities</h2>
+          <p>If an item has probability <code>p</code> on each independent repeated roll, the chance of obtaining it at least once in <code>n</code> rolls is <code>1 - (1 - p)^n</code>. Adding <code>p</code> repeatedly is only an approximation at very small probabilities and quickly becomes impossible values above 100 percent.</p>
+          <p>At a 5 percent per-roll chance, 10 independent attempts yield about a 40.13 percent chance of at least one success, not 50 percent. Expected successes are still 0.5. Probability of at least one and expected count answer different design questions.</p>
+          <pre><code>function atLeastOne(perRollProbability, rolls) {
+  if (perRollProbability &lt; 0 || perRollProbability &gt; 1)
+    throw new RangeError("Probability must be between 0 and 1");
+  if (!Number.isInteger(rolls) || rolls &lt; 0)
+    throw new RangeError("Roll count must be a non-negative integer");
+  return 1 - Math.pow(1 - perRollProbability, rolls);
+}</code></pre>
+          <p>Without-replacement selection requires conditional math. Removing a selected row changes the remaining total, so do not reuse the original probabilities for later picks. Define what happens when the requested pick count exceeds the number of positive eligible rows.</p>
+        </section>
+
+        <section id="simulation"><p class="kicker">Step 5</p><h2>Use simulation as an audit, not as the source of truth</h2>
+          <p>Exact math should define simple models. Simulation verifies implementation, exposes complex conditional systems, and communicates long-run behavior. Use a seeded pseudo-random generator so failures can be reproduced. Record the seed, roll count, table version, and algorithm version with the result.</p>
+          <p>Compare observed counts with an expected range rather than demanding an exact percentage. For a binomial outcome with probability <code>p</code> over <code>n</code> independent rolls, the standard deviation of the count is the square root of <code>n * p * (1 - p)</code>. A rough three-standard-deviation band is a practical automated warning, not proof of correctness.</p>
+          <pre><code>function auditCount(observed, rolls, probability) {
+  const expected = rolls * probability;
+  const sigma = Math.sqrt(rolls * probability * (1 - probability));
+  return {
+    expected,
+    observed,
+    withinAuditBand: Math.abs(observed - expected) &lt;= 3 * sigma
+  };
+}</code></pre>
+          <p>A simulation can match expected frequencies while still selecting the wrong item IDs if data joins are broken. Audit both distribution and identity. Also test fixed boundary random values such as zero and the value immediately below one to catch cumulative-range errors.</p>
+        </section>
+
+        <section id="progression"><p class="kicker">Step 6</p><h2>Model pity, guarantees, and eligibility explicitly</h2>
+          <p>Progression controls change the probability model and should be visible in data. A pity counter may raise weight after each failure, guarantee a category on a threshold, or replace the next roll. Specify whether the counter is per table, per item, per account, or per event, and when it resets.</p>
+          <p>Eligibility filters such as player level, quest state, biome, or first-clear status must run before weight normalization. Removing ineligible rows after selection biases results or causes rerolls with unclear odds. Produce an eligible candidate list, validate its total, then roll.</p>
+          <ul class="checklist"><li>The roll model is named in the table contract.</li><li>Every target item ID resolves against the canonical catalog.</li><li>Weights and chances use explicit, validated scales.</li><li>Zero-weight and unreachable rows are reported.</li><li>Exact probabilities are calculated before simulation.</li><li>Repeated-roll displays use complementary probability.</li><li>Seed, table version, and algorithm version make simulations reproducible.</li><li>Eligibility is applied before normalization.</li><li>Pity and guarantee reset rules are documented and tested.</li><li>Economy audits multiply drop rates by quantities and item values.</li></ul>
+          <div class="tool-callout"><strong>Run two audits</strong><p>Use the Loot Drop Calculator for exact and repeated-roll probabilities. Use RPG Game Data Doctor to check IDs and structural consistency before interpreting the math.</p></div>
+        </section>
+
+        <section id="tools"><p class="kicker">Relevant free tools</p><h2>Calculate and inspect</h2><div class="tools-strip"><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_probability_calculator"><strong>Loot Drop Calculator</strong><span>Check exact drops and chance of at least one success.</span></a><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Audit IDs, rows, fields, and relationship integrity.</span></a></div></section>
+
+        <section id="modules"><p class="kicker">Production data</p><h2>Six public $3 data modules</h2><div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>Canonical reward values</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>Stock rarity context</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>Ingredient demand data</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>2,000 reward records</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>Quest reward pacing</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>Threat-to-reward evidence</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=loot_table_validation&amp;utm_content=loot_encounter_threats">$3 module</a></article>
+        </div></section>
+        <section><p class="kicker">Continue the workflow</p><h2>Related integration guides</h2><div class="related-guides"><a href="../rpg-json-schema-design/">RPG JSON schema design</a><a href="../typescript-rpg-data-models/">TypeScript RPG data models</a><a href="../game-economy-shop-data-integration/">Game economy and shop integration</a><a href="../unity-jsonutility-stable-id-import/">Unity JsonUtility stable-ID import</a></div></section>
+        <div class="disclosure"><strong>Content disclosure:</strong> This original guide was produced with AI assistance and prepared for internal technical QA. Verify probability code with deterministic tests and project-specific balance assumptions before shipping.</div>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="../">All integration guides</a></div></footer>
+</body>
+</html>

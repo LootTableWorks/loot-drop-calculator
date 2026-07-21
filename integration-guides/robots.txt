@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://loottableworks.github.io/loot-drop-calculator/integration-guides/sitemap.xml

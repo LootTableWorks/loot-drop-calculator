@@ -4,6 +4,8 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 
 [Open the World Foundry hub](https://loottableworks.github.io/loot-drop-calculator/world-foundry/)
 
+[Read the RPG data integration guides](https://loottableworks.github.io/loot-drop-calculator/integration-guides/)
+
 ![World Seed Studio showing a connected fantasy region and inspectable records](world-foundry/assets/world-seed-studio-preview-v2.png)
 
 ## Free Browser Tools
@@ -17,6 +19,10 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 | [RPG Data Bridge](https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/) | Convert inspected JSON or CSV schemas into Unity C#, Godot 4 GDScript, and TypeScript starter models. |
 
 All tools run in the browser without an account. Imported data stays in the active tab and is not uploaded, analyzed remotely, or written to persistent browser storage.
+
+## Integration Guides
+
+The public guide cluster covers RPG JSON schema design, Unity JsonUtility imports, Godot 4 Resource imports, TypeScript data models, loot-table validation, and game-economy integration. Each article includes original examples, relevant free-tool workflows, and links only to the six verified public standalone modules.
 
 ## Original `$3` Data Modules
 

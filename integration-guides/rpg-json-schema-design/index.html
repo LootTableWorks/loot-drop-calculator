@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RPG JSON Schema Design: Stable IDs and References | Loot Table Works</title>
+  <meta name="description" content="Design an RPG JSON schema with stable IDs, explicit references, versioned contracts, safe optional fields, and clean separation between authored data and runtime state.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/rpg-json-schema-design/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="RPG JSON Schema Design: Stable IDs and References">
+  <meta property="og:description" content="A practical contract-first method for RPG items, relationships, versions, and migrations.">
+  <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/rpg-json-schema-design/">
+  <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"RPG JSON Schema Design: Stable IDs and References","description":"Design an RPG JSON schema with stable IDs, explicit references, versioned contracts, and safe optional fields.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/rpg-json-schema-design/","datePublished":"2026-07-21","dateModified":"2026-07-21","author":{"@type":"Organization","name":"Loot Table Works"},"publisher":{"@type":"Organization","name":"Loot Table Works"},"proficiencyLevel":"Intermediate"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="../" aria-label="Integration guides home"><img src="../assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a><nav class="site-nav" aria-label="Primary navigation"><a href="../">All guides</a><a href="#tools">Free tools</a><a href="#modules">Data modules</a></nav></div></header>
+
+  <main>
+    <header class="article-hero"><div class="article-hero-inner">
+      <p class="breadcrumbs"><a href="../">Integration guides</a> / RPG JSON schema design</p>
+      <p class="eyebrow">Contract design</p>
+      <h1>RPG JSON schema design that remains stable as the game grows</h1>
+      <p class="article-lead">A useful RPG schema does more than deserialize. It gives every authored concept a durable identity, makes relationships visible, defines units and nullability, and leaves room for migrations without corrupting saves.</p>
+      <div class="article-meta"><span>12 minute read</span><span>Updated July 21, 2026</span><span>JSON + engine-neutral patterns</span></div>
+    </div></header>
+
+    <div class="page-shell" id="article">
+      <aside class="toc" aria-label="On this page"><strong>On this page</strong><a href="#boundary">Choose the boundary</a><a href="#identity">Stable identity</a><a href="#relationships">Relationships</a><a href="#optional">Optional fields</a><a href="#versions">Versions and migrations</a><a href="#validation">Validation checklist</a></aside>
+      <article class="article-body">
+        <section id="boundary">
+          <p class="kicker">Step 1</p><h2>Decide what the JSON owns</h2>
+          <p>Start by separating authored source data from mutable play state. The catalog may define that an emberglass vial has a base value of 48 and belongs to the alchemy category. A save file may record that the player owns three vials and that a particular merchant is out of stock. Those facts have different lifetimes and should not share one record.</p>
+          <p>Keep source data deterministic and reviewable. A source record should describe design intent: identity, display text, tags, base values, and references to other authored records. Runtime state should describe a playthrough: quantities, cooldowns, discovered flags, generated rolls, and temporary modifiers. Rebuilding the catalog must not reset a save; loading a save must not redefine the catalog.</p>
+          <pre><code>{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "item.emberglass_vial",
+      "name": "Emberglass Vial",
+      "category": "alchemy",
+      "baseValue": 48,
+      "tags": ["volatile", "glass"]
+    }
+  ]
+}</code></pre>
+          <div class="callout"><strong>Contract rule</strong><p>If a value can differ between two save files, it probably does not belong in the canonical catalog.</p></div>
+        </section>
+
+        <section id="identity">
+          <p class="kicker">Step 2</p><h2>Use stable IDs, never array positions</h2>
+          <p>An ID is a promise that the same token will continue to mean the same concept. Use an ASCII format that is easy to compare and safe in filenames, URLs, logs, and source control. A namespaced token such as <code>item.emberglass_vial</code> is more diagnostic than <code>1047</code>, while an opaque UUID is useful when records are created by distributed tools. Pick one policy and enforce it.</p>
+          <p>Do not derive IDs from the current display name at runtime. Names are editorial; IDs are relational. Renaming "Minor Health Potion" to "Field Tonic" should change one string, not every recipe, shop row, quest reward, and save reference. Likewise, never use the index in an array as identity. Sorting the array would silently retarget every reference.</p>
+          <table class="decision-table"><thead><tr><th>Field</th><th>Good role</th><th>Bad role</th></tr></thead><tbody><tr><td><code>id</code></td><td>Permanent joins and save references</td><td>Localized display copy</td></tr><tr><td><code>name</code></td><td>Editor labels and fallback display</td><td>Foreign key</td></tr><tr><td><code>index</code></td><td>Temporary loop position</td><td>Persistent identity</td></tr></tbody></table>
+          <p>Validate IDs as a set before importing any relationships. Reject missing, blank, duplicate, or malformed IDs. A warning is too weak for duplicates because a dictionary can preserve only one of the colliding records.</p>
+        </section>
+
+        <section id="relationships">
+          <p class="kicker">Step 3</p><h2>Represent relationships as explicit IDs</h2>
+          <p>Embed a value when it belongs only to its parent and has no independent identity. Reference a value when several systems must agree on the same concept. A recipe ingredient should usually point to an item ID; a small color swatch used only by one item can be embedded.</p>
+          <pre><code>{
+  "recipes": [
+    {
+      "id": "recipe.frostward_tonic",
+      "outputItemId": "item.frostward_tonic",
+      "outputQuantity": 1,
+      "ingredients": [
+        { "itemId": "item.emberglass_vial", "quantity": 1 },
+        { "itemId": "item.winter_mint", "quantity": 3 }
+      ]
+    }
+  ]
+}</code></pre>
+          <p>Use role-specific field names such as <code>outputItemId</code> and <code>merchantId</code>. A generic field called <code>reference</code> hides intent and makes automated validation harder. For one-to-many relationships, store a list of typed reference objects when the edge has its own data, such as quantity, weight, rank, or unlock conditions.</p>
+          <p>Resolve in two passes. Pass one creates every record and indexes it by ID. Pass two resolves references and reports missing targets with the source record and field path. This supports forward references and produces errors that a content author can act on.</p>
+        </section>
+
+        <section id="optional">
+          <p class="kicker">Step 4</p><h2>Make optionality and units unambiguous</h2>
+          <p>Absence, <code>null</code>, zero, and an empty array are different states. Use absence for a field the record does not support, <code>null</code> for an explicitly empty slot when the consumer supports it, zero for a real numeric value, and an empty array for a valid relationship collection with no members. Do not mix these representations casually.</p>
+          <p>Write units into names when the unit is not structurally guaranteed: <code>cooldownSeconds</code>, <code>weightGrams</code>, or <code>chanceBasisPoints</code>. Floating-point percentages invite ambiguity between <code>0.25</code> and <code>25</code>. Integer basis points make the scale explicit: 2,500 means 25.00 percent.</p>
+          <pre><code>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "name", "baseValue"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^item\\.[a-z0-9_]+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "baseValue": { "type": "integer", "minimum": 0 },
+    "cooldownSeconds": { "type": ["number", "null"], "minimum": 0 }
+  },
+  "additionalProperties": false
+}</code></pre>
+          <p><code>additionalProperties: false</code> is useful in controlled authoring pipelines because it catches misspellings. During a staged migration, a more permissive reader may be practical, but unknown fields should still be reported so drift does not become invisible.</p>
+        </section>
+
+        <section id="versions">
+          <p class="kicker">Step 5</p><h2>Version semantics, not every edit</h2>
+          <p>Increment the schema version when a consumer must interpret the data differently. Adding a new optional description does not necessarily require a migration. Changing price from coins to copper units does. Store the version at a documented root, keep migrations sequential, and test an old fixture through every supported path.</p>
+          <pre><code>function migrateCatalog(input) {
+  let data = structuredClone(input);
+  while (data.schemaVersion &lt; 3) {
+    if (data.schemaVersion === 1) data = migrateV1ToV2(data);
+    else if (data.schemaVersion === 2) data = migrateV2ToV3(data);
+    else throw new Error("Unsupported schema version");
+  }
+  return data;
+}</code></pre>
+          <p>Never reuse a retired ID for a different item. Keep a small tombstone map if saves can contain removed IDs, and define a policy: replace with a successor, preserve an inert placeholder, or issue a precise load error. Silent substitution turns a data change into player-facing corruption.</p>
+          <div class="warning"><strong>Migration trap</strong><p>Do not mutate source files automatically during game startup. Migrate into memory or through an explicit authoring command so source changes remain reviewable.</p></div>
+        </section>
+
+        <section id="validation">
+          <p class="kicker">Preflight</p><h2>Schema validation checklist</h2>
+          <ul class="checklist"><li>Every authored entity has one stable, unique ID.</li><li>Display names and file order are never used as foreign keys.</li><li>Every relationship field names its target role and expected collection.</li><li>Numeric units and probability scales are explicit.</li><li>Missing, null, zero, and empty collections have documented meanings.</li><li>Source data and per-save state live in separate contracts.</li><li>The root records a semantic schema version.</li><li>Old fixtures pass deterministic migration tests.</li><li>Broken references report source ID, field path, and missing target.</li></ul>
+          <div class="tool-callout"><strong>Fast preflight</strong><p>Run representative JSON or CSV through the free Doctor, then use the Bridge to draft engine-specific types. Inspect the complete dataset before treating inferred fields as a contract.</p></div>
+        </section>
+
+        <section id="tools"><p class="kicker">Relevant free tools</p><h2>Inspect and map the contract</h2><div class="tools-strip">
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Find duplicate IDs, field drift, and structural faults.</span></a>
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=rpg_data_bridge"><strong>RPG Data Bridge</strong><span>Map inspected records to Unity, Godot 4, or TypeScript.</span></a>
+        </div></section>
+
+        <section id="modules"><p class="kicker">Apply the pattern</p><h2>Six public $3 data modules</h2><div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>Stable item records</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>Stock relationships</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>Input/output references</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>Weighted reward links</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>Chain and reward IDs</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>Phase relationships</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=rpg_json_schema_design&amp;utm_content=schema_encounter_threats">$3 module</a></article>
+        </div></section>
+
+        <section><p class="kicker">Continue the workflow</p><h2>Related integration guides</h2><div class="related-guides"><a href="../unity-jsonutility-stable-id-import/">Unity JsonUtility stable-ID import</a><a href="../godot-4-resource-data-import/">Godot 4 Resource data import</a><a href="../typescript-rpg-data-models/">TypeScript RPG data models</a><a href="../loot-table-validation/">Loot table validation</a></div></section>
+        <div class="disclosure"><strong>Content disclosure:</strong> This original guide was produced with AI assistance and prepared for internal technical QA. Validate examples in the exact engine and version used by your project before shipping.</div>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="../">All integration guides</a></div></footer>
+</body>
+</html>

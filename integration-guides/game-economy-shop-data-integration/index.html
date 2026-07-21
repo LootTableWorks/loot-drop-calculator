@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Economy and Shop Data Integration | Loot Table Works</title>
+  <meta name="description" content="Integrate RPG item, merchant, shop, crafting, and reward data with explainable pricing layers, deterministic restocks, bounded modifiers, currency flow checks, and stable IDs.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/game-economy-shop-data-integration/">
+  <meta property="og:type" content="article"><meta property="og:title" content="Game Economy and Shop Data Integration"><meta property="og:description" content="A data-first workflow for explainable prices, deterministic stock, and measurable RPG currency flows."><meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/game-economy-shop-data-integration/"><meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Game Economy and Shop Data Integration","description":"Integrate RPG item, merchant, shop, crafting, and reward data with explainable pricing, deterministic restocks, and bounded modifiers.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/game-economy-shop-data-integration/","datePublished":"2026-07-21","dateModified":"2026-07-21","author":{"@type":"Organization","name":"Loot Table Works"},"publisher":{"@type":"Organization","name":"Loot Table Works"},"proficiencyLevel":"Intermediate"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="../" aria-label="Integration guides home"><img src="../assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a><nav class="site-nav" aria-label="Primary navigation"><a href="../">All guides</a><a href="#tools">Free tools</a><a href="#modules">Data modules</a></nav></div></header>
+  <main>
+    <header class="article-hero"><div class="article-hero-inner"><p class="breadcrumbs"><a href="../">Integration guides</a> / Game economy and shop integration</p><p class="eyebrow">Economy systems</p><h1>Integrate game economy and shop data without hiding the price math</h1><p class="article-lead">A durable shop system separates canonical item value, merchant policy, local market pressure, player effects, stock selection, and save state. Each layer can then be tuned and explained without rewriting the catalog.</p><div class="article-meta"><span>15 minute read</span><span>Updated July 21, 2026</span><span>JSON + economy formulas</span></div></div></header>
+    <div class="page-shell" id="article">
+      <aside class="toc" aria-label="On this page"><strong>On this page</strong><a href="#layers">Separate the layers</a><a href="#contract">Design the contract</a><a href="#pricing">Build explainable prices</a><a href="#stock">Generate stock</a><a href="#flows">Measure currency flow</a><a href="#tests">Test and tune</a></aside>
+      <article class="article-body">
+        <section id="layers"><p class="kicker">Architecture</p><h2>Give each economic fact one owner</h2>
+          <p>The item catalog should own a canonical base value and classification. A merchant profile should own buying and selling posture, accepted categories, budget, and restock policy. A market state should own temporary scarcity or regional modifiers. Player state should own reputation, skills, and one-time discounts. Inventory state should own current quantities and the seed or timestamp needed to reproduce them.</p>
+          <p>Combining all of those facts into one final price field makes balancing opaque. When a sword costs 312 coins, a designer should be able to see the base value, merchant markup, scarcity multiplier, reputation adjustment, rounding rule, and final clamp. Explainability is a production feature because it turns balance feedback into an actionable change.</p>
+          <table class="decision-table"><thead><tr><th>Layer</th><th>Examples</th><th>Lifetime</th></tr></thead><tbody><tr><td>Item definition</td><td>Base value, category, rarity, tags</td><td>Authored release</td></tr><tr><td>Merchant policy</td><td>Markup, buyback rate, categories, budget</td><td>Authored profile</td></tr><tr><td>Market state</td><td>Regional supply, event demand, taxes</td><td>World or save state</td></tr><tr><td>Player state</td><td>Reputation, perks, negotiated discount</td><td>Save state</td></tr><tr><td>Stock state</td><td>Quantity, restock seed, sold-out flags</td><td>Save state</td></tr></tbody></table>
+        </section>
+
+        <section id="contract"><p class="kicker">Step 1</p><h2>Join catalogs with stable IDs</h2>
+          <p>Merchant stock rules should reference item IDs or tag constraints, not copy the full item record. Copying values creates competing truths: changing an item's canonical price would leave old merchant rows stale. Stable references keep the catalog normalized while allowing generated inventory entries to snapshot the final quantity and price for one restock cycle.</p>
+          <pre><code>{
+  "items": [
+    {
+      "id": "item.emberglass_vial",
+      "category": "alchemy",
+      "baseValue": 48,
+      "rarityTier": 2,
+      "tags": ["fragile", "volatile"]
+    }
+  ],
+  "merchants": [
+    {
+      "id": "merchant.cold_lantern",
+      "sellMarkupBasisPoints": 12500,
+      "buybackBasisPoints": 4200,
+      "budgetCoins": 1800,
+      "stockRules": [
+        { "itemId": "item.emberglass_vial", "weight": 18, "quantity": [1, 4] }
+      ]
+    }
+  ]
+}</code></pre>
+          <p>Basis points avoid the ambiguity between 1.25 and 125. Here, 12,500 basis points means 125 percent of canonical value and 4,200 means 42 percent. Quantity ranges are inclusive by contract. Validate merchant IDs, item IDs, non-negative budgets, bounded multipliers, and quantity ranges before stock generation.</p>
+          <p>Crafting recipes and rewards also participate in the economy. A recipe references input and output item IDs. A reward row references item IDs and quantities. Those joins let an audit calculate production cost, expected faucet value, and whether merchants sell an output below its ingredient floor.</p>
+        </section>
+
+        <section id="pricing"><p class="kicker">Step 2</p><h2>Calculate prices as a visible sequence</h2>
+          <p>Start from the canonical item value. Apply the merchant's normal posture, then market pressure, player effects, and a final rounding rule. Clamp each modifier to a documented range so a data mistake cannot produce negative or extreme prices. Apply taxes or fees in one named layer rather than hiding them inside the markup.</p>
+          <pre><code>function quoteSellPrice(item, merchant, market, player) {
+  const merchantFactor = clamp(merchant.sellMarkupBasisPoints / 10_000, 0.25, 5);
+  const marketFactor = clamp(market.factorByItemId[item.id] ?? 1, 0.5, 2.5);
+  const reputationFactor = clamp(1 - player.discountBasisPoints / 10_000, 0.5, 1);
+  const unrounded = item.baseValue * merchantFactor * marketFactor * reputationFactor;
+  const finalCoins = Math.max(1, Math.round(unrounded));
+  return { base: item.baseValue, merchantFactor, marketFactor,
+    reputationFactor, unrounded, finalCoins };
+}</code></pre>
+          <p>Return a quote object rather than only the final integer. The UI may show a concise price, while debug tools and balance reports can show the full path. Use one pricing service for buying, tooltips, transaction checks, and automated simulations so displayed and charged values do not diverge.</p>
+          <p>Buyback prices need their own policy and a strict relationship to selling prices. Unless arbitrage is intentional, the amount a merchant pays the player should remain below the amount that same merchant charges after all modifiers. Test unusual combinations of reputation, regional demand, taxes, and perks.</p>
+          <div class="warning"><strong>Rounding trap</strong><p>Round once at the end. Rounding after every multiplier can create inconsistent results and exploitable buy-sell loops near price boundaries.</p></div>
+        </section>
+
+        <section id="stock"><p class="kicker">Step 3</p><h2>Make stock generation deterministic and constrained</h2>
+          <p>A stock generator should accept an explicit seed plus immutable inputs: merchant ID, restock cycle, world state, and eligible item rules. The same inputs should produce the same stock. Determinism makes a reported inventory reproducible, supports save/load, and prevents opening the menu repeatedly from rerolling rare items.</p>
+          <p>Filter eligibility before weighted selection. Category, tier, location, quest, and uniqueness constraints determine candidates. Then select according to the documented roll model. Apply per-item and total-slot caps, calculate quantities, and reserve enough merchant budget if buyback or procurement is simulated.</p>
+          <pre><code>function restockSeed(worldSeed, merchantId, cycle) {
+  return stableHash(`${worldSeed}|${merchantId}|${cycle}`);
+}
+
+function eligibleItems(catalog, rule, worldState) {
+  return catalog.items.filter(item =&gt;
+    (!rule.category || item.category === rule.category) &amp;&amp;
+    item.rarityTier &lt;= rule.maximumTier &amp;&amp;
+    !worldState.uniqueItemsSold.has(item.id));
+}</code></pre>
+          <p>Persist the cycle and generated stock or persist enough inputs to regenerate it exactly. Do not use wall-clock time directly as the only seed. Time zones, paused games, and clock changes make that behavior difficult to test. Convert time to a named restock cycle under project control.</p>
+          <p>Define depletion behavior. A merchant may keep sold-out rows visible, remove them, or substitute another item. Purchases must update save-owned stock atomically with currency. Catalog definitions remain immutable.</p>
+        </section>
+
+        <section id="flows"><p class="kicker">Step 4</p><h2>Audit faucets, sinks, and conversion loops</h2>
+          <p>Prices only make sense relative to acquisition rates. Estimate currency and item value entering the game from encounters, quests, salvage, and repeatable activities. Compare that with required and optional sinks: equipment, consumables, crafting fees, repairs, travel, upgrades, and cosmetics. Track expected value per unit of player time, not only per event.</p>
+          <pre><code>function expectedLootValue(entries, itemById) {
+  return entries.reduce((sum, row) =&gt; {
+    const probability = row.weight / entries.reduce((s, x) =&gt; s + x.weight, 0);
+    const averageQuantity = (row.minQuantity + row.maxQuantity) / 2;
+    return sum + probability * averageQuantity * itemById.get(row.itemId).baseValue;
+  }, 0);
+}</code></pre>
+          <p>The example assumes a weighted single pick and uniform integer quantity range; other roll models need different math. Label every assumption. A repeatable encounter with expected value 60 that takes one minute is economically different from a one-time quest paying 600 after thirty minutes.</p>
+          <p>Audit conversion loops across systems. Buying inputs, crafting outputs, and selling them back should not generate infinite currency unless the loop is a deliberate reward. Include fees, yields, critical crafting outcomes, reputation discounts, and regional modifiers. Use stable IDs to traverse the actual recipe and shop relationships instead of comparing names.</p>
+        </section>
+
+        <section id="tests"><p class="kicker">Step 5</p><h2>Test invariants and balance scenarios</h2>
+          <ul class="checklist"><li>Every merchant, stock, recipe, and reward reference resolves by stable ID.</li><li>All basis-point fields use documented ranges and meanings.</li><li>Pricing returns inspectable intermediate factors.</li><li>Rounding occurs once under one shared rule.</li><li>Buyback cannot exceed the matching sale quote accidentally.</li><li>Identical restock inputs produce identical inventories.</li><li>Eligibility is applied before weighted selection.</li><li>Unique and sold-out state belongs to the save, not the catalog.</li><li>Expected faucet value includes quantity and repetition rate.</li><li>Craft-buy-sell loops are tested under extreme modifier combinations.</li><li>Missing data produces a controlled error, not a zero-price item.</li><li>Balance reports record catalog and economy rule versions.</li></ul>
+          <p>Use small scenario fixtures in automated tests: a baseline merchant, maximum discount player, scarce market, abundant market, empty eligible set, sold-out unique item, and a deliberately exploitable recipe. Then run broader simulations with fixed seeds and compare summary outputs under review.</p>
+          <div class="tool-callout"><strong>Explore before implementation</strong><p>Use the Shop Inventory Generator to test deterministic selection and merchant constraints. Use RPG Game Data Doctor to catch broken joins and type drift in source files.</p></div>
+        </section>
+
+        <section id="tools"><p class="kicker">Relevant free tools</p><h2>Generate and inspect the economy inputs</h2><div class="tools-strip"><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=shop_inventory_generator"><strong>Shop Inventory Generator</strong><span>Explore seeded stock, merchant rules, and inventory constraints.</span></a><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Audit item, merchant, recipe, and reward relationships.</span></a></div></section>
+
+        <section id="modules"><p class="kicker">Connected economy data</p><h2>Six public $3 data modules</h2><div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>500 canonical item values</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>1,500 stock relationships</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>Costs, yields, and joins</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>Expected reward value</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>Quest currency faucets</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>Risk and reward pacing</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=game_economy_shop_data_integration&amp;utm_content=economy_encounter_threats">$3 module</a></article>
+        </div></section>
+        <section><p class="kicker">Continue the workflow</p><h2>Related integration guides</h2><div class="related-guides"><a href="../rpg-json-schema-design/">RPG JSON schema design</a><a href="../loot-table-validation/">Loot table validation</a><a href="../typescript-rpg-data-models/">TypeScript RPG data models</a><a href="../unity-jsonutility-stable-id-import/">Unity JsonUtility stable-ID import</a></div></section>
+        <div class="disclosure"><strong>Content disclosure:</strong> This original guide was produced with AI assistance and prepared for internal technical QA. Economy formulas are implementation patterns, not universal balance targets; validate them against your own game loop.</div>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="../">All integration guides</a></div></footer>
+</body>
+</html>

@@ -244,6 +244,21 @@ h1, h2, h3, h4, h5, p { letter-spacing: 0; }
 .tool-link small { margin-top: 1px; color: var(--muted); font-size: 11px; }
 .link-arrow { justify-self: end; color: var(--teal); font-size: 17px; }
 
+.integration-guides-cta {
+  margin: 0;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: #eaf5f3;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.integration-guides-cta a {
+  color: var(--teal-dark);
+  font-weight: 800;
+}
+
 .product-preview {
   min-width: 0;
   margin: 0;

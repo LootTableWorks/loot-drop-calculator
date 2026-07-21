@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TypeScript RPG Data Models from JSON | Loot Table Works</title>
+  <meta name="description" content="Build safe TypeScript RPG data models by treating JSON as unknown, validating one boundary, branding stable IDs, resolving references, and separating wire DTOs from runtime types.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/typescript-rpg-data-models/">
+  <meta property="og:type" content="article"><meta property="og:title" content="TypeScript RPG Data Models from JSON"><meta property="og:description" content="Validate unknown JSON once, then use branded IDs and readonly runtime models with confidence."><meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/typescript-rpg-data-models/"><meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"TypeScript RPG Data Models from JSON","description":"Build safe TypeScript RPG data models by treating JSON as unknown, validating one boundary, branding stable IDs, and resolving references.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/typescript-rpg-data-models/","datePublished":"2026-07-21","dateModified":"2026-07-21","author":{"@type":"Organization","name":"Loot Table Works"},"publisher":{"@type":"Organization","name":"Loot Table Works"},"proficiencyLevel":"Intermediate"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="../" aria-label="Integration guides home"><img src="../assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a><nav class="site-nav" aria-label="Primary navigation"><a href="../">All guides</a><a href="#tools">Free tools</a><a href="#modules">Data modules</a></nav></div></header>
+  <main>
+    <header class="article-hero"><div class="article-hero-inner"><p class="breadcrumbs"><a href="../">Integration guides</a> / TypeScript RPG data models</p><p class="eyebrow">TypeScript boundary</p><h1>Build TypeScript RPG data models that do not trust raw JSON</h1><p class="article-lead">Interfaces disappear at runtime. A safe integration parses JSON as <code>unknown</code>, validates it at one boundary, converts it into readonly domain types, and uses branded stable IDs to prevent accidental cross-collection joins.</p><div class="article-meta"><span>13 minute read</span><span>Updated July 21, 2026</span><span>TypeScript + JSON</span></div></div></header>
+    <div class="page-shell" id="article">
+      <aside class="toc" aria-label="On this page"><strong>On this page</strong><a href="#unknown">Start with unknown</a><a href="#wire">Model the wire</a><a href="#guards">Validate records</a><a href="#domain">Convert to domain types</a><a href="#indexes">Resolve references</a><a href="#tests">Test the contract</a></aside>
+      <article class="article-body">
+        <section id="unknown"><p class="kicker">Boundary rule</p><h2><code>JSON.parse</code> returns evidence, not a trusted model</h2>
+          <p>A TypeScript annotation cannot validate a runtime value. Casting <code>JSON.parse(text) as Catalog</code> only suppresses compiler questions; it does not prove that IDs exist, arrays contain the expected records, numbers are finite, or references point to valid targets. Treat parsed data as <code>unknown</code> until a runtime check establishes the contract.</p>
+          <pre><code>export function parseJson(text: string): unknown {
+  if (new TextEncoder().encode(text).byteLength &gt; 5_000_000) {
+    throw new Error("RPG data exceeds the 5 MB import limit.");
+  }
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    throw new Error("RPG data is not valid JSON.");
+  }
+}</code></pre>
+          <p>Keep validation near the boundary. Once a value has been validated and converted, application code should not repeatedly ask whether <code>item.id</code> is a string. A narrow boundary gives the rest of the codebase a stronger invariant and keeps error reporting consistent.</p>
+          <div class="warning"><strong>False confidence</strong><p>A type assertion changes no runtime behavior. If the source can change independently from the code, it needs a runtime contract.</p></div>
+        </section>
+
+        <section id="wire"><p class="kicker">Step 1</p><h2>Separate wire DTOs from domain types</h2>
+          <p>The wire model mirrors the serialized field names and optionality. The domain model reflects the guarantees your game wants after import. This lets you support an old schema, normalize nullable values, parse units, and rename fields without spreading compatibility logic through gameplay code.</p>
+          <pre><code>{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "item.emberglass_vial",
+      "name": "Emberglass Vial",
+      "baseValue": 48,
+      "tags": ["alchemy", "fragile"]
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe.frostward_tonic",
+      "outputItemId": "item.frostward_tonic"
+    }
+  ]
+}</code></pre>
+          <pre><code>type WireItem = {
+  id: string;
+  name: string;
+  baseValue: number;
+  tags?: string[];
+};
+
+type WireRecipe = {
+  id: string;
+  outputItemId: string;
+};
+
+type WireCatalog = {
+  schemaVersion: 1;
+  items: WireItem[];
+  recipes: WireRecipe[];
+};</code></pre>
+          <p>Wire types are documentation for validator authors; they still do not validate. Keep them narrow, and avoid <code>any</code>. If a field intentionally accepts more than one representation during migration, model that union and normalize it immediately.</p>
+        </section>
+
+        <section id="guards"><p class="kicker">Step 2</p><h2>Collect field-path issues with small predicates</h2>
+          <p>A dependency-free validator can be concise if it uses reusable checks. Start with <code>isRecord</code>, then verify required fields and array elements. Return structured issues rather than only booleans when content authors need useful feedback.</p>
+          <pre><code>type Issue = Readonly&lt;{ path: string; message: string }&gt;;
+
+function isRecord(value: unknown): value is Record&lt;string, unknown&gt; {
+  return typeof value === "object" &amp;&amp; value !== null &amp;&amp; !Array.isArray(value);
+}
+
+function readString(row: Record&lt;string, unknown&gt;, key: string, path: string,
+  issues: Issue[]): string | undefined {
+  const value = row[key];
+  if (typeof value !== "string" || value.trim() === "") {
+    issues.push({ path: `${path}.${key}`, message: "Expected a non-empty string" });
+    return undefined;
+  }
+  return value;
+}</code></pre>
+          <p>Validate finite numbers with <code>Number.isFinite</code>, integer requirements with <code>Number.isInteger</code>, and arrays by checking every member. Do not validate only the first row. Fields that appear later, mixed types, and missing required values are precisely the failures a complete scan should expose.</p>
+          <pre><code>function validateRoot(value: unknown): Issue[] {
+  const issues: Issue[] = [];
+  if (!isRecord(value)) return [{ path: "$", message: "Expected an object" }];
+  if (value.schemaVersion !== 1)
+    issues.push({ path: "$.schemaVersion", message: "Expected schema version 1" });
+  if (!Array.isArray(value.items))
+    issues.push({ path: "$.items", message: "Expected an array" });
+  else value.items.forEach((row, index) =&gt; validateItem(row, `$.items[${index}]`, issues));
+  return issues;
+}</code></pre>
+        </section>
+
+        <section id="domain"><p class="kicker">Step 3</p><h2>Brand IDs and make imported definitions readonly</h2>
+          <p>All IDs are strings at runtime, but TypeScript can prevent many accidental joins at compile time. Brand each ID family so a merchant ID cannot be passed to an item lookup without an explicit mistake. The branding function should remain private to the validated conversion boundary.</p>
+          <pre><code>declare const itemIdBrand: unique symbol;
+declare const recipeIdBrand: unique symbol;
+
+export type ItemId = string &amp; { readonly [itemIdBrand]: true };
+export type RecipeId = string &amp; { readonly [recipeIdBrand]: true };
+
+export type ItemDefinition = Readonly&lt;{
+  id: ItemId;
+  name: string;
+  baseValue: number;
+  tags: readonly string[];
+}&gt;;
+
+function toItemId(value: string): ItemId {
+  return value as ItemId; // Called only after ID validation.
+}</code></pre>
+          <p>Use <code>Readonly</code> and readonly arrays for definitions so gameplay systems do not mutate canonical content by accident. Mutable inventory entries should store an item ID and quantity separately. Freeze objects at runtime only if your threat model or debugging needs it; TypeScript's readonly modifier is a compile-time guarantee.</p>
+          <p>Normalize at conversion: trim allowed strings, fill optional arrays with empty arrays, convert enum tokens through a closed lookup, and reject invalid ranges. Do not silently coerce <code>"48"</code> into <code>48</code> unless the schema explicitly supports that migration.</p>
+        </section>
+
+        <section id="indexes"><p class="kicker">Step 4</p><h2>Index complete collections before resolving joins</h2>
+          <p>A <code>Map</code> makes duplicate detection and lookup intent explicit. Build every primary collection first. Then convert relationship rows and resolve their stable IDs. Keep both the target ID and resolved object when persistence or diagnostics need the token.</p>
+          <pre><code>function indexItems(items: readonly ItemDefinition[]): ReadonlyMap&lt;ItemId, ItemDefinition&gt; {
+  const result = new Map&lt;ItemId, ItemDefinition&gt;();
+  for (const item of items) {
+    if (result.has(item.id)) throw new Error(`Duplicate item ID: ${item.id}`);
+    result.set(item.id, item);
+  }
+  return result;
+}
+
+function requireItem(items: ReadonlyMap&lt;ItemId, ItemDefinition&gt;,
+  rawId: string, sourcePath: string): ItemDefinition {
+  const id = toItemId(rawId);
+  const item = items.get(id);
+  if (!item) throw new Error(`${sourcePath} references missing item ${rawId}`);
+  return item;
+}</code></pre>
+          <p>Do not expose a mutable map from the catalog API. TypeScript's <code>ReadonlyMap</code> communicates intent, though the underlying object can still be mutated by code that retains the original reference. Build indexes inside the catalog factory and keep writable references private.</p>
+          <div class="callout"><strong>Save-file rule</strong><p>Persist stable IDs, not serialized runtime objects. Resolve IDs against the current catalog during load and apply a documented missing-content policy.</p></div>
+        </section>
+
+        <section id="tests"><p class="kicker">Preflight</p><h2>Test the validator and the domain conversion independently</h2>
+          <ul class="checklist"><li>Malformed text fails before contract validation.</li><li>Non-object roots and unsupported versions produce field-path issues.</li><li>Every array member is validated, not only the first record.</li><li>Blank, malformed, and duplicate stable IDs fail conversion.</li><li>NaN, infinity, fractions, and negative values are checked by field policy.</li><li>Optional arrays normalize to readonly empty arrays.</li><li>Wrong ID families fail TypeScript compilation in type tests.</li><li>Forward references resolve after complete indexing.</li><li>Broken joins report source path and missing target ID.</li><li>Source order does not alter catalog semantics.</li><li>Imported definitions cannot be mutated by application code.</li></ul>
+          <div class="tool-callout"><strong>Draft from evidence</strong><p>Inspect the complete JSON or CSV in the Doctor. The Bridge can then produce TypeScript interfaces based on all observed records, including optionality and mixed-type warnings.</p></div>
+        </section>
+
+        <section id="tools"><p class="kicker">Relevant free tools</p><h2>Audit and draft the TypeScript boundary</h2><div class="tools-strip"><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Find field drift before it reaches runtime validation.</span></a><a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_model_bridge"><strong>RPG Data Bridge</strong><span>Generate a reviewable TypeScript model starting point.</span></a></div></section>
+
+        <section id="modules"><p class="kicker">Structured test inputs</p><h2>Six public $3 data modules</h2><div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>Item model records</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>Relational stock data</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>Typed recipe joins</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>Probability model data</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>Quest state models</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>Encounter phase models</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=typescript_rpg_data_models&amp;utm_content=typescript_encounter_threats">$3 module</a></article>
+        </div></section>
+        <section><p class="kicker">Continue the workflow</p><h2>Related integration guides</h2><div class="related-guides"><a href="../rpg-json-schema-design/">RPG JSON schema design</a><a href="../unity-jsonutility-stable-id-import/">Unity JsonUtility stable-ID import</a><a href="../godot-4-resource-data-import/">Godot 4 Resource data import</a><a href="../loot-table-validation/">Loot table validation</a></div></section>
+        <div class="disclosure"><strong>Content disclosure:</strong> This original guide was produced with AI assistance and prepared for internal technical QA. Compile examples with your TypeScript configuration and test the runtime validator against project fixtures.</div>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="../">All integration guides</a></div></footer>
+</body>
+</html>

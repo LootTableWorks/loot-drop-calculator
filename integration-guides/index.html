@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RPG Data Integration Guides | Loot Table Works</title>
+  <meta name="description" content="Practical, engine-aware guides for designing, validating, and importing RPG JSON, loot, shop, and economy data in Unity, Godot 4, and TypeScript.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/integration-guides/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RPG Data Integration Guides">
+  <meta property="og:description" content="Build stable RPG data contracts, validate them, and carry them into Unity, Godot 4, and TypeScript.">
+  <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/">
+  <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/integration-guides/assets/loot-table-works-profile-banner-1920x550.png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"RPG Data Integration Guides","description":"Technical guides for RPG JSON schemas, stable-ID imports, loot validation, and game economy data integration.","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/","publisher":{"@type":"Organization","name":"Loot Table Works","url":"https://loot-table-works.itch.io/"},"hasPart":[{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/rpg-json-schema-design/"},{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/unity-jsonutility-stable-id-import/"},{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/godot-4-resource-data-import/"},{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/typescript-rpg-data-models/"},{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/loot-table-validation/"},{"@type":"TechArticle","url":"https://loottableworks.github.io/loot-drop-calculator/integration-guides/game-economy-shop-data-integration/"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to guides</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="./" aria-label="Loot Table Works integration guides home"><img src="assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works" width="512" height="118"></a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#guides">Guides</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#tools">Free tools</a>
+        <a href="https://loottableworks.github.io/loot-drop-calculator/world-foundry/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=world_foundry_hub">World Foundry</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Loot Table Works field manual</p>
+        <h1>Ship RPG data that survives contact with a real game</h1>
+        <p class="hero-lead">Six implementation guides for turning structured content into stable contracts, trustworthy imports, reproducible loot, and tunable economies. Every method is engine-aware, testable, and built around persistent IDs instead of fragile array positions.</p>
+        <figure class="hero-banner">
+          <img src="assets/loot-table-works-profile-banner-1920x550.png" alt="Loot Table Works World Foundry tools and modular game data" width="1920" height="550">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-band" id="guides">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="kicker">Six high-intent guides</p><h2>Follow the data from authoring to runtime</h2></div>
+          <p>Start with an engine-neutral schema. Validate the complete dataset, generate narrow import contracts, resolve relationships after parsing, and test the gameplay math separately from the records that feed it.</p>
+        </div>
+        <div class="guide-grid">
+          <article class="guide-card"><p class="step-label">Contract 01</p><h3>RPG JSON schema design</h3><p>Choose stable IDs, model references, handle optional fields, version the contract, and separate authored truth from runtime state.</p><a href="rpg-json-schema-design/">Design the schema</a></article>
+          <article class="guide-card"><p class="step-label">Import 02</p><h3>Unity JsonUtility stable-ID import</h3><p>Use serializable wrappers and DTOs, then build runtime dictionaries without asking JsonUtility to solve relationships it cannot represent.</p><a href="unity-jsonutility-stable-id-import/">Build the Unity importer</a></article>
+          <article class="guide-card"><p class="step-label">Import 03</p><h3>Godot 4 Resource data import</h3><p>Parse external JSON into typed Resources while preserving source IDs and keeping file paths out of the content contract.</p><a href="godot-4-resource-data-import/">Build the Godot importer</a></article>
+          <article class="guide-card"><p class="step-label">Boundary 04</p><h3>TypeScript RPG data models</h3><p>Treat imported JSON as unknown, narrow it at one boundary, and use branded IDs and readonly records inside the application.</p><a href="typescript-rpg-data-models/">Model the TypeScript boundary</a></article>
+          <article class="guide-card"><p class="step-label">Probability 05</p><h3>Loot table validation</h3><p>Distinguish weighted selection from independent rolls, verify unreachable rows, and compare expected probabilities with simulation.</p><a href="loot-table-validation/">Audit a loot table</a></article>
+          <article class="guide-card"><p class="step-label">Economy 06</p><h3>Game economy and shop integration</h3><p>Separate catalog value, merchant policy, market modifiers, and player effects so balance changes remain explainable.</p><a href="game-economy-shop-data-integration/">Integrate shops and prices</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-band surface" id="workflow">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="kicker">Recommended sequence</p><h2>A contract-first production loop</h2></div>
+          <p>The expensive failures happen when import code silently invents a schema from one convenient record. This sequence moves uncertainty to explicit checks before gameplay systems depend on it.</p>
+        </div>
+        <div class="sequence">
+          <article><h3>Author</h3><p>Define durable IDs, units, enums, nullability, and relationship fields. Keep generated runtime values out of source files.</p></article>
+          <article><h3>Inspect</h3><p>Scan every record for type drift, missing IDs, duplicate IDs, broken references, and fields that only appear late in the dataset.</p></article>
+          <article><h3>Import</h3><p>Deserialize into narrow transport objects. Convert those objects into engine-owned types in a deliberate second step.</p></article>
+          <article><h3>Resolve</h3><p>Build ID indexes first, then resolve relationships. Report missing targets with source record IDs and field paths.</p></article>
+          <article><h3>Simulate</h3><p>Test probability, pricing, restock, and progression behavior with deterministic seeds and inspectable intermediate values.</p></article>
+          <article><h3>Version</h3><p>Record the schema version and write migrations when semantics change. Never reuse an ID for a different concept.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-band" id="tools">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="kicker">Free local utilities</p><h2>Inspect before you integrate</h2></div>
+          <p>These browser tools run locally on the supplied data. Use the Doctor to find structural faults, the Bridge to draft engine contracts, and the focused generators to test loot, shops, and world inputs.</p>
+        </div>
+        <div class="tools-strip">
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=rpg_data_doctor"><strong>RPG Game Data Doctor</strong><span>Audit JSON or CSV structure, IDs, fields, and references.</span></a>
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=rpg_data_bridge"><strong>RPG Data Bridge</strong><span>Draft TypeScript, Unity C#, and Godot 4 data contracts.</span></a>
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=loot_probability_calculator"><strong>Loot Drop Calculator</strong><span>Check exact drop probabilities and repeated-roll outcomes.</span></a>
+          <a class="tool-link" href="https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=shop_inventory_generator"><strong>Shop Inventory Generator</strong><span>Explore deterministic stock and merchant constraints.</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-band surface" id="modules">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="kicker">Production-ready inputs</p><h2>Six focused $3 data modules</h2></div>
+          <p>Use the guides with original, structured fantasy records. Each module is an independent purchase with JSON and CSV exports plus focused workflow material.</p>
+        </div>
+        <div class="catalog" aria-label="Six public standalone modules">
+          <article class="module-card"><span class="module-code">WF-01</span><div><strong>Item Catalog &amp; Economy</strong><small>500 stable item records</small></div><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_item_catalog">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-02</span><div><strong>Merchant &amp; Shop</strong><small>1,500 stock relationships</small></div><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_merchant_shop">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-03</span><div><strong>Crafting &amp; Recipe</strong><small>300 recipes and 900 inputs</small></div><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_crafting_recipes">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-04</span><div><strong>Enemy Loot &amp; Reward</strong><small>2,000 reward records</small></div><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_enemy_loot">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-05</span><div><strong>Quest, Contract &amp; Reward</strong><small>240 staged quests</small></div><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_quest_contracts">$3 module</a></article>
+          <article class="module-card"><span class="module-code">WF-06</span><div><strong>Encounter &amp; Threat</strong><small>180 three-phase encounters</small></div><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=integration_guides&amp;utm_medium=seo_guide&amp;utm_campaign=integration_guides_index&amp;utm_content=index_encounter_threats">$3 module</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-band">
+      <div class="section-inner disclosure"><strong>Content disclosure:</strong> These guides were produced with AI assistance and then structured for internal technical QA. Examples are original and intentionally small. Treat generated engine code as a reviewed starting point: compile it in your target engine, add project-specific tests, and verify behavior against the engine version you ship.</div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="site-footer-inner"><span>Loot Table Works &middot; Engine-neutral RPG data systems</span><a href="#guides">Browse the six guides</a></div></footer>
+</body>
+</html>
