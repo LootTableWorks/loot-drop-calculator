@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Audit RPG JSON and CSV locally for broken IDs, weights, economy, recipes, quests, rewards, and encounter transitions.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#141a1d">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="RPG Game Data Doctor">
+    <meta property="og:description" content="A private, local-only structural audit for RPG JSON and CSV data.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/">
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/assets/loot-table-works-profile-banner-1920x550.png">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="550">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/loot-table-works-avatar-512.png" type="image/png">
+    <title>RPG Game Data Doctor | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"RPG Game Data Doctor","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript; runs entirely in the browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"},"description":"Local JSON and CSV structural auditing for original RPG game data."}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../" aria-label="Loot Table Works tools">
+        <img class="brand-avatar" src="assets/loot-table-works-avatar-512.png" alt="">
+        <img class="brand-wordmark" src="assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works">
+      </a>
+      <div class="tool-identity">
+        <span>Local audit utility</span>
+        <strong>RPG Game Data Doctor</strong>
+      </div>
+      <div class="privacy-state" aria-label="Privacy status">
+        <span class="privacy-dot" aria-hidden="true"></span>
+        Local only
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="input-rail" aria-labelledby="input-title">
+        <div class="rail-heading">
+          <p>Source</p>
+          <h1 id="input-title">Audit game data</h1>
+          <span>JSON or CSV · 1 MB maximum</span>
+        </div>
+
+        <div class="source-tabs" role="group" aria-label="Input method">
+          <button class="selected" type="button" data-source-mode="paste" aria-pressed="true">Paste</button>
+          <button type="button" data-source-mode="file" aria-pressed="false">File</button>
+        </div>
+
+        <section id="paste-source" class="source-panel" aria-label="Paste data">
+          <label for="source-text">Data</label>
+          <textarea id="source-text" spellcheck="false" maxlength="1000000" placeholder='{"items": [{"id": "itm-001"}]}'></textarea>
+          <div class="input-meta">
+            <span id="byte-count">0 bytes</span>
+            <button class="text-button" id="load-sample" type="button">Load original sample</button>
+          </div>
+        </section>
+
+        <section id="file-source" class="source-panel file-panel" aria-label="Select data file" hidden>
+          <input id="source-file" type="file" accept=".json,.csv,application/json,text/csv">
+          <label class="file-picker" for="source-file">
+            <strong>Select JSON or CSV</strong>
+            <span>Files above 1 MB are rejected before reading.</span>
+          </label>
+          <p id="file-status">No file selected</p>
+          <button class="text-button sample-file-button" id="load-sample-file" type="button">Use original sample instead</button>
+        </section>
+
+        <label class="format-field" for="format-select">
+          <span>Format</span>
+          <select id="format-select">
+            <option value="auto">Auto-detect</option>
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+          </select>
+        </label>
+
+        <div class="rail-actions">
+          <button class="run-button" id="run-audit" type="button">Run audit</button>
+          <button class="reset-button" id="reset-audit" type="button">Reset</button>
+        </div>
+        <p class="privacy-copy"><strong>Your data stays in this tab.</strong> It is parsed as text, never uploaded, executed, or inserted as raw HTML.</p>
+      </aside>
+
+      <section class="audit-stage" aria-live="polite">
+        <div class="stage-heading">
+          <div>
+            <p class="eyebrow">Structural audit</p>
+            <h2 id="audit-title">Ready for a source file</h2>
+            <p id="audit-meta">Load the original sample or inspect your own JSON or CSV.</p>
+          </div>
+          <div class="report-actions">
+            <button id="copy-report" type="button" disabled>Copy report</button>
+            <button id="download-report" class="primary-action" type="button" disabled>Download report</button>
+          </div>
+        </div>
+
+        <section class="summary-band" id="summary-band" aria-label="Severity summary">
+          <div><span>Records</span><strong id="record-total">0</strong></div>
+          <div class="critical-summary"><span>Critical</span><strong id="critical-total">0</strong></div>
+          <div class="error-summary"><span>Errors</span><strong id="error-total">0</strong></div>
+          <div class="warning-summary"><span>Warnings</span><strong id="warning-total">0</strong></div>
+          <div><span>Findings</span><strong id="finding-total">0</strong></div>
+        </section>
+
+        <nav class="view-tabs" aria-label="Audit views">
+          <button class="active" type="button" data-view="findings" aria-current="page">Findings</button>
+          <button type="button" data-view="report">Audit report</button>
+        </nav>
+
+        <section id="findings-view" class="audit-view">
+          <div class="finding-toolbar">
+            <div class="severity-filter" id="severity-filter" role="group" aria-label="Filter by severity">
+              <button class="selected" type="button" data-severity="all" aria-pressed="true">All</button>
+              <button type="button" data-severity="critical" aria-pressed="false">Critical</button>
+              <button type="button" data-severity="error" aria-pressed="false">Errors</button>
+              <button type="button" data-severity="warning" aria-pressed="false">Warnings</button>
+            </div>
+            <label class="category-filter" for="category-select">
+              <span>Category</span>
+              <select id="category-select"><option value="all">All categories</option></select>
+            </label>
+            <label class="search-filter" for="finding-search">
+              <span>Search</span>
+              <input id="finding-search" type="search" placeholder="ID, field, or message">
+            </label>
+          </div>
+
+          <div class="empty-state" id="empty-state">
+            <img src="assets/loot-table-works-avatar-512.png" alt="">
+            <strong>No audit loaded</strong>
+            <span>Use the source controls to begin.</span>
+          </div>
+          <div class="findings-list" id="findings-list"></div>
+        </section>
+
+        <section id="report-view" class="audit-view report-view" hidden>
+          <pre id="report-output">Run an audit to generate a portable text report.</pre>
+        </section>
+
+        <section class="module-section" id="module-section" aria-labelledby="module-title" hidden>
+          <div class="module-heading">
+            <div>
+              <p class="eyebrow">Relevant repair foundations</p>
+              <h2 id="module-title">Modules matched to this audit</h2>
+            </div>
+            <span>$3 each · standalone</span>
+          </div>
+          <div class="module-grid" id="module-grid"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Loot Table Works</span>
+      <span>Focused structural checks, not a replacement for project-specific validation</span>
+      <span>No login · no analytics · no external runtime</span>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="sample-data.js"></script>
+    <script src="data-doctor-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

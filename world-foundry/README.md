@@ -4,7 +4,7 @@ Status: `approved_for_deployment`
 
 A dependency-free static learning and catalog hub for Loot Table Works / World Foundry. It provides:
 
-- one first-viewport index to the three public free utilities;
+- one first-viewport index to the four public free utilities;
 - a six-module standalone catalog with placement-specific campaign attribution;
 - substantive guides to dependency-closed world seeds and merchant economies;
 - canonical, Open Graph, X card, JSON-LD, sitemap, and crawl metadata;
@@ -28,4 +28,4 @@ node scripts/validate.js
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1
 ```
 
-The build writes only to `dist/` inside this project and creates `world-foundry-hub-static-site-v1.zip`. It does not deploy or publish.
+The build writes only to `dist/` inside this project and creates `world-foundry-hub-static-site-v1-1.zip`. It does not deploy or publish.

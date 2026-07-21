@@ -1,0 +1,60 @@
+{
+  "product_id": "rpg-data-doctor",
+  "version": "1.0.0",
+  "status": "approved_for_deployment",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": true,
+  "canonical_candidate": "https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/",
+  "runtime": "static_local_only",
+  "maximum_import_bytes": 1000000,
+  "live_standalone_destinations": 6,
+  "imported_data_uploaded": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1943,
+      "sha256": "60bbab9428ce400c2cbb936677ccb68509cfebb7cee2f0b534c5efb69f308e2b"
+    },
+    {
+      "path": "app.js",
+      "bytes": 14459,
+      "sha256": "036fdd80b4b1e199503404c5497cafdbfb02412d993cbbcc396aeedc1a5d001c"
+    },
+    {
+      "path": "assets/loot-table-works-avatar-512.png",
+      "bytes": 3757,
+      "sha256": "ce4d6db49f9b7914635ae9dd4d74f4ed104976f2f2f087ff16beed325d97388c"
+    },
+    {
+      "path": "assets/loot-table-works-profile-banner-1920x550.png",
+      "bytes": 1581070,
+      "sha256": "c02f619bf455c0a930a19ec9be4fcd822ff3af4d9ad49dc741cbb7b27aa1bdfb"
+    },
+    {
+      "path": "assets/loot-table-works-wordmark-dark.png",
+      "bytes": 19985,
+      "sha256": "352cbfaf050e932f9be0c048a88f0d1731750e65069a4c6d0d2bffe3cbd4f140"
+    },
+    {
+      "path": "data-doctor-core.js",
+      "bytes": 31487,
+      "sha256": "5d7295f34d5ccb1aa082e97ed0747ff8f339b0639f580aa456152c8fa594fc6a"
+    },
+    {
+      "path": "index.html",
+      "bytes": 8867,
+      "sha256": "07415032c52864658fab4386ae4019dd190a8e14f5d98cb0a5d19f11ae782f63"
+    },
+    {
+      "path": "sample-data.js",
+      "bytes": 2191,
+      "sha256": "4268c65fa35eb9b464ee6bbc12400516aefce0af3bb68ff6d20d888bfb450fa4"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 15071,
+      "sha256": "234cc975c4adf424d0ace6c5b61e4c516ddbeec06603d08265003e073f3f707b"
+    }
+  ]
+}
