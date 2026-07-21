@@ -6,7 +6,7 @@ RPG Game Data Doctor is a static, no-login utility for auditing common RPG JSON 
 
 ## Audit coverage
 
-- JSON and RFC-style CSV parsing with a strict 1,000,000-byte cap
+- JSON and RFC-style CSV parsing with a strict 5,000,000-byte cap
 - Common record and nested-array detection
 - Duplicate primary IDs and unresolved `*_id` / `*_ids` references
 - Invalid values and normalization drift in probability or reward-weight pools
@@ -20,7 +20,7 @@ The included sample is original Loot Table Works content created specifically to
 
 ## Conversion boundary
 
-Recommendations are generated only from finding categories present in the current audit. The catalog contains exactly six already-public `$3` Loot Table Works standalone modules. Each results card and report link uses `utm_source=rpg_data_doctor`, `utm_medium=free_tool`, and a module-specific placement value. No gated or draft destination is present.
+Recommendations are generated only from finding categories present in the current audit. The catalog contains exactly six already-public `$3` Loot Table Works standalone modules. Each results card and report link uses `utm_source=rpg_data_doctor`, `utm_medium=free_tool`, and a module-specific placement value. An attributed handoff routes audited data into RPG Data Bridge for engine-model generation. No gated or draft destination is present.
 
 ## Build and review
 

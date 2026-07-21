@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Preserve RPG stable IDs and relationships while bridging JSON or CSV into deterministic TypeScript, Unity C#, or Godot 4 starter code.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#151b1e">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="RPG Data Bridge">
+    <meta property="og:description" content="Preserve RPG stable IDs and relationships while generating TypeScript, Unity C#, or Godot 4 starter models locally.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/">
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/assets/loot-table-works-profile-banner-1920x550.png">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="550">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>RPG Data Bridge | Loot Table Works</title>
+    <link rel="icon" href="assets/loot-table-works-avatar-512.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"RPG Data Bridge","applicationCategory":"DeveloperApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript; runs entirely in the browser","url":"https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"},"description":"Local JSON and CSV schema mapping into deterministic TypeScript, Unity C#, and Godot 4 starter models."}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../" aria-label="Loot Table Works tools">
+        <img class="brand-avatar" src="assets/loot-table-works-avatar-512.png" alt="">
+        <img class="brand-wordmark" src="assets/loot-table-works-wordmark-dark.png" alt="Loot Table Works">
+      </a>
+      <div class="tool-title">
+        <span>Local integration utility</span>
+        <strong>RPG Data Bridge</strong>
+      </div>
+      <div class="local-state"><span aria-hidden="true"></span>Local only</div>
+    </header>
+
+    <main>
+      <section class="workbench" aria-labelledby="source-heading">
+        <aside class="source-panel">
+          <div class="panel-heading">
+            <p>Source</p>
+            <h1 id="source-heading">Import game data</h1>
+            <span>JSON or RFC-style CSV / 5,000,000 bytes</span>
+          </div>
+
+          <div class="source-mode" role="group" aria-label="Input method">
+            <button class="selected" type="button" data-source-mode="paste" aria-pressed="true">Paste</button>
+            <button type="button" data-source-mode="file" aria-pressed="false">File</button>
+          </div>
+
+          <section id="paste-panel" class="source-entry" aria-label="Paste source data">
+            <label for="source-text">Source data</label>
+            <textarea id="source-text" maxlength="5000000" spellcheck="false" placeholder='{"items":[{"item_id":"item-001"}]}'></textarea>
+            <div class="source-meta">
+              <span id="byte-count">0 / 5,000,000 bytes</span>
+              <button id="load-sample" class="quiet-button" type="button">Load original sample</button>
+            </div>
+          </section>
+
+          <section id="file-panel" class="source-entry file-entry" aria-label="Select source file" hidden>
+            <input id="source-file" type="file" accept=".json,.csv,application/json,text/csv">
+            <label class="file-picker" for="source-file">
+              <strong>Select JSON or CSV</strong>
+              <span>Oversized files are rejected before reading.</span>
+            </label>
+            <p id="file-status">No file selected</p>
+            <button id="load-file-sample" class="quiet-button" type="button">Use original sample</button>
+          </section>
+
+          <label class="format-field" for="format-select">
+            <span>Source format</span>
+            <select id="format-select">
+              <option value="auto">Auto-detect</option>
+              <option value="json">JSON</option>
+              <option value="csv">CSV</option>
+            </select>
+          </label>
+
+          <div class="privacy-statement">
+            <strong>Private by design</strong>
+            <p>Imported data stays in this tab. It is never executed, uploaded, logged, or saved.</p>
+          </div>
+        </aside>
+
+        <section class="bridge-stage" aria-live="polite">
+          <div class="target-bar">
+            <div>
+              <p class="eyebrow">Target</p>
+              <h2>Preserve IDs across engine targets</h2>
+            </div>
+            <div class="target-control" role="group" aria-label="Code target">
+              <button class="selected" type="button" data-target="typescript" aria-pressed="true"><span>TS</span>TypeScript</button>
+              <button type="button" data-target="unity" aria-pressed="false"><span>C#</span>Unity</button>
+              <button type="button" data-target="godot" aria-pressed="false"><span>Gd</span>Godot 4</button>
+            </div>
+            <button id="generate-code" class="generate-button" type="button">Generate code</button>
+          </div>
+
+          <section class="schema-band" aria-labelledby="schema-heading">
+            <div class="schema-title">
+              <div>
+                <p class="eyebrow">Schema</p>
+                <h2 id="schema-heading">No source analyzed</h2>
+              </div>
+              <span id="schema-format">Waiting</span>
+            </div>
+            <div id="schema-stats" class="schema-stats" aria-label="Schema statistics">
+              <div><span>Collections</span><strong>0</strong></div>
+              <div><span>Records</span><strong>0</strong></div>
+              <div><span>Stable IDs</span><strong>0</strong></div>
+              <div><span>Relationships</span><strong>0</strong></div>
+              <div><span>Warnings</span><strong>0</strong></div>
+            </div>
+            <div class="schema-detail-grid">
+              <section aria-labelledby="collections-title">
+                <h3 id="collections-title">Collections</h3>
+                <div id="collection-list" class="collection-list"><p class="empty-copy">Collections appear after generation.</p></div>
+              </section>
+              <section aria-labelledby="warnings-title">
+                <h3 id="warnings-title">Integration warnings</h3>
+                <div id="warning-list" class="warning-list"><p class="empty-copy">Warnings appear after generation.</p></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="code-panel" aria-labelledby="code-heading">
+            <div class="code-toolbar">
+              <div>
+                <p class="eyebrow">Generated output</p>
+                <h2 id="code-heading">TypeScript interfaces</h2>
+              </div>
+              <div class="code-actions">
+                <button id="copy-code" type="button" disabled>Copy</button>
+                <button id="download-code" type="button" disabled>Download</button>
+                <button id="download-mapping" type="button" disabled>Mapping</button>
+              </div>
+            </div>
+            <pre id="code-output" tabindex="0">Load a source dataset and generate a target.</pre>
+          </section>
+        </section>
+      </section>
+
+      <section class="doctor-band" aria-labelledby="doctor-title">
+        <div>
+          <p class="eyebrow">Preflight</p>
+          <h2 id="doctor-title">Check record integrity before integration</h2>
+          <p>Run the same JSON or CSV through RPG Game Data Doctor first, then preserve its stable IDs and relationship fields across TypeScript, Unity, and Godot.</p>
+        </div>
+        <a href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/?utm_source=rpg_data_bridge&amp;utm_medium=free_tool&amp;utm_campaign=integration_code&amp;utm_content=doctor_handoff">Open RPG Data Doctor</a>
+      </section>
+
+      <section class="module-section" aria-labelledby="modules-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Connected data foundations</p>
+            <h2 id="modules-title">Build from ready-to-integrate RPG records</h2>
+          </div>
+          <span>$3 each / standalone</span>
+        </div>
+        <div id="module-grid" class="module-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Loot Table Works</span>
+      <span>No login / no analytics / no external runtime</span>
+      <span>Starter code requires project-specific review</span>
+    </footer>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="sample-data.js"></script>
+    <script src="data-bridge-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

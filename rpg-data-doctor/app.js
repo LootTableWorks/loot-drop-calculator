@@ -81,7 +81,7 @@
 
   function updateByteCount() {
     const bytes = core.byteLength(elements.sourceText.value);
-    elements.byteCount.textContent = `${formatBytes(bytes)} / 1 MB`;
+    elements.byteCount.textContent = `${formatBytes(bytes)} / 5 MB`;
     elements.byteCount.classList.toggle("over-limit", bytes > core.MAX_FILE_BYTES);
   }
 
@@ -213,7 +213,7 @@
       state.fileName = file.name;
       elements.fileStatus.textContent = `${file.name} · rejected (${formatBytes(file.size)})`;
       renderResult(core.auditText("", { fileName: file.name, format: elements.format.value }));
-      showToast("File rejected: 1 MB limit");
+      showToast("File rejected: 5 MB limit");
       return;
     }
     const extension = file.name.toLowerCase().split(".").pop();

@@ -1,0 +1,74 @@
+{
+  "product_id": "rpg-data-bridge",
+  "version": "1.0.0",
+  "status": "approved_for_public_release",
+  "quality_expectation": "AAA",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "release_authority": "delegated_internal_aaa_qa",
+  "public_release_requires_review": false,
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/",
+  "runtime": "static_local_only",
+  "maximum_import_bytes": 5000000,
+  "target_count": 3,
+  "paired_preflight_tool": "RPG Game Data Doctor",
+  "deterministic_mapping_download": true,
+  "imported_record_values_in_generated_artifacts": false,
+  "public_standalone_destinations": 6,
+  "bundle_destinations": 0,
+  "imported_data_uploaded": false,
+  "persistent_storage_used": false,
+  "deterministic_archive_timestamp_utc": "2020-01-01T00:00:00Z",
+  "files": [
+    {
+      "path": "app.js",
+      "bytes": 11079,
+      "sha256": "f3d362511aa9dc3404dacc0edddf19ae8123088d954dbaa4d237e1d06ee81102"
+    },
+    {
+      "path": "assets/loot-table-works-avatar-512.png",
+      "bytes": 3757,
+      "sha256": "ce4d6db49f9b7914635ae9dd4d74f4ed104976f2f2f087ff16beed325d97388c"
+    },
+    {
+      "path": "assets/loot-table-works-profile-banner-1920x550.png",
+      "bytes": 1581070,
+      "sha256": "c02f619bf455c0a930a19ec9be4fcd822ff3af4d9ad49dc741cbb7b27aa1bdfb"
+    },
+    {
+      "path": "assets/loot-table-works-wordmark-dark.png",
+      "bytes": 19985,
+      "sha256": "352cbfaf050e932f9be0c048a88f0d1731750e65069a4c6d0d2bffe3cbd4f140"
+    },
+    {
+      "path": "data-bridge-core.js",
+      "bytes": 33623,
+      "sha256": "884b8cfb3898840ab8570f52b4d82b344c0e5065e74236aadfe580933e4bb290"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9411,
+      "sha256": "e5596550537397ca37dd01b5f9c7f016c69a4924b9320e692f5309f9f5f2d3e6"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2989,
+      "sha256": "f9c7b26b8c98daaec1ae4cf0e8dd45160d6132bf95a2d694c20fee719174ef93"
+    },
+    {
+      "path": "release.json",
+      "bytes": 859,
+      "sha256": "d2fbc1a232519ef23185b488b492587f10f59888cf352b8fc934698d180b1268"
+    },
+    {
+      "path": "sample-data.js",
+      "bytes": 2545,
+      "sha256": "b8ee48b8b4f85467ec36ac43a9a2c0075a90f60a7d383f910ce171e53f5409d6"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 14910,
+      "sha256": "d20a20513bc827d19cac7cd39a77e2b8fcafe7c9e048bede030fd2ee8ec8ebe5"
+    }
+  ]
+}

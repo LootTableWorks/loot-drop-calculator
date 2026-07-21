@@ -7,19 +7,19 @@
   "public_release_requires_review": true,
   "canonical_candidate": "https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/",
   "runtime": "static_local_only",
-  "maximum_import_bytes": 1000000,
+  "maximum_import_bytes": 5000000,
   "live_standalone_destinations": 6,
   "imported_data_uploaded": false,
   "files": [
     {
       "path": "README.md",
-      "bytes": 1943,
-      "sha256": "60bbab9428ce400c2cbb936677ccb68509cfebb7cee2f0b534c5efb69f308e2b"
+      "bytes": 2035,
+      "sha256": "787ca050535e4b5af43afe576d6259f683f3d4e7582d29fad4d0316efba8a2b3"
     },
     {
       "path": "app.js",
       "bytes": 14459,
-      "sha256": "036fdd80b4b1e199503404c5497cafdbfb02412d993cbbcc396aeedc1a5d001c"
+      "sha256": "5b5d83bd47fcec0d95f509b99c81bd9ba2272a1e628ab57f554061460ec8f858"
     },
     {
       "path": "assets/loot-table-works-avatar-512.png",
@@ -39,12 +39,12 @@
     {
       "path": "data-doctor-core.js",
       "bytes": 31487,
-      "sha256": "5d7295f34d5ccb1aa082e97ed0747ff8f339b0639f580aa456152c8fa594fc6a"
+      "sha256": "e7cf1fdce01f709c533433506848400f276b8176495f20a419e80513327ecd7d"
     },
     {
       "path": "index.html",
-      "bytes": 8867,
-      "sha256": "07415032c52864658fab4386ae4019dd190a8e14f5d98cb0a5d19f11ae782f63"
+      "bytes": 9133,
+      "sha256": "637555772bff79aa4c4588dde46c7259ce987df35bc76da2bba0ff127730bb0b"
     },
     {
       "path": "sample-data.js",
@@ -53,8 +53,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 15071,
-      "sha256": "234cc975c4adf424d0ace6c5b61e4c516ddbeec06603d08265003e073f3f707b"
+      "bytes": 15353,
+      "sha256": "d01b0de5f63594362042c50c685adafe4b1f478ad649d6b4a99fc7fdd9afab55"
     }
   ]
 }

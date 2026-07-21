@@ -1,0 +1,27 @@
+{
+  "product_id": "rpg-data-bridge",
+  "version": "1.0.0",
+  "status": "approved_for_public_release",
+  "quality_expectation": "AAA",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "release_authority": "delegated_internal_aaa_qa",
+  "public_release_requires_review": false,
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/",
+  "runtime": "static_local_only",
+  "maximum_import_bytes": 5000000,
+  "paired_preflight_tool": "RPG Game Data Doctor",
+  "deterministic_mapping_download": true,
+  "imported_record_values_in_generated_artifacts": false,
+  "targets": [
+    "typescript",
+    "unity",
+    "godot"
+  ],
+  "public_standalone_destinations": 6,
+  "bundle_destinations": 0,
+  "imported_data_uploaded": false,
+  "persistent_storage_used": false,
+  "analytics_used": false,
+  "paid_data_used": false
+}

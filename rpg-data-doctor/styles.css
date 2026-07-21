@@ -225,8 +225,11 @@ select, input[type="search"] {
 }
 
 .rail-actions { display: grid; grid-template-columns: minmax(0, 1fr) 76px; gap: 7px; margin-top: 14px; }
-.run-button, .reset-button, .report-actions button, .primary-action {
+.run-button, .reset-button, .report-actions button, .report-actions a, .primary-action {
   min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 12px;
   border-radius: 5px;
   font-weight: 800;
@@ -235,6 +238,8 @@ select, input[type="search"] {
 .run-button, .primary-action { border: 1px solid var(--teal); color: #fff; background: var(--teal); }
 .run-button:hover, .primary-action:hover { background: var(--teal-dark); }
 .reset-button, .report-actions button:not(.primary-action) { border: 1px solid #afbdbe; color: var(--ink); background: #fff; }
+.bridge-action { border: 1px solid var(--copper); color: #fff; background: var(--copper); text-decoration: none; font-size: 11px; }
+.bridge-action:hover { background: var(--copper-dark); }
 .report-actions button:disabled { color: #8a9699; background: #edf0ef; cursor: not-allowed; }
 
 .privacy-copy {

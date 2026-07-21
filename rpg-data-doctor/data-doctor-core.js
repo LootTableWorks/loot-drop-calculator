@@ -5,7 +5,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function createRpgDataDoctor() {
   "use strict";
 
-  const MAX_FILE_BYTES = 1_000_000;
+  const MAX_FILE_BYTES = 5_000_000;
   const SEVERITY_ORDER = Object.freeze({ critical: 0, error: 1, warning: 2, info: 3 });
   const PRODUCTS = Object.freeze([
     Object.freeze({

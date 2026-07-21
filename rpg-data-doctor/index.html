@@ -43,7 +43,7 @@
         <div class="rail-heading">
           <p>Source</p>
           <h1 id="input-title">Audit game data</h1>
-          <span>JSON or CSV · 1 MB maximum</span>
+          <span>JSON or CSV · 5 MB maximum</span>
         </div>
 
         <div class="source-tabs" role="group" aria-label="Input method">
@@ -53,7 +53,7 @@
 
         <section id="paste-source" class="source-panel" aria-label="Paste data">
           <label for="source-text">Data</label>
-          <textarea id="source-text" spellcheck="false" maxlength="1000000" placeholder='{"items": [{"id": "itm-001"}]}'></textarea>
+          <textarea id="source-text" spellcheck="false" maxlength="5000000" placeholder='{"items": [{"id": "itm-001"}]}'></textarea>
           <div class="input-meta">
             <span id="byte-count">0 bytes</span>
             <button class="text-button" id="load-sample" type="button">Load original sample</button>
@@ -64,7 +64,7 @@
           <input id="source-file" type="file" accept=".json,.csv,application/json,text/csv">
           <label class="file-picker" for="source-file">
             <strong>Select JSON or CSV</strong>
-            <span>Files above 1 MB are rejected before reading.</span>
+            <span>Files above 5 MB are rejected before reading.</span>
           </label>
           <p id="file-status">No file selected</p>
           <button class="text-button sample-file-button" id="load-sample-file" type="button">Use original sample instead</button>
@@ -94,6 +94,7 @@
             <p id="audit-meta">Load the original sample or inspect your own JSON or CSV.</p>
           </div>
           <div class="report-actions">
+            <a class="bridge-action" href="https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/?utm_source=rpg_data_doctor&amp;utm_medium=free_tool&amp;utm_campaign=integration_code&amp;utm_content=doctor_bridge_handoff">Generate engine models</a>
             <button id="copy-report" type="button" disabled>Copy report</button>
             <button id="download-report" class="primary-action" type="button" disabled>Download report</button>
           </div>
