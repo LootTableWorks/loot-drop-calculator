@@ -1,8 +1,8 @@
 {
   "product_id": "shop-inventory-generator",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0",
   "public_release_requires_review": true,
-  "deployment_allowed": false,
+  "deployment_allowed": true,
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/",
   "paid_destination": "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit",
   "source_merchants": 15,
@@ -10,8 +10,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 962,
-      "sha256": "40a14153b176b344c94915d64ced416b2a9e89cc284d1fc4c7130969e4f1895d"
+      "bytes": 943,
+      "sha256": "fa9b2128e40de40dec5ff6e4c03518fcf464afffd48c044d18df0f8aa676afb8"
     },
     {
       "path": "USAGE-TERMS.md",

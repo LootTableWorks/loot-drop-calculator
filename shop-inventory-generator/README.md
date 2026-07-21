@@ -1,6 +1,6 @@
 # Fantasy Shop Inventory Generator
 
-Private release candidate for a free, deterministic shop inventory generator that demonstrates the validated Merchant & Shop Kit data model.
+Public v1 release of a free, deterministic shop inventory generator that demonstrates the validated Merchant & Shop Kit data model.
 
 ## Product Boundary
 
@@ -15,4 +15,4 @@ Private release candidate for a free, deterministic shop inventory generator tha
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1
 ```
 
-The build stages the review candidate at `../dist/github-pages-root/shop-inventory-generator/` and creates `../dist/shop-inventory-generator-static-site-v1-rc1.zip`. Public deployment remains disabled until review.
+The build stages the public release at `../dist/github-pages-root/shop-inventory-generator/` and creates `../dist/shop-inventory-generator-static-site-v1.zip`. Public deployment was approved after review.
