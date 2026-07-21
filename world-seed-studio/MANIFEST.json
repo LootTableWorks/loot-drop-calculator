@@ -1,0 +1,58 @@
+{
+  "product_id": "world-seed-studio",
+  "version": "2.0.0",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": true,
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/world-seed-studio/",
+  "source_entities": 74,
+  "source_relationships": 199,
+  "live_standalone_destinations": 6,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1257,
+      "sha256": "f1c3fab03fb93ff5228e1190f5a228a5d7985b9b2ceb9d7940b874b87cf7ee9b"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 18078,
+      "sha256": "6c5f8d2714c62bce3830de6ea4e72f75cc9d9f83497ad4556c4ecc3f579e82de"
+    },
+    {
+      "path": "assets/saltglass-coast-map-v1.png",
+      "bytes": 3700759,
+      "sha256": "88420bf02c1b327c3e1bbab3f6cbe38c98d64522c329d9ad7d80f9ff064943a4"
+    },
+    {
+      "path": "assets/world-seed-studio-preview-v2.png",
+      "bytes": 823890,
+      "sha256": "0217f132a45f8255998f9ea489bc560e2d17a3be45f7d09048200546e861f659"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9086,
+      "sha256": "968b2f1d05a8d7d46eab69daeea5e87b37f537da8dcb0c070954e4e1fccda4cb"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 17159,
+      "sha256": "9cf2207257d84260fc167c65a2dd7437fe4d0c71d28395cac12e26fe12804d4f"
+    },
+    {
+      "path": "world-data.js",
+      "bytes": 218294,
+      "sha256": "41ebf7a5c84a2e0fa80b828a5bddd4fe9c193ebe3f368fce34b96845f88a5d59"
+    },
+    {
+      "path": "world-seed-core.js",
+      "bytes": 14361,
+      "sha256": "0f1ffb8cbfbbb97fd45e5008fff3afe154868f18e464e76e823b9678c946c368"
+    }
+  ]
+}

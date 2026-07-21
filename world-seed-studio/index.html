@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate a deterministic, dependency-closed coastal fantasy world seed with linked items, merchants, recipes, quests, loot, encounters, and JSON export.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#20282c">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/world-seed-studio/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="World Seed Studio">
+    <meta property="og:description" content="A free, no-login fantasy world seed generator for game developers and game masters.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/world-seed-studio/">
+    <meta property="og:image" content="assets/world-seed-studio-preview-v2.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/saltglass-coast-map-v1.png" type="image/png">
+    <title>Free Fantasy World Seed Generator | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"World Seed Studio","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../" aria-label="Loot Table Works loot probability calculator">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>World Seed Studio</small></span>
+      </a>
+      <nav class="tool-nav" aria-label="Free tools">
+        <a href="../">Loot Odds</a>
+        <a href="../shop-inventory-generator/">Shop Generator</a>
+        <a class="active" href="./" aria-current="page">World Seed</a>
+      </nav>
+      <a class="header-cta" href="#module-recommendations">Browse $3 modules</a>
+    </header>
+
+    <main class="workspace">
+      <aside class="control-rail" aria-label="World controls">
+        <div class="control-heading">
+          <p>Free coastal dataset</p>
+          <h1>World Seed Studio</h1>
+        </div>
+
+        <label class="field" for="seed">
+          <span>World seed</span>
+          <div class="seed-row">
+            <input id="seed" name="seed" value="saltglass-31" maxlength="64" autocomplete="off">
+            <button class="icon-button" id="random-seed" type="button" title="Generate a new seed" aria-label="Generate a new seed">#</button>
+          </div>
+        </label>
+
+        <fieldset class="segmented-field">
+          <legend>Workflow preset</legend>
+          <div class="preset-segmented" id="preset-control">
+            <button type="button" data-preset="full_world">Full world</button>
+            <button type="button" data-preset="town_economy">Town economy</button>
+            <button type="button" data-preset="quest_arc">Quest arc</button>
+            <button type="button" data-preset="encounter_loop">Encounter loop</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>View</legend>
+          <div class="segmented" id="audience-control">
+            <button type="button" data-audience="developer" class="selected">Developer</button>
+            <button type="button" data-audience="gm">Game Master</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>Scale</legend>
+          <div class="segmented three" id="scale-control">
+            <button type="button" data-scale="outpost">Outpost</button>
+            <button type="button" data-scale="district" class="selected">District</button>
+            <button type="button" data-scale="region">Region</button>
+          </div>
+        </fieldset>
+
+        <label class="field" for="tier">
+          <span>Maximum tier <output id="tier-output" for="tier">5</output></span>
+          <input id="tier" type="range" min="1" max="5" step="1" value="5">
+        </label>
+
+        <fieldset class="module-field">
+          <legend>Requested systems</legend>
+          <div id="module-controls" class="module-controls"></div>
+        </fieldset>
+
+        <button class="generate-button" id="generate" type="button">Generate world</button>
+        <p class="closure-note"><strong id="source-count">74</strong> source entities. Dependencies resolve automatically.</p>
+      </aside>
+
+      <section class="world-stage">
+        <div class="world-title-row">
+          <div>
+            <p class="status-line"><span id="validity-dot"></span><span id="validity">Validated</span></p>
+            <h2 id="world-title">Saltwake Coast</h2>
+            <p id="world-meta"></p>
+          </div>
+          <div class="world-actions">
+            <button class="secondary-button" id="copy-link" type="button">Copy link</button>
+            <button class="secondary-button" id="copy-brief" type="button">Copy brief</button>
+            <button class="secondary-button" id="copy-json" type="button">Copy JSON</button>
+            <button class="secondary-button" id="download-csv" type="button">Download CSV</button>
+            <button class="primary-button" id="download-json" type="button">Download JSON</button>
+          </div>
+        </div>
+
+        <section class="stats-band" id="stats" aria-label="Generated record counts"></section>
+
+        <section class="quick-offer" id="quick-offer" aria-label="Best matching standalone module">
+          <div>
+            <span>Best match for this seed</span>
+            <strong id="quick-offer-title">Loading recommendation</strong>
+            <small id="quick-offer-proof"></small>
+          </div>
+          <a id="quick-offer-link" href="#module-recommendations">View $3 pack</a>
+        </section>
+
+        <div class="map-and-inspector">
+          <figure class="world-map" aria-label="Saltglass Coast world map">
+            <img src="assets/saltglass-coast-map-v1.png" alt="Illustrated map of Saltglass Coast with islands, settlements, routes, and coastal waters.">
+            <div class="map-markers" id="map-markers"></div>
+            <figcaption><span id="map-caption">District seed</span><strong id="map-closure">0 missing references</strong></figcaption>
+          </figure>
+
+          <aside class="record-inspector" id="record-inspector" aria-live="polite">
+            <p class="inspector-type" id="inspector-type">Recommended start</p>
+            <h3 id="inspector-title">Generating...</h3>
+            <p id="inspector-description"></p>
+            <dl id="inspector-fields"></dl>
+          </aside>
+        </div>
+
+        <nav class="result-tabs" aria-label="World output views">
+          <button class="active" type="button" data-tab="brief">World brief</button>
+          <button type="button" data-tab="records">Records</button>
+          <button type="button" data-tab="relationships">Relationships</button>
+          <button type="button" data-tab="json">JSON</button>
+        </nav>
+
+        <section class="result-panel" id="brief-panel"></section>
+        <section class="result-panel" id="records-panel" hidden></section>
+        <section class="result-panel" id="relationships-panel" hidden></section>
+        <section class="result-panel json-panel" id="json-panel" hidden><pre id="json-output"></pre></section>
+
+        <section class="module-marketplace" id="module-recommendations" aria-labelledby="module-marketplace-title">
+          <div class="marketplace-heading">
+            <div>
+              <p class="section-label">Continue this build</p>
+              <h2 id="module-marketplace-title">Production-ready data for this world seed</h2>
+              <p id="recommendation-summary">Recommendations update with the systems selected above.</p>
+            </div>
+            <strong class="module-price">$3 per module</strong>
+          </div>
+          <div class="recommendation-grid" id="recommendation-grid" aria-label="Recommended modules"></div>
+          <div class="catalog-heading">
+            <h3>All standalone modules</h3>
+            <span>Original, system-neutral, commercial-use data</span>
+          </div>
+          <div class="module-catalog" id="module-catalog" aria-label="All standalone modules"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Loot Table Works</span>
+      <span>System-neutral original fantasy data</span>
+      <span>No login, analytics, or external runtime</span>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="world-data.js"></script>
+    <script src="world-seed-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
