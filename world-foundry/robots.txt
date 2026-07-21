@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /loot-drop-calculator/world-foundry/
+
+Sitemap: https://loottableworks.github.io/loot-drop-calculator/world-foundry/sitemap.xml

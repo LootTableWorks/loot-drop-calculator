@@ -48,6 +48,32 @@ body {
   font-weight: 700;
 }
 
+.tool-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 0 18px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.tool-switch a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 4px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tool-switch a.active {
+  color: #fff;
+  background: var(--accent);
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--warm);
@@ -226,6 +252,12 @@ h2 {
   font-size: 13px;
 }
 
+.site-footer a {
+  color: var(--accent-dark);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
 @media (max-width: 760px) {
   .controls,
   .result-grid,
@@ -239,5 +271,10 @@ h2 {
 
   h1 {
     font-size: 28px;
+  }
+
+  .tool-switch {
+    display: flex;
+    flex-wrap: wrap;
   }
 }
