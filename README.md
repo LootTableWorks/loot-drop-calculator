@@ -17,6 +17,7 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 | [World Seed Studio](https://loottableworks.github.io/loot-drop-calculator/world-seed-studio/) | Assemble dependency-closed regions, economies, quest arcs, and encounter loops. |
 | [RPG Game Data Doctor](https://loottableworks.github.io/loot-drop-calculator/rpg-data-doctor/) | Audit JSON and CSV for duplicate IDs, missing references, broken weights, economy loops, quest gaps, and encounter transitions. |
 | [RPG Data Bridge](https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/) | Convert inspected JSON or CSV schemas into Unity C#, Godot 4 GDScript, and TypeScript starter models. |
+| [One-Shot Forge](https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/) | Generate a deterministic five-scene adventure, scaled opposition, fail-forward clues, and a ready-to-play pregenerated party. |
 
 All tools run in the browser without an account. Imported data stays in the active tab and is not uploaded, analyzed remotely, or written to persistent browser storage.
 

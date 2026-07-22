@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate a complete, deterministic fantasy one-shot with a five-scene run sheet, clues, countdown, scaled opposition, pregenerated characters, and Markdown or JSON export.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#20272a">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="One-Shot Forge | Free Fantasy Adventure Generator">
+    <meta property="og:description" content="A complete system-neutral one-shot, timed run sheet, fail-forward clues, and ready-to-play party from one reproducible seed.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/">
+    <meta property="og:image" content="assets/one-shot-forge-coastal-map-v1.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/one-shot-forge-coastal-map-v1.jpg" type="image/jpeg">
+    <title>Free One-Shot Campaign Generator | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"One-Shot Forge","applicationCategory":"GameApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../" aria-label="Loot Table Works free RPG tools">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>One-Shot Forge</small></span>
+      </a>
+      <nav class="tool-nav" aria-label="Free tools">
+        <a href="../">Loot Odds</a>
+        <a href="../shop-inventory-generator/">Shops</a>
+        <a href="../world-seed-studio/">World Seed</a>
+        <a class="active" href="./" aria-current="page">One-Shot</a>
+        <a href="../world-foundry/">Hub</a>
+      </nav>
+      <a class="header-cta" href="#module-marketplace">Expand the data</a>
+    </header>
+
+    <main class="workspace">
+      <aside class="control-rail" aria-label="Adventure controls">
+        <div class="control-heading">
+          <p>Session-ready generator</p>
+          <h1>One-Shot Forge</h1>
+        </div>
+
+        <div class="field">
+          <label for="seed">Adventure seed</label>
+          <div class="seed-row">
+            <input id="seed" name="seed" value="beacon-47" maxlength="64" autocomplete="off">
+            <button class="icon-button" id="random-seed" type="button" title="Create a new seed">New</button>
+          </div>
+        </div>
+
+        <fieldset class="segmented-field">
+          <legend>Tone</legend>
+          <div class="segmented three" id="tone-control">
+            <button type="button" data-tone="heroic" class="selected">Heroic</button>
+            <button type="button" data-tone="mystery">Mystery</button>
+            <button type="button" data-tone="peril">Peril</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>Run time</legend>
+          <div class="segmented three" id="duration-control">
+            <button type="button" data-duration="120">2 hours</button>
+            <button type="button" data-duration="180" class="selected">3 hours</button>
+            <button type="button" data-duration="240">4 hours</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>Threat</legend>
+          <div class="segmented three" id="threat-control">
+            <button type="button" data-threat="forgiving">Forgiving</button>
+            <button type="button" data-threat="standard" class="selected">Standard</button>
+            <button type="button" data-threat="dangerous">Dangerous</button>
+          </div>
+        </fieldset>
+
+        <label class="field" for="party-size">
+          <span>Pregenerated party <output id="party-size-output" for="party-size">4</output></span>
+          <input id="party-size" type="range" min="3" max="6" step="1" value="4">
+        </label>
+
+        <label class="field" for="maximum-tier">
+          <span>Maximum tier <output id="tier-output" for="maximum-tier">3</output></span>
+          <input id="maximum-tier" type="range" min="1" max="5" step="1" value="3">
+        </label>
+
+        <button class="generate-button" id="generate" type="button">Forge one-shot</button>
+        <dl class="integrity-ledger">
+          <div><dt>Runtime</dt><dd>Local</dd></div>
+          <div><dt>Source graph</dt><dd>74 / 199</dd></div>
+          <div><dt>Unresolved</dt><dd id="rail-missing">0</dd></div>
+        </dl>
+      </aside>
+
+      <section class="adventure-stage">
+        <div class="adventure-title-row">
+          <div>
+            <p class="status-line"><span id="validity-dot"></span><span id="validity">Validated packet</span></p>
+            <h2 id="adventure-title">Preparing the contract</h2>
+            <p id="adventure-meta"></p>
+          </div>
+          <div class="adventure-actions">
+            <button class="secondary-button" id="copy-link" type="button">Copy link</button>
+            <button class="secondary-button" id="copy-markdown" type="button">Copy Markdown</button>
+            <button class="secondary-button" id="print-packet" type="button">Print</button>
+            <button class="primary-button" id="download-json" type="button">Download JSON</button>
+          </div>
+        </div>
+
+        <section class="stats-band" aria-label="Generated packet counts">
+          <div class="stat"><strong id="stat-minutes">180</strong><span>Minutes</span></div>
+          <div class="stat"><strong id="stat-scenes">5</strong><span>Scenes</span></div>
+          <div class="stat"><strong id="stat-characters">4</strong><span>Pregens</span></div>
+          <div class="stat"><strong id="stat-clues">4</strong><span>Clues</span></div>
+          <div class="stat"><strong id="stat-references">0</strong><span>References</span></div>
+        </section>
+
+        <section class="adventure-overview">
+          <figure class="adventure-map">
+            <img src="assets/one-shot-forge-coastal-map-v1.jpg" alt="Illustrated coastal adventure map showing a beacon island, harbor route, marsh, encounter points, and four party markers.">
+            <figcaption><span id="map-label">Gullwatch route</span><strong id="map-proof">0 missing references</strong></figcaption>
+          </figure>
+          <div class="mission-brief">
+            <p class="section-label">Mission brief</p>
+            <h3 id="logline-title">Contract objective</h3>
+            <p id="logline"></p>
+            <div class="brief-facts">
+              <div><span>Countdown</span><strong id="countdown-label"></strong></div>
+              <div><span>Final pressure</span><strong id="countdown-final"></strong></div>
+              <div><span>Reward</span><strong id="reward-summary"></strong></div>
+              <div><span>Content notes</span><strong id="content-notes"></strong></div>
+            </div>
+          </div>
+        </section>
+
+        <nav class="result-tabs" aria-label="Adventure packet views">
+          <button class="active" type="button" data-tab="run-sheet">Run sheet</button>
+          <button type="button" data-tab="scenes">Scene detail</button>
+          <button type="button" data-tab="party">Pregenerated party</button>
+          <button type="button" data-tab="references">Reference ledger</button>
+          <button type="button" data-tab="json">JSON</button>
+        </nav>
+
+        <section class="result-panel" id="run-sheet-panel"></section>
+        <section class="result-panel" id="scenes-panel" hidden></section>
+        <section class="result-panel" id="party-panel" hidden></section>
+        <section class="result-panel" id="references-panel" hidden></section>
+        <section class="result-panel json-panel" id="json-panel" hidden><pre id="json-output"></pre></section>
+
+        <section class="module-marketplace" id="module-marketplace" aria-labelledby="module-title">
+          <div class="marketplace-heading">
+            <div>
+              <p class="section-label">Deepen this one-shot</p>
+              <h2 id="module-title">Production data behind the packet</h2>
+              <p>Standalone modules expand the same quest, encounter, loot, item, merchant, and recipe contracts used above.</p>
+            </div>
+            <strong class="module-price">$3 each</strong>
+          </div>
+          <div class="recommendation-grid" id="recommendation-grid"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Loot Table Works</span>
+      <span>Original system-neutral fantasy data</span>
+      <span>No login, analytics, or external runtime</span>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="one-shot-data.js"></script>
+    <script src="one-shot-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

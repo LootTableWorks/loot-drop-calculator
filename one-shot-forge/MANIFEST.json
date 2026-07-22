@@ -1,0 +1,60 @@
+{
+  "product_id": "one-shot-forge",
+  "version": "1.0.0",
+  "status": "internal_aaa_release_candidate",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": false,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/",
+  "source_entities": 74,
+  "source_relationships": 199,
+  "scenes_per_packet": 5,
+  "pregenerated_characters_min": 3,
+  "pregenerated_characters_max": 6,
+  "live_standalone_destinations": 6,
+  "bundle_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1033,
+      "sha256": "e52357e3b9069edbd0f35eac02fa127a1b891fcbf06b4a7117618e6fe6296c73"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 14624,
+      "sha256": "b33a9ec9c78b39a259dfd64eb10aaad946a6550185d70458040a46ae158cf3c9"
+    },
+    {
+      "path": "assets/one-shot-forge-coastal-map-v1.jpg",
+      "bytes": 508741,
+      "sha256": "9d3f5ed81f918b5e5fbf5d3b6316ddf522465e2422d05f1cc0b9e5179bef1b7c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9431,
+      "sha256": "961e2461627355b98b662d645275adcdae742f1065e4979417ef49edb5faeb4c"
+    },
+    {
+      "path": "one-shot-core.js",
+      "bytes": 21443,
+      "sha256": "9090dd7fac0353861cdf775ab6e971afc26dd112486bbf844c7bce81f9272c41"
+    },
+    {
+      "path": "one-shot-data.js",
+      "bytes": 218292,
+      "sha256": "047e0272d1e222de22af36be524dec6729bdb8f5e1e0b73db1f3fced217089a4"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 16888,
+      "sha256": "9feae11bb79f6a12bf9b0d05ebf10b8beacbb2a2ab6c4121b4278788544cb59c"
+    }
+  ]
+}
