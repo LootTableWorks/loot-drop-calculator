@@ -4,6 +4,8 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 
 [Open the World Foundry hub](https://loottableworks.github.io/loot-drop-calculator/world-foundry/)
 
+[Download Gullwatch Beacon, the complete free Play Tonight Kit](https://loottableworks.github.io/loot-drop-calculator/gullwatch-beacon/)
+
 [Browse all free RPG tools by task](https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/)
 
 [Read the RPG data integration guides](https://loottableworks.github.io/loot-drop-calculator/integration-guides/)
