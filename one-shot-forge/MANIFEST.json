@@ -1,7 +1,7 @@
 {
   "product_id": "one-shot-forge",
   "version": "1.0.0",
-  "status": "internal_aaa_release_candidate",
+  "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
   "public_release_requires_review": false,
