@@ -1,0 +1,63 @@
+{
+  "product_id": "campaign-arc-forge",
+  "version": "1.0.0",
+  "status": "approved_public_release",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": false,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/campaign-arc-forge/",
+  "source_entities": 74,
+  "source_relationships": 199,
+  "sessions_min": 3,
+  "sessions_max": 9,
+  "campaign_acts": 3,
+  "faction_fronts": 3,
+  "character_stakes_min": 3,
+  "character_stakes_max": 6,
+  "live_standalone_destinations": 6,
+  "bundle_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1238,
+      "sha256": "9e3849953da8f80e00260c1ffd749281fa644c80bb1f1d4838673055cda25871"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 14852,
+      "sha256": "132fa6010104ffd1a37a95bdac3cd6380da592cd962c9ad272a54f22f0f2c3be"
+    },
+    {
+      "path": "assets/campaign-arc-forge-board-v1.png",
+      "bytes": 2777099,
+      "sha256": "a1ed38bc8a9c573dd85f70c23f0aa8590e31231a55cd22795726c433c9fafaea"
+    },
+    {
+      "path": "campaign-arc-core.js",
+      "bytes": 24211,
+      "sha256": "08f4567fda7b8382020b4e7edaa13a873d3ec908c5308e66a41f37aa27294513"
+    },
+    {
+      "path": "campaign-arc-data.js",
+      "bytes": 218296,
+      "sha256": "bd7787a623f4612bdd486f7b32ba7235724d44efd7011a9ba97beb5ec0665d1e"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11355,
+      "sha256": "b7c3bcd71be895e67a9c52cdb6f97a800a01a0c06a91466f359c33e6b73938f6"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 18450,
+      "sha256": "5c9f6181bc090a2da3be800e9bb448fc5f35d758a3f779feb362f08326b5cabd"
+    }
+  ]
+}

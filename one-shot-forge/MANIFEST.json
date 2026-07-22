@@ -38,8 +38,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9486,
-      "sha256": "6c2b56d954ef04b7897003eeef64b71f7d7d24af9d3b312ff52d14fc0c180bec"
+      "bytes": 9544,
+      "sha256": "cd494f70e1fe5b7f5cba0365fc2e524df1279dbe2c564265d3721c8913398ade"
     },
     {
       "path": "one-shot-core.js",
@@ -54,7 +54,7 @@
     {
       "path": "styles.css",
       "bytes": 16888,
-      "sha256": "9feae11bb79f6a12bf9b0d05ebf10b8beacbb2a2ab6c4121b4278788544cb59c"
+      "sha256": "567f8a16d526b5c9c5ad8b4052bcc9fdedd649db596c832a212bffbfb14bdd3e"
     }
   ]
 }

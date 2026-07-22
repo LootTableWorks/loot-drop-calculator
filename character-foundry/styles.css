@@ -29,7 +29,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 14px; }
 .brand small { margin-top: 2px; color: #b9c7c4; font-size: 10px; }
-.tool-nav { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border: 1px solid #52605f; }
+.tool-nav { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border: 1px solid #52605f; }
 .tool-nav a { min-height: 32px; display: grid; place-items: center; min-width: 0; padding: 6px 8px; color: #d9e1df; border-right: 1px solid #52605f; text-decoration: none; font-size: 10px; font-weight: 800; }
 .tool-nav a:last-child { border-right: 0; }
 .tool-nav a:hover, .tool-nav a.current { color: #fff; background: var(--sea); }

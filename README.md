@@ -21,6 +21,7 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 | [RPG Data Bridge](https://loottableworks.github.io/loot-drop-calculator/rpg-data-bridge/) | Convert inspected JSON or CSV schemas into Unity C#, Godot 4 GDScript, and TypeScript starter models. |
 | [One-Shot Forge](https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/) | Generate a deterministic five-scene adventure, scaled opposition, fail-forward clues, and a ready-to-play pregenerated party. |
 | [Character Foundry](https://loottableworks.github.io/loot-drop-calculator/character-foundry/) | Forge a deterministic 3-6 character party with complete dossiers, campaign stakes, bonds, repair prompts, and session-zero support. |
+| [Campaign Arc Forge](https://loottableworks.github.io/loot-drop-calculator/campaign-arc-forge/) | Build a deterministic 3, 6, or 9-session arc with faction clocks, character stakes, playable decisions, tracked consequences, and Markdown or JSON export. |
 
 All tools run in the browser without an account. Imported data stays in the active tab and is not uploaded, analyzed remotely, or written to persistent browser storage.
 

@@ -196,7 +196,7 @@ input[type="range"] { width: 100%; accent-color: var(--teal); }
   .app-header { display: flex; flex-wrap: wrap; padding: 10px 13px; }
   .brand { flex: 1 1 190px; }
   .header-cta { flex: 0 0 auto; }
-  .tool-nav { order: 3; width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); overflow: visible; }
+  .tool-nav { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; }
   .tool-nav a { min-width: 0; padding: 7px 3px; font-size: 9px; }
   .control-rail, .adventure-stage { padding: 16px 13px 22px; }
   .adventure-title-row h2 { font-size: 23px; }

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Build a deterministic 3, 6, or 9-session fantasy campaign arc with linked factions, character stakes, encounters, rewards, consequences, and export-ready session plans.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#20272a">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/campaign-arc-forge/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="Campaign Arc Forge | Free Fantasy Campaign Generator">
+    <meta property="og:description" content="Generate a coherent 3, 6, or 9-session campaign with faction clocks, character stakes, playable decisions, and tracked consequences.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/campaign-arc-forge/">
+    <meta property="og:image" content="assets/campaign-arc-forge-board-v1.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/campaign-arc-forge-board-v1.png" type="image/png">
+    <title>Free Campaign Arc Generator | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Campaign Arc Forge","applicationCategory":"GameApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="../free-rpg-tools/" aria-label="Loot Table Works free RPG tools">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>Campaign Arc Forge</small></span>
+      </a>
+      <nav class="tool-nav" aria-label="Campaign tools">
+        <a href="../one-shot-forge/">One-Shot</a>
+        <a href="../character-foundry/">Characters</a>
+        <a class="active" href="./" aria-current="page">Campaign Arc</a>
+        <a href="../world-foundry/">World Foundry</a>
+        <a href="../free-rpg-tools/">All Tools</a>
+      </nav>
+      <a class="header-cta" href="#module-marketplace">Expand the campaign</a>
+    </header>
+
+    <main class="workspace">
+      <aside class="control-rail" aria-label="Campaign controls">
+        <div class="control-heading">
+          <p>Local-first campaign planner</p>
+          <h1>Campaign Arc Forge</h1>
+        </div>
+
+        <label class="field" for="seed-input">
+          <span>Campaign seed</span>
+          <span class="seed-row">
+            <input id="seed-input" type="text" maxlength="64" autocomplete="off" value="storm-ledger-29">
+            <button id="new-seed-button" class="icon-button" type="button" title="Create a new seed" aria-label="Create a new seed">NEW</button>
+          </span>
+        </label>
+
+        <fieldset class="segmented-field">
+          <legend>Sessions</legend>
+          <div class="segmented three" data-control="sessions">
+            <button type="button" data-value="3">3</button>
+            <button class="selected" type="button" data-value="6">6</button>
+            <button type="button" data-value="9">9</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>Tone</legend>
+          <div class="segmented three" data-control="tone">
+            <button class="selected" type="button" data-value="grounded">Grounded</button>
+            <button type="button" data-value="heroic">Heroic</button>
+            <button type="button" data-value="intrigue">Intrigue</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="segmented-field">
+          <legend>Campaign pressure</legend>
+          <div class="segmented three" data-control="pressure">
+            <button type="button" data-value="measured">Measured</button>
+            <button class="selected" type="button" data-value="escalating">Escalating</button>
+            <button type="button" data-value="relentless">Relentless</button>
+          </div>
+        </fieldset>
+
+        <label class="field" for="party-size-input">
+          <span>Character stake slots <output id="party-size-output">4</output></span>
+          <input id="party-size-input" type="range" min="3" max="6" step="1" value="4">
+        </label>
+
+        <label class="field" for="tier-input">
+          <span>Maximum content tier <output id="tier-output">3</output></span>
+          <input id="tier-input" type="range" min="1" max="5" step="1" value="3">
+        </label>
+
+        <button id="generate-button" class="generate-button" type="button">Forge campaign arc</button>
+
+        <dl class="integrity-ledger">
+          <div><dt>Source entities</dt><dd id="source-entities">74</dd></div>
+          <div><dt>Relationships</dt><dd id="source-relationships">199</dd></div>
+          <div><dt>Reference gaps</dt><dd id="reference-gaps">0</dd></div>
+          <div><dt>Runtime</dt><dd>Local</dd></div>
+        </dl>
+      </aside>
+
+      <section class="campaign-stage" aria-live="polite">
+        <div class="campaign-title-row">
+          <div>
+            <p class="status-line"><span id="validity-dot"></span><span id="validity-label">Validated linked campaign</span></p>
+            <h2 id="campaign-title">Building campaign...</h2>
+            <p id="campaign-id"></p>
+          </div>
+          <div class="campaign-actions">
+            <button id="copy-button" class="primary-button" type="button">Copy Markdown</button>
+            <button id="markdown-button" class="secondary-button" type="button">Download .md</button>
+            <button id="json-button" class="secondary-button" type="button">Download JSON</button>
+            <button id="share-button" class="secondary-button" type="button">Share URL</button>
+            <button id="print-button" class="secondary-button" type="button">Print</button>
+          </div>
+        </div>
+
+        <div class="stats-band" aria-label="Campaign summary">
+          <div class="stat"><strong id="session-stat">6</strong><span>Sessions</span></div>
+          <div class="stat"><strong>3</strong><span>Acts</span></div>
+          <div class="stat"><strong>3</strong><span>Faction fronts</span></div>
+          <div class="stat"><strong id="stake-stat">4</strong><span>Character stakes</span></div>
+          <div class="stat"><strong id="resolved-stat">0</strong><span>Resolved</span></div>
+        </div>
+
+        <div class="campaign-overview">
+          <figure class="campaign-board">
+            <img src="assets/campaign-arc-forge-board-v1.png" alt="Fantasy campaign planning table with a regional map, nine session markers, faction dossiers, character notes, and reward tokens">
+            <figcaption><span>One seed. Three acts. Every consequence carries forward.</span><strong id="board-seed">storm-ledger-29</strong></figcaption>
+          </figure>
+          <article class="campaign-brief">
+            <p class="section-label">Campaign brief</p>
+            <h3 id="campaign-logline-title">A linked regional struggle</h3>
+            <p id="campaign-logline"></p>
+            <div class="brief-facts">
+              <div><span>Promise</span><strong id="campaign-promise"></strong></div>
+              <div><span>GM framing</span><strong id="gm-framing"></strong></div>
+              <div><span>Pressure cadence</span><strong id="pressure-cadence"></strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="result-tabs" role="tablist" aria-label="Campaign views">
+          <button id="tab-arc" class="active" type="button" role="tab" aria-selected="true" aria-controls="panel-arc" data-panel="arc">Arc board</button>
+          <button id="tab-sessions" type="button" role="tab" aria-selected="false" aria-controls="panel-sessions" data-panel="sessions">Session plans</button>
+          <button id="tab-stakes" type="button" role="tab" aria-selected="false" aria-controls="panel-stakes" data-panel="stakes">Character stakes</button>
+          <button id="tab-ledger" type="button" role="tab" aria-selected="false" aria-controls="panel-ledger" data-panel="ledger">Consequence ledger</button>
+          <button id="tab-data" type="button" role="tab" aria-selected="false" aria-controls="panel-data" data-panel="data">JSON</button>
+        </div>
+
+        <section id="panel-arc" class="result-panel" role="tabpanel" aria-labelledby="tab-arc">
+          <div class="arc-layout">
+            <div id="acts-list" class="acts-list"></div>
+            <aside>
+              <p class="section-label">Live faction state</p>
+              <div id="fronts-list" class="fronts-list"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="panel-sessions" class="result-panel" role="tabpanel" aria-labelledby="tab-sessions" hidden>
+          <div id="sessions-list" class="sessions-list"></div>
+        </section>
+
+        <section id="panel-stakes" class="result-panel" role="tabpanel" aria-labelledby="tab-stakes" hidden>
+          <div id="stakes-list" class="stakes-list"></div>
+        </section>
+
+        <section id="panel-ledger" class="result-panel" role="tabpanel" aria-labelledby="tab-ledger" hidden>
+          <div class="ledger-layout">
+            <div>
+              <p class="section-label">Recorded outcomes</p>
+              <div id="outcome-ledger" class="outcome-ledger"></div>
+            </div>
+            <aside class="reference-ledger">
+              <h3>Reference ledger</h3>
+              <p>Every generated campaign record closes over the validated World Foundry source graph.</p>
+              <div id="reference-ledger"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="panel-data" class="result-panel json-panel" role="tabpanel" aria-labelledby="tab-data" hidden>
+          <pre id="json-output"></pre>
+        </section>
+
+        <section id="module-marketplace" class="module-marketplace">
+          <div class="marketplace-heading">
+            <div>
+              <p class="section-label">Build beyond the starter graph</p>
+              <h2>Expand the campaign with production data</h2>
+              <p>The free forge proves the workflow with a compact linked source. Add the matching data modules when you need enough quests, encounters, rewards, shops, items, and recipes for a full table.</p>
+            </div>
+            <strong class="module-price">$3 each</strong>
+          </div>
+          <div id="recommendation-grid" class="recommendation-grid"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Deterministic, system-neutral, and generated locally in your browser.</span>
+      <span><a href="../free-rpg-tools/">Free RPG Tools</a> &middot; <a href="../world-foundry/">World Foundry Hub</a></span>
+    </footer>
+    <div id="toast" class="toast" role="status"></div>
+    <script src="campaign-arc-data.js"></script>
+    <script src="campaign-arc-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

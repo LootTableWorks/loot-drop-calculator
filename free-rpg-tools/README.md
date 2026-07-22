@@ -2,14 +2,14 @@
 
 Status: `approved_public_release`
 
-A dependency-free acquisition and navigation page for the seven public Loot Table Works browser tools. The page routes visitors by outcome rather than presenting an undifferentiated list:
+A dependency-free acquisition and navigation page for the eight public Loot Table Works browser tools. The page routes visitors by outcome rather than presenting an undifferentiated list:
 
-- prepare a complete one-shot and linked party;
+- plan a campaign arc, prepare a complete one-shot, and build a linked party;
 - assemble a coherent world and shop economy;
 - validate and bridge RPG game data;
 - calculate exact loot probabilities.
 
-The directory exposes exactly seven public free-tool destinations and six verified `$3` standalone destinations. It contains no bundle, private, draft, account, analytics, or runtime API dependency.
+The directory exposes exactly eight public free-tool destinations and six verified `$3` standalone destinations. It contains no bundle, private, draft, account, analytics, or runtime API dependency.
 
 ## Build
 
