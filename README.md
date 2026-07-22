@@ -4,6 +4,8 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 
 [Open the World Foundry hub](https://loottableworks.github.io/loot-drop-calculator/world-foundry/)
 
+[Browse all free RPG tools by task](https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/)
+
 [Read the RPG data integration guides](https://loottableworks.github.io/loot-drop-calculator/integration-guides/)
 
 ![World Seed Studio showing a connected fantasy region and inspectable records](world-foundry/assets/world-seed-studio-preview-v2.png)

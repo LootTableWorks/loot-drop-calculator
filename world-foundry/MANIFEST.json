@@ -13,8 +13,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 1345,
-      "sha256": "df1271785c4eb15b827d13466bf7ff354953a582398c2efce08c2a9bf5da4de0"
+      "bytes": 1419,
+      "sha256": "29e0bcc643ce6f5272d3b5cc1143db8bc827320dc9930b4145d8edc45d0100ce"
     },
     {
       "path": "assets/world-seed-studio-preview-v2.png",
@@ -23,8 +23,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 31856,
-      "sha256": "b98c07f615b67d9e773ad26d789d61ddc98c6a9dbb8941b565a4026eea2de290"
+      "bytes": 31978,
+      "sha256": "0a6ec44dc4c692cbe216741f70a83de4f33922d6fe1916cd98f05eeda862913d"
     },
     {
       "path": "robots.txt",

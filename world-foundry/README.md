@@ -5,6 +5,7 @@ Status: `approved_for_deployment`
 A dependency-free static learning and catalog hub for Loot Table Works / World Foundry. It provides:
 
 - one first-viewport index to seven public free utilities, including complete one-shot and linked-party generators;
+- a direct route to the outcome-based Free RPG Tools discovery directory;
 - a six-module standalone catalog with placement-specific campaign attribution;
 - substantive guides to dependency-closed world seeds, merchant economies, and engine data contracts;
 - canonical, Open Graph, X card, JSON-LD, sitemap, and crawl metadata;
