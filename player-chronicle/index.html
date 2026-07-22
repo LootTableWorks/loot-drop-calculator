@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free TTRPG Player Journal & Downtime Tracker | Loot Table Works</title>
+  <meta name="description" content="Track a system-neutral fantasy character across 12 sessions with consequences, bonds, downtime, next-session intentions, and portable JSON or Markdown exports.">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/player-chronicle/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Player Chronicle | Loot Table Works">
+  <meta property="og:description" content="A free local-first TTRPG player journal for session consequences, downtime, relationships, and portable character progress.">
+  <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/player-chronicle/">
+  <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/player-chronicle/assets/player-chronicle-journey-v1.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#23312e">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Player Chronicle",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "url": "https://loottableworks.github.io/loot-drop-calculator/player-chronicle/",
+    "description": "A local-first system-neutral TTRPG player journal and downtime tracker with portable exports.",
+    "author": { "@type": "Organization", "name": "Loot Table Works" }
+  }
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="../world-foundry/" aria-label="Loot Table Works World Foundry Hub">
+      <span class="brand-mark" aria-hidden="true">LTW</span>
+      <span><strong>Loot Table Works</strong><small>World Foundry</small></span>
+    </a>
+    <nav class="tool-nav" aria-label="Free tool navigation">
+      <a href="../">Loot</a>
+      <a href="../shop-inventory-generator/">Shops</a>
+      <a href="../world-seed-studio/">Seeds</a>
+      <a href="../rpg-data-doctor/">Doctor</a>
+      <a href="../rpg-data-bridge/">Bridge</a>
+      <a href="../one-shot-forge/">One-Shot</a>
+      <a href="../character-foundry/">Characters</a>
+      <a href="../campaign-arc-forge/">Campaign</a>
+      <a class="current" href="./" aria-current="page">Chronicle</a>
+    </nav>
+    <a class="header-cta" href="../free-rpg-tools/">All tools</a>
+  </header>
+
+  <main class="workspace">
+    <aside class="control-rail" aria-labelledby="tool-title">
+      <p class="section-label">Between-session utility</p>
+      <h1 id="tool-title">Player Chronicle</h1>
+      <p class="rail-summary">Carry one character's decisions, strain, bonds, and unfinished business into the next game.</p>
+
+      <div class="control-group seed-control">
+        <div class="control-label-row"><label for="seed">Chronicle seed</label><button id="random-seed" class="quiet-button" type="button">Randomize</button></div>
+        <input id="seed" maxlength="64" value="saltline-17" autocomplete="off" spellcheck="false">
+      </div>
+
+      <div class="control-group">
+        <label for="character-name">Character name</label>
+        <input id="character-name" maxlength="48" placeholder="Generate a name" autocomplete="off">
+      </div>
+
+      <div class="control-group">
+        <label for="pronouns">Pronouns</label>
+        <input id="pronouns" maxlength="24" value="they/them" autocomplete="off">
+      </div>
+
+      <fieldset class="control-group">
+        <legend>Role</legend>
+        <div class="role-grid" id="role-control">
+          <button type="button" data-role="trail_reader" aria-pressed="true">Trail Reader</button>
+          <button type="button" data-role="warden" aria-pressed="false">Warden</button>
+          <button type="button" data-role="broker" aria-pressed="false">Broker</button>
+          <button type="button" data-role="field_scholar" aria-pressed="false">Scholar</button>
+          <button type="button" data-role="scoundrel" aria-pressed="false">Scoundrel</button>
+          <button type="button" data-role="weather_adept" aria-pressed="false">Weather Adept</button>
+        </div>
+      </fieldset>
+
+      <div id="imported-party" class="imported-party" hidden>
+        <label for="imported-character">Imported party member</label>
+        <select id="imported-character"></select>
+      </div>
+
+      <div class="rail-actions">
+        <button id="start" class="primary-button" type="button">Start new chronicle</button>
+        <label class="file-button" for="import-file">Open JSON file</label>
+        <input id="import-file" class="visually-hidden" type="file" accept="application/json,.json">
+      </div>
+
+      <div class="source-status" aria-live="polite">
+        <span id="validity-dot" class="status-dot"></span>
+        <span><strong id="validity">Validated source</strong><small>74 entities / 199 relationships</small></span>
+      </div>
+      <p class="privacy-note">No account, analytics, or cloud save. Download JSON to continue later.</p>
+    </aside>
+
+    <section class="chronicle-stage" aria-live="polite">
+      <div class="title-row">
+        <div><p class="section-label">Active character journey</p><h2 id="character-title">Preparing chronicle</h2><p id="character-meta" class="character-meta"></p></div>
+        <div class="export-actions" aria-label="Chronicle actions">
+          <button id="print" type="button">Print</button>
+          <button id="copy-link" type="button">Copy start link</button>
+          <button id="copy-markdown" type="button">Copy Markdown</button>
+          <button id="download-json" type="button">Save JSON</button>
+        </div>
+      </div>
+
+      <div class="stats-band" aria-label="Current character state">
+        <div class="stat"><strong id="stat-session">0</strong><span>Sessions</span></div>
+        <div class="stat"><strong id="stat-momentum">2</strong><span>Momentum</span></div>
+        <div class="stat"><strong id="stat-strain">0</strong><span>Strain</span></div>
+        <div class="stat"><strong id="stat-bond">1</strong><span>Bond</span></div>
+        <div class="stat"><strong id="stat-reputation">0</strong><span>Reputation</span></div>
+      </div>
+
+      <section class="character-overview" aria-labelledby="identity-heading">
+        <figure class="journey-art">
+          <img src="assets/player-chronicle-journey-v1.png" alt="An original fantasy adventurer's open campaign journal with coastal maps, relationship tokens, and a crafted talisman.">
+          <figcaption><span>Portable character record</span><strong>Session / consequence / next intention</strong></figcaption>
+        </figure>
+        <div class="identity-brief">
+          <p class="section-label">Character throughline</p>
+          <h3 id="identity-heading">A journey that remembers your decisions</h3>
+          <p id="contribution"></p>
+          <dl class="brief-grid">
+            <div><dt>Edge</dt><dd id="edge"></dd></div>
+            <div><dt>Burden</dt><dd id="burden"></dd></div>
+            <div><dt>Signature item</dt><dd id="signature-item"></dd></div>
+            <div><dt>Home base</dt><dd id="home-base"></dd></div>
+          </dl>
+          <p id="campaign-stake" class="campaign-stake"></p>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Chronicle views">
+        <button id="tab-timeline" role="tab" aria-controls="timeline-panel" aria-selected="true" data-tab="timeline">Timeline</button>
+        <button id="tab-session" role="tab" aria-controls="session-panel" aria-selected="false" data-tab="session">Record session</button>
+        <button id="tab-data" role="tab" aria-controls="data-panel" aria-selected="false" data-tab="data">Data</button>
+      </div>
+
+      <section id="timeline-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-timeline"></section>
+
+      <section id="session-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-session" hidden>
+        <div class="session-workspace">
+          <div class="session-heading"><div><p class="section-label">Next journal entry</p><h3 id="session-heading">Record session 1</h3></div><span id="session-capacity">12 entries available</span></div>
+          <div class="session-grid">
+            <fieldset><legend>What mattered?</legend><div id="focus-control" class="choice-stack">
+              <button type="button" data-focus="quest" aria-pressed="true">Pursue a contract</button>
+              <button type="button" data-focus="relationship" aria-pressed="false">Test a bond</button>
+              <button type="button" data-focus="discovery" aria-pressed="false">Follow evidence</button>
+              <button type="button" data-focus="craft" aria-pressed="false">Make or repair</button>
+              <button type="button" data-focus="recovery" aria-pressed="false">Protect the company</button>
+            </div></fieldset>
+            <fieldset><legend>How did it end?</legend><div id="outcome-control" class="choice-stack compact">
+              <button type="button" data-outcome="triumph" aria-pressed="false">Triumph</button>
+              <button type="button" data-outcome="costly_win" aria-pressed="true">Costly win</button>
+              <button type="button" data-outcome="setback" aria-pressed="false">Setback</button>
+            </div></fieldset>
+            <fieldset><legend>Between sessions</legend><div id="downtime-control" class="choice-stack">
+              <button type="button" data-downtime="recover" aria-pressed="true">Recover</button>
+              <button type="button" data-downtime="craft" aria-pressed="false">Craft</button>
+              <button type="button" data-downtime="research" aria-pressed="false">Research</button>
+              <button type="button" data-downtime="bond" aria-pressed="false">Strengthen a bond</button>
+              <button type="button" data-downtime="trade" aria-pressed="false">Trade and resupply</button>
+            </div></fieldset>
+          </div>
+          <div class="note-row"><label for="session-note">Private player note <span>optional, 240 characters</span></label><textarea id="session-note" maxlength="240" rows="3" placeholder="The choice, promise, or detail you want to remember..."></textarea></div>
+          <button id="record-session" class="primary-button record-button" type="button">Add session to chronicle</button>
+        </div>
+      </section>
+
+      <section id="data-panel" class="result-panel data-panel" role="tabpanel" aria-labelledby="tab-data" hidden>
+        <div class="data-layout"><div><p class="section-label">Reference ledger</p><h3>Closed source IDs</h3><div id="reference-ledger" class="reference-ledger"></div></div><pre id="json-output" tabindex="0"></pre></div>
+      </section>
+
+      <section class="module-marketplace" aria-labelledby="module-heading">
+        <div class="marketplace-heading"><div><p class="section-label">Extend the journal's world</p><h2 id="module-heading">Production data for the next decision</h2><p>Move from the free coastal sample into larger item, quest, merchant, encounter, crafting, and reward libraries.</p></div><span class="module-price">$3 each</span></div>
+        <div id="recommendation-grid" class="recommendation-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Loot Table Works / Player Chronicle v1.0</span><span>System-neutral / local-first / no login</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="player-chronicle-data.js"></script>
+  <script src="player-chronicle-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

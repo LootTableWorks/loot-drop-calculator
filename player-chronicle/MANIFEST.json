@@ -1,0 +1,63 @@
+{
+  "product_id": "player-chronicle",
+  "version": "1.0.0",
+  "status": "approved_public_release",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": false,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/player-chronicle/",
+  "source_entities": 74,
+  "source_relationships": 199,
+  "character_slots": 1,
+  "session_capacity": 12,
+  "session_focuses": 5,
+  "outcome_modes": 3,
+  "downtime_modes": 5,
+  "session_combinations": 75,
+  "live_standalone_destinations": 6,
+  "gated_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1019,
+      "sha256": "ba4791c4693befae3c95133dfd6514741e7a8f1800c9f23e22767718fb058a74"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 10824,
+      "sha256": "e565075a9c067ca13eba9a7ac7dfe68b21bc767531981e4af47387fcdae9c54a"
+    },
+    {
+      "path": "assets/player-chronicle-journey-v1.png",
+      "bytes": 3060154,
+      "sha256": "b7efaa0eec9da56d22255b37f0e8deec5d55075a0ac2b8aec4298b9cd97a1958"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11884,
+      "sha256": "dc70ea19972f9de212f672671dd99a1219048d2fda7e70d997af2a2cb4f56126"
+    },
+    {
+      "path": "player-chronicle-core.js",
+      "bytes": 19938,
+      "sha256": "d3aa33cac09564837f1f77591954bcf528ca106cbdea16a814563647fa5689bb"
+    },
+    {
+      "path": "player-chronicle-data.js",
+      "bytes": 218300,
+      "sha256": "c0082c458e94a6d7a0e2108a583e6da2c5b817b012ee4e042ef97057e64aa126"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 17336,
+      "sha256": "4ff0387ce87ab81d4c7b497b56533df49c0e4b687d5b5b5bcc4ea5b165e48ae6"
+    }
+  ]
+}
