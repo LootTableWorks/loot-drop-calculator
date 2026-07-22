@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Build a shareable one-shot or campaign launch sequence with a world seed, linked player characters, session plan, campaign arc, and player chronicle. Free and no login.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#172426">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="Campaign Launchpad | Build a One-Shot, Party, and Campaign Arc">
+    <meta property="og:description" content="One shared seed. Five connected free RPG tools. Build the world, party, opening session, campaign arc, and player chronicle without a login.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/">
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/assets/campaign-launchpad-party-v1.jpg">
+    <meta property="og:image:width" content="1672">
+    <meta property="og:image:height" content="941">
+    <meta property="og:image:alt" content="An original fantasy adventuring company planning a coastal campaign around a map and field notes.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Campaign Launchpad | Loot Table Works">
+    <meta name="twitter:description" content="Build a connected world, party, one-shot, campaign arc, and player chronicle from one seed.">
+    <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/assets/campaign-launchpad-party-v1.jpg">
+    <title>Free One-Shot and Campaign Generator Launchpad | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css?v=1.0.0">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "name": "Campaign Launchpad",
+            "url": "https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Any",
+            "description": "A free, no-login campaign launch workflow connecting world, character, one-shot, campaign, and player-journal tools.",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+            "creator": {"@type": "Organization", "name": "Loot Table Works", "url": "https://loot-table-works.itch.io/"}
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {"@type": "Question", "name": "Are the paid modules required?", "acceptedAnswer": {"@type": "Answer", "text": "No. The complete five-step campaign workflow is free. The standalone modules add larger production-ready datasets for specific parts of the selected play loop."}},
+              {"@type": "Question", "name": "Can I share the generated campaign setup?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The launchpad creates a shareable configuration URL and a Markdown campaign plan. The same seed and settings reproduce the same linked tool routes."}},
+              {"@type": "Question", "name": "Does the launchpad require an account?", "acceptedAnswer": {"@type": "Answer", "text": "No. It runs locally in the browser without an account, analytics script, hosted AI runtime, or persistent storage."}}
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#builder">Skip to campaign builder</a>
+
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Loot Table Works home">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>Campaign Launchpad</small></span>
+      </a>
+      <nav aria-label="Campaign tool navigation">
+        <a href="#builder">Build</a>
+        <a href="#sequence">Launch sequence</a>
+        <a href="#production-data">Production data</a>
+        <a href="../free-rpg-tools/">All free tools</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <img src="assets/campaign-launchpad-party-v1.jpg" width="1672" height="941" alt="An original fantasy adventuring company planning a coastal campaign around a map and field notes.">
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">One seed. One connected campaign workflow.</p>
+          <h1 id="hero-title">Campaign Launchpad</h1>
+          <p>Build the region, party, opening session, campaign arc, and player follow-through as one reproducible sequence. Start free, then add only the production data that fits the game you are preparing.</p>
+          <a href="#builder">Build a campaign plan <span aria-hidden="true">-&gt;</span></a>
+        </div>
+        <div class="hero-proof" aria-label="Campaign Launchpad facts">
+          <span><strong>5</strong> connected tools</span>
+          <span><strong>240</strong> validated setups</span>
+          <span><strong>0</strong> logins</span>
+        </div>
+      </section>
+
+      <section class="builder" id="builder" aria-labelledby="builder-title">
+        <div class="section-heading">
+          <div><p class="section-index">Campaign brief</p><h2 id="builder-title">Set the table</h2></div>
+          <p>Every destination receives the same seed, party size, and power tier. Scope and spotlight tune the session structure and product recommendations.</p>
+        </div>
+
+        <div class="builder-grid">
+          <div class="seed-control">
+            <label for="seed">Campaign seed</label>
+            <div><input id="seed" maxlength="64" value="salt-road-27"><button id="new-seed" type="button">New seed</button></div>
+          </div>
+
+          <fieldset>
+            <legend>Scope</legend>
+            <div class="segment-control four" id="scope-control">
+              <button type="button" data-scope="tonight">One night</button>
+              <button type="button" class="selected" data-scope="full_evening">Full evening</button>
+              <button type="button" data-scope="mini_arc">Mini arc</button>
+              <button type="button" data-scope="campaign">Campaign</button>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Spotlight</legend>
+            <div class="segment-control" id="spotlight-control">
+              <button type="button" class="selected" data-spotlight="exploration">Exploration</button>
+              <button type="button" data-spotlight="intrigue">Intrigue</button>
+              <button type="button" data-spotlight="survival">Survival</button>
+            </div>
+          </fieldset>
+
+          <div class="range-control">
+            <label for="party">Players <output id="party-output" for="party">4</output></label>
+            <input id="party" type="range" min="3" max="6" step="1" value="4">
+            <div aria-hidden="true"><span>3</span><span>6</span></div>
+          </div>
+
+          <div class="range-control">
+            <label for="tier">Maximum tier <output id="tier-output" for="tier">2</output></label>
+            <input id="tier" type="range" min="1" max="5" step="1" value="2">
+            <div aria-hidden="true"><span>1</span><span>5</span></div>
+          </div>
+
+          <button class="build-button" id="build-plan" type="button">Build launch sequence</button>
+        </div>
+      </section>
+
+      <section class="plan-band" aria-live="polite">
+        <div>
+          <p class="section-index" id="plan-id">CL-00000000</p>
+          <h2 id="plan-title">Exploration full evening for 4 players</h2>
+          <p id="plan-promise"></p>
+          <span id="scope-summary"></span>
+        </div>
+        <dl>
+          <div><dt>Free routes</dt><dd id="tool-count">5</dd></div>
+          <div><dt>Focused modules</dt><dd id="product-count">3</dd></div>
+          <div><dt>Players</dt><dd id="party-count">4</dd></div>
+        </dl>
+      </section>
+
+      <section class="sequence" id="sequence" aria-labelledby="sequence-title">
+        <div class="section-heading">
+          <div><p class="section-index">Five-step prep loop</p><h2 id="sequence-title">Move from premise to continuity</h2></div>
+          <div class="plan-actions">
+            <button id="copy-plan" type="button">Copy plan</button>
+            <button id="share-plan" type="button">Copy share link</button>
+            <button id="download-plan" type="button">Save Markdown</button>
+          </div>
+        </div>
+        <div id="tools" class="workflow-list"></div>
+      </section>
+
+      <section class="production" id="production-data" aria-labelledby="production-title">
+        <div class="section-heading">
+          <div><p class="section-index">Contextual expansion</p><h2 id="production-title">Add depth where this campaign needs it</h2></div>
+          <p>The free workflow is complete on its own. These three standalone modules match the selected spotlight and stay separate so you can buy only the data you will use.</p>
+        </div>
+        <div id="products" class="product-grid"></div>
+        <p class="commercial-boundary"><strong>Commercial boundary:</strong> three separate $3 products, no subscription, no bundle link, and no required purchase.</p>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <div class="section-heading compact"><div><p class="section-index">Campaign continuity</p><h2 id="faq-title">Keep the setup portable</h2></div></div>
+        <details><summary>Are the paid modules required?</summary><p>No. The complete five-step workflow is free. The modules add larger production-ready datasets for the parts of the selected play loop that need more depth.</p></details>
+        <details><summary>Can I share the setup?</summary><p>Yes. Copy the launchpad URL or save the Markdown plan. The same seed and settings reproduce the same linked tool routes.</p></details>
+        <details><summary>Where does campaign data go?</summary><p>Nowhere outside the active page unless you choose a tool link or export. There is no account, analytics script, hosted AI runtime, or persistent storage.</p></details>
+      </section>
+    </main>
+
+    <footer>
+      <strong>Loot Table Works</strong>
+      <span>Original, system-neutral campaign tools and production data.</span>
+      <a href="../world-foundry/">Browse the World Foundry field guide</a>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="campaign-launchpad-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

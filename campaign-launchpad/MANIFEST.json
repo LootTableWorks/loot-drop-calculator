@@ -1,0 +1,51 @@
+{
+  "product_id": "campaign-launchpad",
+  "version": "1.0.0",
+  "status": "approved_public_release",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/",
+  "campaign_scopes": 4,
+  "play_spotlights": 3,
+  "party_sizes": 4,
+  "tiers": 5,
+  "validated_setup_combinations": 240,
+  "synchronized_free_tool_routes": 5,
+  "contextual_paid_destinations": 3,
+  "live_standalone_inventory": 6,
+  "gated_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 882,
+      "sha256": "dbdf996503bc28b057eab4b48ea094a8605884e07249324856944984d87bfcf7"
+    },
+    {
+      "path": "app.js",
+      "bytes": 5697,
+      "sha256": "5273eb4135c9589b8b5a4430303472a5ddbce32d1f3f1cdb43a427a71495224a"
+    },
+    {
+      "path": "assets/campaign-launchpad-party-v1.jpg",
+      "bytes": 453321,
+      "sha256": "bba84ae86fc0b40583199cf864bf59b83624d4ebd5bbb477eab7ecf87d79147d"
+    },
+    {
+      "path": "campaign-launchpad-core.js",
+      "bytes": 10141,
+      "sha256": "c1408ac3700664d0e0c7662193fd3e4727b020310740b92631ed1430b5d32cb4"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11053,
+      "sha256": "b64bcd3beaf7bbe992c3b2272fea714b30f1b330f2fd46466a43197952e2888b"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 11771,
+      "sha256": "d36450f514d46d2b3710f8a76571ea369fda70e6205a2da1a2c57c309fae2e87"
+    }
+  ]
+}

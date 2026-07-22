@@ -14,6 +14,7 @@ Free, local-first browser tools and original system-neutral fantasy data for gam
 
 | Tool | Use it for |
 |---|---|
+| [Campaign Launchpad](https://loottableworks.github.io/loot-drop-calculator/campaign-launchpad/) | Route one shared seed through a world, linked party, one-shot, campaign arc, and player chronicle, then see three contextual production-data recommendations. |
 | [Loot Drop Probability Calculator](https://loottableworks.github.io/loot-drop-calculator/) | Calculate independent drop odds, expected rewards, and attempts needed for a target confidence. |
 | [Fantasy Shop Inventory Generator](https://loottableworks.github.io/loot-drop-calculator/shop-inventory-generator/) | Generate deterministic shop stock, prices, shareable configurations, JSON, and CSV. |
 | [World Seed Studio](https://loottableworks.github.io/loot-drop-calculator/world-seed-studio/) | Assemble dependency-closed regions, economies, quest arcs, and encounter loops. |
