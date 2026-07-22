@@ -1,0 +1,63 @@
+{
+  "product_id": "character-foundry",
+  "version": "1.0.0",
+  "status": "approved_public_release",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": false,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/character-foundry/",
+  "source_entities": 74,
+  "source_relationships": 199,
+  "pregenerated_characters_min": 3,
+  "pregenerated_characters_max": 6,
+  "campaign_modes": 4,
+  "tone_options": 3,
+  "cohesion_options": 3,
+  "campaign_threads": 3,
+  "live_standalone_destinations": 6,
+  "gated_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1107,
+      "sha256": "acd35656b6da3aa59995bacd34ab1227012f6e7d023d50d25d3b5233e4b20737"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    },
+    {
+      "path": "app.js",
+      "bytes": 16851,
+      "sha256": "068a7231c15dbb227d7c7372b7e6c75e315730ca55b27fc126118de841f6304f"
+    },
+    {
+      "path": "assets/character-foundry-party-v1.jpg",
+      "bytes": 453321,
+      "sha256": "bba84ae86fc0b40583199cf864bf59b83624d4ebd5bbb477eab7ecf87d79147d"
+    },
+    {
+      "path": "character-core.js",
+      "bytes": 27295,
+      "sha256": "9474180d2f68b87eaabb6c80e66f577ad47437d2a0dfd8d1195dd307d646e518"
+    },
+    {
+      "path": "character-data.js",
+      "bytes": 218301,
+      "sha256": "3ad9c933bdab356e760b11eae36ed3c90de556e0b6ba5c2cc55e8afd8195ba2a"
+    },
+    {
+      "path": "index.html",
+      "bytes": 10608,
+      "sha256": "1a444a80f41d555576ad68f1a765bf7679415d6b74a7bb982363774a89634d39"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 21345,
+      "sha256": "21a303a863c8eb0845e250644e9b95e28a37801b7aeceec528532732ce5e557a"
+    }
+  ]
+}

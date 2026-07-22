@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free Character & Party Generator | Loot Table Works</title>
+  <meta name="description" content="Generate a deterministic system-neutral fantasy party with 3-6 complete character dossiers, linked bonds, session-zero prompts, campaign threads, and JSON or Markdown export.">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/character-foundry/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Character Foundry | Loot Table Works">
+  <meta property="og:description" content="A free deterministic fantasy character and party generator with linked bonds, campaign hooks, session-zero prompts, and clean exports.">
+  <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/character-foundry/">
+  <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/character-foundry/assets/character-foundry-party-v1.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#253032">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Character Foundry",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "url": "https://loottableworks.github.io/loot-drop-calculator/character-foundry/",
+    "description": "A deterministic system-neutral fantasy character and party generator with session-zero and data export tools.",
+    "author": { "@type": "Organization", "name": "Loot Table Works" }
+  }
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="../world-foundry/" aria-label="Loot Table Works World Foundry Hub">
+      <span class="brand-mark" aria-hidden="true">LTW</span>
+      <span><strong>Loot Table Works</strong><small>World Foundry</small></span>
+    </a>
+    <nav class="tool-nav" aria-label="Free tool navigation">
+      <a href="../">Loot</a>
+      <a href="../shop-inventory-generator/">Shops</a>
+      <a href="../world-seed-studio/">Seeds</a>
+      <a href="../rpg-data-doctor/">Doctor</a>
+      <a href="../rpg-data-bridge/">Bridge</a>
+      <a href="../one-shot-forge/">One-Shot</a>
+      <a class="current" href="./" aria-current="page">Characters</a>
+    </nav>
+    <a class="header-cta" href="../world-foundry/">View hub</a>
+  </header>
+
+  <main class="workspace">
+    <aside class="control-rail" aria-labelledby="tool-title">
+      <p class="section-label">Session-zero utility</p>
+      <h1 id="tool-title">Character Foundry</h1>
+      <p class="rail-summary">A complete, linked party from one reproducible world seed.</p>
+
+      <div class="control-group seed-control">
+        <div class="control-label-row">
+          <label for="seed">Party seed</label>
+          <button id="random-seed" class="quiet-button" type="button">Randomize</button>
+        </div>
+        <input id="seed" maxlength="64" value="saltline-17" autocomplete="off" spellcheck="false">
+      </div>
+
+      <fieldset class="control-group">
+        <legend>Campaign mode</legend>
+        <div class="segmented four" id="campaign-mode-control">
+          <button type="button" data-campaign="expedition" aria-pressed="true">Expedition</button>
+          <button type="button" data-campaign="intrigue" aria-pressed="false">Intrigue</button>
+          <button type="button" data-campaign="recovery" aria-pressed="false">Recovery</button>
+          <button type="button" data-campaign="resistance" aria-pressed="false">Resistance</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="control-group">
+        <legend>Tone</legend>
+        <div class="segmented" id="tone-control">
+          <button type="button" data-tone="hopeful" aria-pressed="false">Hopeful</button>
+          <button type="button" data-tone="grounded" aria-pressed="true">Grounded</button>
+          <button type="button" data-tone="mysterious" aria-pressed="false">Mystery</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="control-group">
+        <legend>Party history</legend>
+        <div class="segmented" id="cohesion-control">
+          <button type="button" data-cohesion="new_crew" aria-pressed="true">New crew</button>
+          <button type="button" data-cohesion="trusted_company" aria-pressed="false">Trusted</button>
+          <button type="button" data-cohesion="uneasy_alliance" aria-pressed="false">Uneasy</button>
+        </div>
+      </fieldset>
+
+      <div class="control-group range-control">
+        <div class="control-label-row">
+          <label for="party-size">Party size</label>
+          <output id="party-size-output" for="party-size">4</output>
+        </div>
+        <input id="party-size" type="range" min="3" max="6" step="1" value="4">
+        <div class="range-scale" aria-hidden="true"><span>3</span><span>6</span></div>
+      </div>
+
+      <div class="control-group range-control">
+        <div class="control-label-row">
+          <label for="maximum-tier">Maximum item tier</label>
+          <output id="tier-output" for="maximum-tier">3</output>
+        </div>
+        <input id="maximum-tier" type="range" min="1" max="5" step="1" value="3">
+        <div class="range-scale" aria-hidden="true"><span>1</span><span>5</span></div>
+      </div>
+
+      <div class="source-status" aria-live="polite">
+        <span id="validity-dot" class="status-dot"></span>
+        <span><strong id="validity">Validated source</strong><small>74 entities / 199 relationships</small></span>
+      </div>
+      <button id="generate" class="primary-button" type="button">Forge party</button>
+    </aside>
+
+    <section class="party-stage" aria-live="polite">
+      <div class="party-title-row">
+        <div>
+          <p class="section-label">Generated party packet</p>
+          <h2 id="party-title">The Saltline Company</h2>
+          <p id="party-meta" class="party-meta"></p>
+        </div>
+        <div class="party-actions" aria-label="Export actions">
+          <button id="print" type="button">Print</button>
+          <button id="copy-link" type="button">Copy link</button>
+          <button id="copy-markdown" type="button">Copy Markdown</button>
+          <button id="download-json" type="button">Download JSON</button>
+        </div>
+      </div>
+
+      <div class="stats-band" aria-label="Generated party statistics">
+        <div class="stat"><strong id="stat-characters">4</strong><span>Characters</span></div>
+        <div class="stat"><strong id="stat-bonds">4</strong><span>Party bonds</span></div>
+        <div class="stat"><strong id="stat-threads">3</strong><span>Quest threads</span></div>
+        <div class="stat"><strong id="stat-references">0</strong><span>Source IDs</span></div>
+        <div class="stat"><strong id="stat-missing">0</strong><span>Missing refs</span></div>
+      </div>
+
+      <section class="party-overview" aria-labelledby="overview-title">
+        <figure class="party-art">
+          <img src="assets/character-foundry-party-v1.jpg" alt="Six original fantasy adventurers planning around a coastal route map inside a weathered guild hall.">
+          <figcaption><span id="art-label">Party planning room</span><strong id="art-proof">One seed / complete company</strong></figcaption>
+        </figure>
+        <div class="campaign-brief">
+          <p class="section-label">Campaign frame</p>
+          <h3 id="overview-title">A company built for connected play</h3>
+          <p id="campaign-frame"></p>
+          <dl class="brief-grid">
+            <div><dt>Home base</dt><dd id="home-base"></dd></div>
+            <div><dt>Patron</dt><dd id="patron"></dd></div>
+            <div><dt>Inciting contract</dt><dd id="inciting-contract"></dd></div>
+            <div><dt>Shared resource</dt><dd id="group-resource"></dd></div>
+          </dl>
+          <p id="shared-history" class="shared-history"></p>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Party packet views">
+        <button id="tab-overview" role="tab" aria-controls="overview-panel" aria-selected="true" data-tab="overview">Overview</button>
+        <button id="tab-dossiers" role="tab" aria-controls="dossiers-panel" aria-selected="false" data-tab="dossiers">Dossiers</button>
+        <button id="tab-bonds" role="tab" aria-controls="bonds-panel" aria-selected="false" data-tab="bonds">Bonds</button>
+        <button id="tab-session" role="tab" aria-controls="session-panel" aria-selected="false" data-tab="session">Session zero</button>
+        <button id="tab-data" role="tab" aria-controls="data-panel" aria-selected="false" data-tab="data">Data</button>
+      </div>
+
+      <section id="overview-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-overview"></section>
+      <section id="dossiers-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-dossiers" hidden></section>
+      <section id="bonds-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-bonds" hidden></section>
+      <section id="session-panel" class="result-panel" role="tabpanel" aria-labelledby="tab-session" hidden></section>
+      <section id="data-panel" class="result-panel data-panel" role="tabpanel" aria-labelledby="tab-data" hidden>
+        <div class="data-layout">
+          <div><p class="section-label">Reference ledger</p><h3>Closed source IDs</h3><div id="reference-ledger" class="reference-ledger"></div></div>
+          <pre id="json-output" tabindex="0"></pre>
+        </div>
+      </section>
+
+      <section class="module-marketplace" aria-labelledby="module-heading">
+        <div class="marketplace-heading">
+          <div><p class="section-label">Build beyond the free sample</p><h2 id="module-heading">Expand the party with production data</h2><p>Use the same stable-ID model across items, quests, merchants, encounters, recipes, and reward profiles.</p></div>
+          <span class="module-price">$3 each</span>
+        </div>
+        <div id="recommendation-grid" class="recommendation-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Loot Table Works / Character Foundry v1.0</span><span>System-neutral / local-first / no login</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="character-data.js"></script>
+  <script src="character-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

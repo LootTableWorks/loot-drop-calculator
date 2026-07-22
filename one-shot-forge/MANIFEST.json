@@ -38,8 +38,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9431,
-      "sha256": "961e2461627355b98b662d645275adcdae742f1065e4979417ef49edb5faeb4c"
+      "bytes": 9486,
+      "sha256": "6c2b56d954ef04b7897003eeef64b71f7d7d24af9d3b312ff52d14fc0c180bec"
     },
     {
       "path": "one-shot-core.js",

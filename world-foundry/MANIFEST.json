@@ -1,20 +1,20 @@
 {
   "product_id": "world-foundry-hub",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
   "public_release_requires_review": false,
   "release_authority": "delegated_internal_aaa_qa",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/world-foundry/",
-  "free_tool_destinations": 6,
+  "free_tool_destinations": 7,
   "paid_standalone_destinations": 6,
   "external_runtime_dependencies": 0,
   "files": [
     {
       "path": "README.md",
-      "bytes": 1354,
-      "sha256": "dc0374277ace0d5e4f8dce3e0e531aa78eb475abd41a89c8712725e9f32ad107"
+      "bytes": 1345,
+      "sha256": "df1271785c4eb15b827d13466bf7ff354953a582398c2efce08c2a9bf5da4de0"
     },
     {
       "path": "assets/world-seed-studio-preview-v2.png",
@@ -23,8 +23,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 31228,
-      "sha256": "87e7846228998324987514061dd76eeb36acedd9a2181759abefefd9970e1cb5"
+      "bytes": 31856,
+      "sha256": "b98c07f615b67d9e773ad26d789d61ddc98c6a9dbb8941b565a4026eea2de290"
     },
     {
       "path": "robots.txt",
@@ -38,8 +38,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 18146,
-      "sha256": "2b7b7084a6280892ae73d8c31d87bdd733ee432cc97b787f9611ef955c46128d"
+      "bytes": 18593,
+      "sha256": "b72090bed9cb31ea4945bc18a27d126ae6f4afd9f32fe4406f4b832b748d436f"
     }
   ]
 }
