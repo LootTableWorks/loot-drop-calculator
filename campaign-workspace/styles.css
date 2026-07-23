@@ -84,6 +84,34 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 .quiet-action { color: var(--white); border-color: #49605f !important; background: transparent; }
 .primary-action { color: #122626; border-color: var(--brass) !important; background: #d4a34a; }
+.primary-action:disabled { cursor: not-allowed; opacity: 0.55; }
+
+.recovery-panel {
+  position: relative;
+  z-index: 19;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  border-bottom: 1px solid #d5b46e;
+  padding: 14px 20px;
+  background: #fff3d9;
+}
+.recovery-panel[hidden] { display: none; }
+.recovery-panel strong { color: #714118; font: 700 15px Georgia, serif; }
+.recovery-panel p { max-width: 850px; margin: 4px 0 0; color: #624b36; font-size: 11px; line-height: 1.45; }
+.recovery-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.recovery-actions button {
+  min-height: 38px;
+  border: 1px solid #a78243;
+  border-radius: 4px;
+  padding: 8px 11px;
+  color: var(--ink);
+  background: var(--panel);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
 
 .app-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: calc(100vh - 66px); }
 
@@ -141,6 +169,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border-left-color: var(--sea);
   color: var(--sea-dark);
   background: var(--white);
+}
+.workspace-nav nav button[role="tab"]:focus-visible {
+  outline: 3px solid #176d68;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 2px #ffffff;
 }
 
 .nav-foot { margin-top: auto; display: grid; gap: 5px; padding: 18px; color: var(--muted); font-size: 10px; }
@@ -449,6 +482,8 @@ p { line-height: 1.55; }
 }
 
 @media (max-width: 900px) {
+  .recovery-panel { grid-template-columns: 1fr; }
+  .recovery-actions { justify-content: flex-start; }
   .app-bar { grid-template-columns: auto minmax(0, 1fr); }
   .brand { border-right: 0; padding-right: 8px; }
   .brand span { display: none; }
@@ -479,6 +514,8 @@ p { line-height: 1.55; }
   .campaign-identity > span:not(.status-dot) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .header-actions button { padding: 7px 5px; }
+  .recovery-panel { padding: 13px 16px; }
+  .recovery-actions { display: grid; grid-template-columns: 1fr; }
   .workspace-nav { top: 0; }
   #workspace-view { padding: 20px 16px 36px; }
   .view-heading { display: grid; gap: 15px; }
@@ -497,7 +534,7 @@ p { line-height: 1.55; }
 }
 
 @media print {
-  .app-bar, .workspace-nav, .view-actions, .toast { display: none !important; }
+  .app-bar, .recovery-panel, .workspace-nav, .view-actions, .toast { display: none !important; }
   .app-shell { display: block; }
   #workspace-view { padding: 0; }
   .campaign-ribbon { box-shadow: none; break-inside: avoid; }

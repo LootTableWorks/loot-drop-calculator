@@ -1,19 +1,184 @@
-(function attachCampaignWorkspaceApp() {
+(function attachCampaignWorkspaceApp(globalScope) {
   "use strict";
 
   const STORAGE_KEY = "loot-table-works:gullwatch-campaign-workspace:v1";
+  const BACKUP_STORAGE_KEY = `${STORAGE_KEY}:backup`;
+  const RECOVERY_REQUIRED_CODE = "CAMPAIGN_RECOVERY_REQUIRED";
+
+  function createRecoveryRequiredError(message) {
+    const error = new Error(message);
+    error.code = RECOVERY_REQUIRED_CODE;
+    return error;
+  }
+
+  function decodeStoredWorkspace(raw, runtimeApi) {
+    if (typeof raw !== "string" || raw.length === 0) {
+      throw new Error("Stored campaign data is empty.");
+    }
+    return runtimeApi.hydrate(JSON.parse(raw));
+  }
+
+  function serializeValidatedWorkspace(value, runtimeApi) {
+    const serialized = runtimeApi.serialize(value);
+    decodeStoredWorkspace(serialized, runtimeApi);
+    return serialized;
+  }
+
+  function createLocalJournal(storage, runtimeApi, keys = {}) {
+    const primaryKey = keys.primaryKey ?? STORAGE_KEY;
+    const backupKey = keys.backupKey ?? BACKUP_STORAGE_KEY;
+
+    function inspect(raw) {
+      try {
+        return { valid: true, workspace: decodeStoredWorkspace(raw, runtimeApi), error: null };
+      } catch (error) {
+        return { valid: false, workspace: null, error };
+      }
+    }
+
+    function load() {
+      const primaryRaw = storage.getItem(primaryKey);
+      const backupRaw = storage.getItem(backupKey);
+      if (primaryRaw !== null) {
+        const primary = inspect(primaryRaw);
+        if (primary.valid) {
+          return {
+            workspace: primary.workspace,
+            source: "primary",
+            recovered: false,
+            quarantineRaw: null,
+            issue: null
+          };
+        }
+        const backup = backupRaw === null ? null : inspect(backupRaw);
+        return {
+          workspace: backup?.valid ? backup.workspace : null,
+          source: backup?.valid ? "backup" : "none",
+          recovered: Boolean(backup?.valid),
+          quarantineRaw: primaryRaw,
+          issue: `The primary local save could not be opened: ${primary.error.message}`
+        };
+      }
+
+      if (backupRaw !== null) {
+        const backup = inspect(backupRaw);
+        if (backup.valid) {
+          return {
+            workspace: backup.workspace,
+            source: "backup",
+            recovered: true,
+            quarantineRaw: null,
+            issue: "The primary local save was missing, so the validated backup was recovered."
+          };
+        }
+      }
+
+      return {
+        workspace: null,
+        source: "none",
+        recovered: false,
+        quarantineRaw: null,
+        issue: null
+      };
+    }
+
+    function commit(value, options = {}) {
+      const serialized = serializeValidatedWorkspace(value, runtimeApi);
+      const previousRaw = storage.getItem(primaryKey);
+      let backupCandidate = null;
+
+      if (previousRaw !== null) {
+        const previous = inspect(previousRaw);
+        if (!previous.valid && options.allowInvalidPrimaryReplacement !== true) {
+          throw createRecoveryRequiredError(
+            "Export or copy the unreadable primary save before replacing it with the recovered campaign."
+          );
+        }
+        if (previous.valid) backupCandidate = previousRaw;
+      } else {
+        backupCandidate = serialized;
+      }
+
+      if (backupCandidate !== null) {
+        storage.setItem(backupKey, backupCandidate);
+        const writtenBackup = storage.getItem(backupKey);
+        const verifiedBackup = inspect(writtenBackup);
+        if (!verifiedBackup.valid || writtenBackup !== backupCandidate) {
+          throw new Error("The local backup write could not be verified; the primary slot was left unchanged.");
+        }
+      }
+
+      storage.setItem(primaryKey, serialized);
+      const written = storage.getItem(primaryKey);
+      const verified = inspect(written);
+      if (!verified.valid || written !== serialized) {
+        throw new Error("The local campaign write could not be verified; the validated backup was retained.");
+      }
+      return { serialized, workspace: verified.workspace };
+    }
+
+    return Object.freeze({
+      primaryKey,
+      backupKey,
+      load,
+      commit,
+      inspect
+    });
+  }
+
+  function tabIndexForKey(key, currentIndex, count) {
+    if (!Number.isInteger(currentIndex) || count < 1) return null;
+    if (key === "ArrowLeft") return (currentIndex - 1 + count) % count;
+    if (key === "ArrowRight") return (currentIndex + 1) % count;
+    if (key === "Home") return 0;
+    if (key === "End") return count - 1;
+    return null;
+  }
+
+  function applyTabState(tabs, panel, selectedView) {
+    let selectedTab = null;
+    tabs.forEach((tab) => {
+      const selected = tab.dataset.view === selectedView;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected) selectedTab = tab;
+    });
+    if (!selectedTab) throw new Error(`Unknown workspace view: ${selectedView}`);
+    panel.setAttribute("aria-labelledby", selectedTab.id);
+    return selectedTab;
+  }
+
+  const testApi = Object.freeze({
+    STORAGE_KEY,
+    BACKUP_STORAGE_KEY,
+    RECOVERY_REQUIRED_CODE,
+    decodeStoredWorkspace,
+    serializeValidatedWorkspace,
+    createLocalJournal,
+    tabIndexForKey,
+    applyTabState
+  });
+  globalScope.CampaignWorkspaceAppHelpers = testApi;
+  if (typeof module !== "undefined" && module.exports) module.exports = testApi;
+  if (typeof document === "undefined") return;
+
   const runtime = globalThis.CampaignWorkspaceRuntime;
   const source = globalThis.PlayerChronicleSource;
   const adventure = globalThis.GullwatchAdventureSource;
   const root = document.querySelector("#workspace-view");
   const fileInput = document.querySelector("#campaign-file");
   const toast = document.querySelector("#toast");
+  const recoveryPanel = document.querySelector("#recovery-panel");
+  const recoveryMessage = document.querySelector("#recovery-message");
+  const journal = createLocalJournal(localStorage, runtime); // Routes localStorage.setItem through validated journal writes.
   const validViews = new Set(["overview", "brief", "record", "timeline", "factions", "canon", "kit", "field-test"]);
   const requestedView = new URLSearchParams(window.location.search).get("view");
   let activeView = validViews.has(requestedView) ? requestedView : "overview";
   let workspace = null;
   let toastTimer = null;
   let clockAdjustments = { flood_tide: 0, false_signal: 0 };
+  let recoveryState = null;
+  let initialLoadResult = null;
 
   const esc = (value) => String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -33,22 +198,33 @@
     toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2600);
   }
 
-  function saveLocal() {
-    localStorage.setItem(STORAGE_KEY, runtime.serialize(workspace));
+  function setSaveStatus(message) {
     const status = document.querySelector("#save-status");
-    status.textContent = "Saved locally";
+    status.textContent = message;
+  }
+
+  function saveLocal(options = {}) {
+    try {
+      journal.commit(workspace, options);
+      setSaveStatus("Saved locally");
+      return true;
+    } catch (error) {
+      setSaveStatus(error.code === RECOVERY_REQUIRED_CODE ? "Recovery action required" : "Local save failed - export JSON");
+      showToast(error.code === RECOVERY_REQUIRED_CODE
+        ? error.message
+        : `Local save failed; the last validated slot was retained. ${error.message}`);
+      return false;
+    }
   }
 
   function loadOrCreate() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        return runtime.hydrate(JSON.parse(saved));
-      } catch (error) {
-        localStorage.removeItem(STORAGE_KEY);
-        showToast(`Local save was not valid: ${error.message}`);
-      }
-    }
+    initialLoadResult = journal.load();
+    recoveryState = initialLoadResult.quarantineRaw === null ? null : {
+      raw: initialLoadResult.quarantineRaw,
+      issue: initialLoadResult.issue,
+      exported: false
+    };
+    if (initialLoadResult.workspace) return initialLoadResult.workspace;
     return runtime.createDefault(source, adventure, {
       seed: "gullwatch-first-light",
       createdAt: new Date().toISOString()
@@ -59,13 +235,31 @@
     return runtime.summarize(workspace);
   }
 
-  function setView(view) {
+  function updateRecoveryPanel() {
+    if (!recoveryState) {
+      recoveryPanel.hidden = true;
+      return;
+    }
+    recoveryPanel.hidden = false;
+    recoveryMessage.textContent = `${recoveryState.issue} The unreadable bytes remain in the primary slot. Download or copy them before replacing that slot.`;
+    document.querySelector("#replace-recovered-save").disabled = !recoveryState.exported;
+  }
+
+  function updateTabs() {
+    return applyTabState(
+      Array.from(document.querySelectorAll('[role="tab"][data-view]')),
+      root,
+      activeView
+    );
+  }
+
+  function setView(view, options = {}) {
+    if (!validViews.has(view)) throw new Error(`Unknown workspace view: ${view}`);
     activeView = view;
-    document.querySelectorAll("[data-view]").forEach((button) => {
-      button.setAttribute("aria-selected", String(button.dataset.view === view));
-    });
     render();
-    root.focus({ preventScroll: true });
+    const selectedTab = updateTabs();
+    if (options.focus === "tab") selectedTab.focus({ preventScroll: true });
+    else root.focus({ preventScroll: true });
   }
 
   function heading(eyebrow, title, description, actions = "") {
@@ -431,9 +625,9 @@
       if (action === "cancel-record") setView("overview");
       if (action === "generate-brief") {
         workspace = runtime.generateBrief(workspace);
-        saveLocal();
+        const saved = saveLocal();
         render();
-        showToast("Next-session brief rebuilt from current Canon.");
+        if (saved) showToast("Next-session brief rebuilt from current Canon.");
       }
       if (action === "copy-brief") {
         await navigator.clipboard.writeText(runtime.briefToMarkdown(workspace.brief));
@@ -455,9 +649,9 @@
       if (action === "export-factions") downloadFactionState();
       if (action === "reset-factions" && window.confirm("Reset all Saltglass faction pressure, posture, and projects to their authored defaults?")) {
         workspace = runtime.resetFactionState(workspace, new Date().toISOString());
-        saveLocal();
+        const saved = saveLocal();
         render();
-        showToast("Faction state reset to authored defaults.");
+        if (saved) showToast("Faction state reset to authored defaults.");
       }
     }));
 
@@ -480,11 +674,11 @@
         clockAdjustments
       });
       clockAdjustments = { flood_tide: 0, false_signal: 0 };
-      saveLocal();
+      const saved = saveLocal();
       activeView = "brief";
       renderNavigation();
       render();
-      showToast(`Session ${workspace.session_number - 1} committed; the next brief is ready.`);
+      if (saved) showToast(`Session ${workspace.session_number - 1} committed; the next brief is ready.`);
     });
 
     root.querySelectorAll("[data-faction-posture]").forEach((select) => select.addEventListener("change", () => {
@@ -493,9 +687,9 @@
         id: select.dataset.factionPosture,
         value: select.value
       }, new Date().toISOString());
-      saveLocal();
+      const saved = saveLocal();
       render();
-      showToast("Faction posture saved locally.");
+      if (saved) showToast("Faction posture saved locally.");
     }));
 
     root.querySelectorAll("[data-faction-project], [data-front-pressure]").forEach((button) => button.addEventListener("click", () => {
@@ -509,9 +703,9 @@
         id,
         value: Math.max(0, Math.min(maximum, current + step))
       }, new Date().toISOString());
-      saveLocal();
+      const saved = saveLocal();
       render();
-      showToast(isProject ? "Faction project saved locally." : "Front pressure saved locally.");
+      if (saved) showToast(isProject ? "Faction project saved locally." : "Front pressure saved locally.");
     }));
   }
 
@@ -521,7 +715,8 @@
     document.querySelector("#campaign-meta").textContent = `Session ${summary.sessionNumber} / Canon verified`;
     document.querySelector("#entity-count").textContent = `${summary.entityCount} entities`;
     document.querySelector("#event-count").textContent = `${summary.eventCount} events`;
-    document.querySelectorAll("[data-view]").forEach((button) => button.setAttribute("aria-selected", String(button.dataset.view === activeView)));
+    updateTabs();
+    updateRecoveryPanel();
   }
 
   function render() {
@@ -564,7 +759,53 @@
     showToast("Faction Fronts browser state saved.");
   }
 
-  document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+  function downloadText(contents, filename, type = "text/plain") {
+    const blob = new Blob([contents], { type });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  const tabs = Array.from(document.querySelectorAll('[role="tab"][data-view]'));
+  tabs.forEach((button) => {
+    button.addEventListener("click", () => setView(button.dataset.view, { focus: "tab" }));
+    button.addEventListener("keydown", (event) => {
+      const targetIndex = tabIndexForKey(event.key, tabs.indexOf(button), tabs.length);
+      if (targetIndex === null) return;
+      event.preventDefault();
+      setView(tabs[targetIndex].dataset.view, { focus: "tab" });
+    });
+  });
+  document.querySelector("#download-recovery-data").addEventListener("click", () => {
+    if (!recoveryState) return;
+    downloadText(recoveryState.raw, "gullwatch-unreadable-local-save.txt");
+    recoveryState.exported = true;
+    updateRecoveryPanel();
+    showToast("Unreadable local-save bytes downloaded. Replacement is now available.");
+  });
+  document.querySelector("#copy-recovery-data").addEventListener("click", async () => {
+    if (!recoveryState) return;
+    try {
+      await navigator.clipboard.writeText(recoveryState.raw);
+      recoveryState.exported = true;
+      updateRecoveryPanel();
+      showToast("Unreadable local-save bytes copied. Replacement is now available.");
+    } catch (error) {
+      showToast(`Recovery copy failed: ${error.message}`);
+    }
+  });
+  document.querySelector("#replace-recovered-save").addEventListener("click", () => {
+    if (!recoveryState?.exported) return;
+    if (!saveLocal({ allowInvalidPrimaryReplacement: true })) return;
+    recoveryState = null;
+    updateRecoveryPanel();
+    showToast("The recovered campaign replaced the unreadable primary; the backup remains available.");
+  });
   document.querySelector("#save-campaign").addEventListener("click", downloadCampaign);
   document.querySelector("#open-campaign").addEventListener("click", () => {
     delete fileInput.dataset.intent;
@@ -575,7 +816,7 @@
       seed: `gullwatch-${Date.now().toString(36)}`,
       createdAt: new Date().toISOString()
     });
-    saveLocal();
+    if (!saveLocal()) return;
     activeView = "overview";
     render();
     showToast("New Gullwatch campaign created.");
@@ -591,14 +832,16 @@
         : factionImport
           ? runtime.importFactionState(workspace, parsed, new Date().toISOString())
           : runtime.hydrate(parsed);
-      saveLocal();
+      const saved = saveLocal();
       activeView = factionImport ? "factions" : "overview";
       render();
-      showToast(factionImport
-        ? "Faction Fronts browser state imported."
-        : parsed.document_type === "loot-table-works.campaign-start"
-        ? "Campaign Start imported into Gullwatch."
-        : "Campaign opened and validated.");
+      if (saved) {
+        showToast(factionImport
+          ? "Faction Fronts browser state imported."
+          : parsed.document_type === "loot-table-works.campaign-start"
+          ? "Campaign Start imported into Gullwatch."
+          : "Campaign opened and validated.");
+      }
     } catch (error) {
       showToast(error.message);
     } finally {
@@ -610,8 +853,15 @@
   try {
     if (!runtime || !source || !adventure) throw new Error("Campaign Workspace runtime data is unavailable.");
     workspace = loadOrCreate();
+    if (initialLoadResult.recovered) {
+      setSaveStatus("Recovered validated backup");
+      showToast(initialLoadResult.issue);
+    } else if (recoveryState) {
+      setSaveStatus("Recovery action required");
+      showToast("The local save is unreadable. Recovery actions are available.");
+    }
     render();
   } catch (error) {
     root.innerHTML = `<div class="empty-state"><div><h2>Campaign unavailable</h2><p>${esc(error.message)}</p></div></div>`;
   }
-})();
+})(globalThis);

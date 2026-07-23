@@ -154,6 +154,38 @@ var CampaignWorkspaceRuntimeBundle = (() => {
         function humanize(value) {
           return String(value).replace(/[._-]+/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, (character) => character.toUpperCase());
         }
+        function nounStem(value) {
+          const word = String(value ?? "").toLowerCase().replace(/[^a-z]/g, "");
+          if (word.endsWith("ies") && word.length > 3) return `${word.slice(0, -3)}y`;
+          if (word.endsWith("s") && !word.endsWith("ss") && word.length > 3) return word.slice(0, -1);
+          return word;
+        }
+        function editorialName(value) {
+          const words = String(value ?? "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
+          return words.filter((word, index) => {
+            if (index === 0) return true;
+            const previous = words[index - 1];
+            return !nounStem(previous) || nounStem(previous) !== nounStem(word);
+          }).join(" ");
+        }
+        function stripTerminalPunctuation(value) {
+          return String(value ?? "").replace(/\s+/g, " ").trim().replace(/[.!?]+$/g, "");
+        }
+        function completeSentence(value) {
+          const text = stripTerminalPunctuation(value);
+          return text ? `${text}.` : "";
+        }
+        function dependentClause(value) {
+          return stripTerminalPunctuation(value).replace(
+            /^(What|Who|Where|When|Why|How)\b/,
+            (word) => word.toLowerCase()
+          );
+        }
+        function nounPhrase(value, fallback) {
+          const text = stripTerminalPunctuation(editorialName(value));
+          const sentenceShaped = /^(?:answer|choose|complete|decide|deliver|determine|discover|find|investigate|make|produce|protect|reach|record|recover|repair|resolve|return|save|secure|stop|test|uncover)\b/i.test(text);
+          return !text || sentenceShaped || text.length > 72 ? fallback : text;
+        }
         function possessive(name) {
           return /s$/i.test(name) ? `${name}'` : `${name}'s`;
         }
@@ -163,6 +195,40 @@ var CampaignWorkspaceRuntimeBundle = (() => {
         function clampInteger(value, minimum, maximum, fallback) {
           const parsed = Number(value);
           return Number.isInteger(parsed) && parsed >= minimum && parsed <= maximum ? parsed : fallback;
+        }
+        function optionalText(value) {
+          return typeof value === "string" && value.trim() ? value.trim() : null;
+        }
+        function normalizeContinuity(input) {
+          if (!isObject3(input)) return null;
+          const faction = isObject3(input.factionReaction) ? {
+            faction_id: optionalText(input.factionReaction.factionId),
+            faction_name: optionalText(input.factionReaction.factionName),
+            posture: optionalText(input.factionReaction.posture),
+            front_id: optionalText(input.factionReaction.frontId),
+            front_title: optionalText(input.factionReaction.frontTitle),
+            pressure: Number.isInteger(input.factionReaction.pressure) ? input.factionReaction.pressure : null,
+            pressure_maximum: Number.isInteger(input.factionReaction.pressureMaximum) ? input.factionReaction.pressureMaximum : null,
+            consequence: optionalText(input.factionReaction.consequence)
+          } : null;
+          const location = isObject3(input.locationChange) ? {
+            from: optionalText(input.locationChange.from),
+            to: optionalText(input.locationChange.to),
+            text: optionalText(input.locationChange.text)
+          } : null;
+          const reveal = isObject3(input.actionableReveal) ? {
+            clue_id: optionalText(input.actionableReveal.clueId),
+            clue: optionalText(input.actionableReveal.clue),
+            reveals: optionalText(input.actionableReveal.reveals),
+            action: optionalText(input.actionableReveal.action)
+          } : null;
+          return deepFreeze({
+            completed_outcome_recap: optionalText(input.completedOutcomeRecap),
+            unresolved_choice: optionalText(input.unresolvedChoice),
+            faction_reaction: faction,
+            location_change: location,
+            actionable_reveal: reveal
+          });
         }
         function normalizeOptions(input = {}) {
           if (!isObject3(input)) throw new Error("Campaign Workspace options must be an object.");
@@ -176,7 +242,8 @@ var CampaignWorkspaceRuntimeBundle = (() => {
             sessionNumber: clampInteger(input.sessionNumber, 1, 999, 1),
             sceneCount: clampInteger(input.sceneCount, 3, 7, 5),
             entityLimit: clampInteger(input.entityLimit, 3, 10, 6),
-            callbackLimit: clampInteger(input.callbackLimit, 2, 6, 4)
+            callbackLimit: clampInteger(input.callbackLimit, 2, 6, 4),
+            continuity: normalizeContinuity(input.continuity)
           });
         }
         function unwrapSnapshot(input) {
@@ -278,7 +345,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
           const validation = validateSnapshot(input);
           if (!validation.valid) throw new Error(validation.errors.join("\n"));
           const normalized = unwrapSnapshot(input);
-          const entities = [...normalized.entities].map(cloneJson2).sort((left, right) => left.id.localeCompare(right.id));
+          const entities = [...normalized.entities].map(cloneJson2).map((entity) => ({ ...entity, name: editorialName(entity.name) })).sort((left, right) => left.id.localeCompare(right.id));
           const relationships = [...normalized.relationships].map(cloneJson2).sort((left, right) => left.id.localeCompare(right.id));
           const entitiesById = new Map(entities.map((entity) => [entity.id, entity]));
           const relationshipsById = new Map(relationships.map((relationship) => [relationship.id, relationship]));
@@ -513,7 +580,100 @@ var CampaignWorkspaceRuntimeBundle = (() => {
           if (sceneCount === 6) return [0, 1, 2, 3, 5, 6];
           return [0, 1, 2, 3, 4, 5, 6];
         }
-        function buildScenes(index, signals, involved, options, briefId) {
+        function buildEditorialContinuity(index, signals, involved, options) {
+          const primary = index.entitiesById.get(signals[0].entity_id);
+          const secondary = index.entitiesById.get(involved[1]?.id) ?? primary;
+          const supplied = options.continuity ?? {};
+          const suppliedFaction = supplied.faction_reaction;
+          const factionEntity = involved.map((entry) => index.entitiesById.get(entry.id)).find((entity) => /faction/i.test(entity?.entity_type ?? ""));
+          const factionName = editorialName(suppliedFaction?.faction_name ?? factionEntity?.name ?? secondary.name);
+          const factionConsequence = suppliedFaction?.consequence ?? `${factionName} moves first to control access to ${primary.name} and demands a public answer.`;
+          const suppliedLocation = supplied.location_change;
+          const fromLocation = editorialName(suppliedLocation?.from ?? primary.name);
+          const toLocation = editorialName(suppliedLocation?.to ?? secondary.name);
+          const suppliedReveal = supplied.actionable_reveal;
+          const clue = suppliedReveal?.clue ?? `${signals[0].label} leaves physical evidence at ${toLocation}`;
+          const reveals = suppliedReveal?.reveals ?? `who benefits if ${signals[0].label.toLowerCase()} remains unresolved`;
+          return deepFreeze({
+            completed_outcome_recap: supplied.completed_outcome_recap ?? `The established campaign state now makes this consequence unavoidable: ${signals[0].detail}`,
+            unresolved_choice: supplied.unresolved_choice ?? `Decide how to change ${primary.name} without abandoning ${secondary.name}.`,
+            faction_reaction: {
+              faction_id: suppliedFaction?.faction_id ?? factionEntity?.id ?? null,
+              faction_name: factionName,
+              posture: suppliedFaction?.posture ?? "active",
+              front_id: suppliedFaction?.front_id ?? null,
+              front_title: suppliedFaction?.front_title ?? null,
+              pressure: suppliedFaction?.pressure ?? null,
+              pressure_maximum: suppliedFaction?.pressure_maximum ?? null,
+              consequence: factionConsequence
+            },
+            location_change: {
+              from: fromLocation,
+              to: toLocation,
+              text: suppliedLocation?.text ?? `Move play from ${fromLocation} to ${toLocation}; the changed ground makes the next decision visible.`
+            },
+            actionable_reveal: {
+              clue_id: suppliedReveal?.clue_id ?? `derived:${signals[0].signal_id}`,
+              clue,
+              reveals,
+              action: suppliedReveal?.action ?? `Give the players this clue before asking what they do next: "${stripTerminalPunctuation(clue)}."`
+            }
+          });
+        }
+        function sceneEditorial(template, context) {
+          const {
+            primary,
+            secondary,
+            signal,
+            continuity
+          } = context;
+          const faction = continuity.faction_reaction;
+          const location = continuity.location_change;
+          const reveal = continuity.actionable_reveal;
+          const primarySubject = nounPhrase(primary.name, "the recorded outcome");
+          const secondarySubject = nounPhrase(secondary.name, "the opening expedition");
+          const clueText = stripTerminalPunctuation(reveal.clue);
+          const revealText = dependentClause(reveal.reveals);
+          const variants = {
+            consequence: {
+              beat: `Completed outcome: ${continuity.completed_outcome_recap} ${faction.faction_name} answers immediately: ${faction.consequence}`,
+              choice: `Meet ${faction.faction_name} openly, protect ${primarySubject} from the reaction, or use the brief delay to secure evidence.`,
+              consequence: `If no one responds, ${faction.faction_name} completes its first move and sets the terms around ${primarySubject}.`
+            },
+            trace: {
+              beat: `${completeSentence(location.text)} At ${location.to}, a usable clue states: "${clueText}." It reveals ${completeSentence(revealText)}`,
+              choice: `Act on the reveal now, test it against ${possessive(secondarySubject)} account, or present the evidence to ${faction.faction_name}.`,
+              consequence: `If the clue is ignored, access to ${location.to} closes and the reveal reaches ${faction.faction_name} first.`
+            },
+            leverage: {
+              beat: `${secondarySubject} can provide ${leverageFor(secondary)} at ${location.to}, but only if the group states what the completed outcome now obliges them to protect.`,
+              choice: `Spend ${possessive(secondarySubject)} leverage on access, proof, or protection; the unchosen benefit becomes unavailable this session.`,
+              consequence: `If the offer lapses, ${secondarySubject} withdraws the leverage and ${signal.label.toLowerCase()} becomes harder to verify.`
+            },
+            collision: {
+              beat: `${faction.faction_name} brings its ${faction.posture} reaction into direct conflict with ${possessive(secondarySubject)} interest: ${faction.consequence}`,
+              choice: `Back ${secondarySubject}, accept ${possessive(faction.faction_name)} terms, or expose ${revealText} and force both sides to answer.`,
+              consequence: `If the conflict is left alone, ${faction.faction_name} controls ${location.to} and ${secondarySubject} acts without the party.`
+            },
+            cost: {
+              beat: `The cost of delay becomes concrete at ${location.to}: ${completeSentence(signal.detail)} The clue states: "${clueText}."`,
+              choice: `Pay with time to preserve the clue, surrender access to reduce immediate pressure, or accept a lasting cost around ${primarySubject}.`,
+              consequence: `If the cost is deferred, ${signal.label} advances and the clue can only be recovered by conceding leverage to ${faction.faction_name}.`
+            },
+            decision: {
+              beat: `Unresolved choice: ${continuity.unresolved_choice} ${faction.faction_name} will carry out its named consequence unless the decision changes its position.`,
+              choice: `Answer the unresolved choice by naming who gains access to ${location.to}, who receives the reveal, and what ${faction.faction_name} must do next.`,
+              consequence: `If the party refuses the decision, ${faction.faction_name} decides by action and ${primarySubject} absorbs the consequence.`
+            },
+            record: {
+              beat: `Close on the result of "${continuity.unresolved_choice}" and state how the move from ${location.from} to ${location.to} changed the campaign.`,
+              choice: `Record the completed outcome, what the clue revealed, ${possessive(faction.faction_name)} reaction, and one genuinely unresolved next choice.`,
+              consequence: `If the result is not recorded, preserve ${possessive(faction.faction_name)} move and the lost access to ${location.to} as explicit next-session pressure.`
+            }
+          };
+          return variants[template.id];
+        }
+        function buildScenes(index, signals, involved, options, briefId, continuity) {
           const primary = index.entitiesById.get(signals[0].entity_id);
           const templates = sceneTemplateIndexes(options.sceneCount).map((indexValue) => SCENE_TEMPLATES[indexValue]);
           const involvedIds = involved.map((entity) => entity.id);
@@ -528,15 +688,21 @@ var CampaignWorkspaceRuntimeBundle = (() => {
               ...focusIds.map((id) => sourceReference("entity", id)),
               ...relationships.map((relationship) => sourceReference("relationship", relationship.id))
             ];
-            const beat = position === 0 ? `${signalEntity.name} makes the consequence visible before anyone can treat it as background: ${signal.detail}` : `${secondary.name} offers ${leverageFor(secondary)}, but using it changes how the group can answer ${signal.label.toLowerCase()} around ${primary.name}.`;
+            const editorial = sceneEditorial(template, {
+              primary,
+              secondary,
+              signal,
+              signalEntity,
+              continuity
+            });
             return {
               scene_id: `cws-${String(position + 1).padStart(2, "0")}-${hexHash(`${briefId}|${template.id}|${signal.signal_id}|${secondary.id}`)}`,
               order: position + 1,
               title: template.title,
               purpose: template.purpose,
-              beat,
-              choice: position === templates.length - 1 ? `State which truth changes, which track moves, and which thread remains open around ${primary.name}.` : `Choose whether to use ${possessive(secondary.name)} leverage, reduce the immediate pressure, or preserve that option for the next scene.`,
-              consequence_if_ignored: signal.kind === "clock" ? `${signal.label} remains at ${signal.current}/${signal.maximum} and should advance when the fiction supports it.` : `${signal.detail} Preserve it as an explicit callback in the next brief.`,
+              beat: editorial.beat,
+              choice: editorial.choice,
+              consequence_if_ignored: editorial.consequence,
               focus_entity_ids: focusIds,
               source_references: references
             };
@@ -607,10 +773,26 @@ var CampaignWorkspaceRuntimeBundle = (() => {
           if (!Array.isArray(brief.scenes) || brief.scenes.length < 3 || brief.scenes.length > 7) {
             errors.push("Session brief must contain three through seven scenes.");
           } else {
+            const choices = /* @__PURE__ */ new Set();
+            const consequences = /* @__PURE__ */ new Set();
             brief.scenes.forEach((scene, position) => {
               if (scene.order !== position + 1) errors.push(`Scene ${position + 1} is out of order.`);
               if (sceneIds.has(scene.scene_id)) errors.push(`Duplicate scene ID: ${scene.scene_id}.`);
               sceneIds.add(scene.scene_id);
+              if (typeof scene.choice !== "string" || !scene.choice.trim()) {
+                errors.push(`Scene ${position + 1} requires an actionable choice.`);
+              } else if (choices.has(scene.choice)) {
+                errors.push(`Scene ${position + 1} repeats another scene's choice.`);
+              } else {
+                choices.add(scene.choice);
+              }
+              if (typeof scene.consequence_if_ignored !== "string" || !scene.consequence_if_ignored.trim()) {
+                errors.push(`Scene ${position + 1} requires a scene-specific consequence.`);
+              } else if (consequences.has(scene.consequence_if_ignored)) {
+                errors.push(`Scene ${position + 1} repeats another scene's consequence.`);
+              } else {
+                consequences.add(scene.consequence_if_ignored);
+              }
             });
           }
           if (!brief.objective?.text) errors.push("Session brief objective is required.");
@@ -673,6 +855,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
             options.sceneCount,
             options.entityLimit,
             options.callbackLimit,
+            stableStringify(options.continuity ?? {}),
             stateFingerprint
           ].join("|"))}`;
           const involved = collectInvolvedEntities(index, signals, options);
@@ -695,7 +878,8 @@ var CampaignWorkspaceRuntimeBundle = (() => {
             continuity_signal_id: primarySignal.signal_id,
             source_references: primarySignal.source_references
           };
-          const scenes = buildScenes(index, signals, involved, options, briefId);
+          const editorialContinuity = buildEditorialContinuity(index, signals, involved, options);
+          const scenes = buildScenes(index, signals, involved, options, briefId, editorialContinuity);
           const brief = {
             schema_version: VERSION,
             generator: "Loot Table Works Campaign Workspace",
@@ -712,6 +896,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
             involved_entities: involved,
             continuity_callbacks: callbacks,
             scenes,
+            editorial_continuity: editorialContinuity,
             source_references: [],
             reference_ledger: [],
             state_summary: {
@@ -2284,8 +2469,16 @@ var CampaignWorkspaceRuntimeBundle = (() => {
   var WORKSPACE_SCHEMA_VERSION = "1.0.0";
   var WORKSPACE_GENERATOR = "Loot Table Works Gullwatch Campaign Workspace";
   var FACTION_FRONTS_INTEGRATION_VERSION = "1.0.0";
+  var PRODUCER_MAPPING_VERSION = "1.0.0";
   var OUTCOMES = /* @__PURE__ */ new Set(["victory", "costly_win", "setback"]);
   var FACTION_POSTURES = /* @__PURE__ */ new Set(["cooperative", "watchful", "strained", "hostile", "fractured"]);
+  var FACTION_POSTURE_PRIORITY = Object.freeze({
+    cooperative: 1,
+    watchful: 2,
+    strained: 3,
+    hostile: 5,
+    fractured: 4
+  });
   var GULLWATCH_LOCATION_ID = "loc-coastal-02";
   function clone(value) {
     return value === void 0 ? void 0 : JSON.parse(JSON.stringify(value));
@@ -2472,6 +2665,434 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     });
     return mergeGullwatchRegistry(base, campaignStart);
   }
+  function producerCanonId(startId, kind, sourceId) {
+    return `cwp-${kind}-${hash(`${startId}|${kind}|${sourceId}`)}`;
+  }
+  function createProducerMapping(producerStart) {
+    const opening = producerStart.opening_session;
+    const records = [
+      ...opening.scenes.map((scene, index) => ({
+        mapping_id: `cwm-${hash(`${producerStart.start_id}|scene|${scene.id}`)}`,
+        source_kind: "scene",
+        source_id: scene.id,
+        canon_entity_id: producerCanonId(producerStart.start_id, "scene", scene.id),
+        consumed_by: "opening_brief_scene",
+        visible_path: `brief.scenes[${index}]`
+      })),
+      ...opening.characters.map((character, index) => ({
+        mapping_id: `cwm-${hash(`${producerStart.start_id}|character|${character.character_id}`)}`,
+        source_kind: "character",
+        source_id: character.character_id,
+        canon_entity_id: producerCanonId(producerStart.start_id, "character", character.character_id),
+        consumed_by: "workspace_cast_and_brief",
+        visible_path: `summary.cast[${index}]`
+      }))
+    ];
+    return {
+      mapping_version: PRODUCER_MAPPING_VERSION,
+      start_id: producerStart.start_id,
+      opening_adventure_id: opening.adventure_id,
+      root_canon_entity_id: producerCanonId(producerStart.start_id, "adventure", opening.adventure_id),
+      records
+    };
+  }
+  function integrateProducerCanon(canon, producerStart, mapping) {
+    const candidate = clone(canon);
+    const opening = producerStart.opening_session;
+    const entities = new Map(candidate.baseline.entities.map((entity) => [entity.id, entity]));
+    const relationships = new Map(candidate.baseline.relationships.map((relationship) => [relationship.id, relationship]));
+    const rootId = mapping.root_canon_entity_id;
+    entities.set(rootId, {
+      id: rootId,
+      entity_type: "opening_adventure",
+      name: opening.title,
+      status: "active",
+      tags: ["campaign-start", "opening-session", opening.tone],
+      attributes: {
+        source_module: "campaign_start",
+        facts: {
+          producer_start_id: producerStart.start_id,
+          producer_adventure_id: opening.adventure_id,
+          opening_logline: opening.logline
+        },
+        source_record: {
+          title: opening.title,
+          logline: opening.logline,
+          duration_minutes: opening.duration_minutes,
+          party_size: opening.party_size
+        }
+      }
+    });
+    const sceneMappings = new Map(
+      mapping.records.filter((record) => record.source_kind === "scene").map((record) => [record.source_id, record])
+    );
+    opening.scenes.forEach((scene) => {
+      const record = sceneMappings.get(scene.id);
+      entities.set(record.canon_entity_id, {
+        id: record.canon_entity_id,
+        entity_type: "opening_scene",
+        name: scene.title,
+        status: "planned",
+        tags: ["campaign-start", "opening-scene"],
+        attributes: {
+          source_module: "campaign_start",
+          facts: {
+            source_scene_id: scene.id,
+            scene_order: scene.order,
+            minutes: scene.minutes
+          },
+          source_record: clone(scene)
+        }
+      });
+      const relationshipId = `cwp-rel-${hash(`${producerStart.start_id}|contains|${scene.id}`)}`;
+      relationships.set(relationshipId, {
+        id: relationshipId,
+        from: rootId,
+        to: record.canon_entity_id,
+        relationship_type: "contains_opening_scene",
+        attributes: {
+          source_module: "campaign_start",
+          graph_metadata: { source_scene_id: scene.id, scene_order: scene.order }
+        }
+      });
+    });
+    const characterMappings = new Map(
+      mapping.records.filter((record) => record.source_kind === "character").map((record) => [record.source_id, record])
+    );
+    opening.characters.forEach((character) => {
+      const record = characterMappings.get(character.character_id);
+      entities.set(record.canon_entity_id, {
+        id: record.canon_entity_id,
+        entity_type: "character",
+        name: character.name,
+        status: "active",
+        tags: ["campaign-start", "player-character"],
+        attributes: {
+          source_module: "campaign_start",
+          facts: {
+            source_character_id: character.character_id,
+            role: character.role,
+            drive: character.drive,
+            burden: character.burden,
+            bond: character.bond
+          },
+          source_record: clone(character)
+        }
+      });
+      const relationshipId = `cwp-rel-${hash(`${producerStart.start_id}|participates|${character.character_id}`)}`;
+      relationships.set(relationshipId, {
+        id: relationshipId,
+        from: record.canon_entity_id,
+        to: rootId,
+        relationship_type: "participates_in_opening",
+        attributes: {
+          source_module: "campaign_start",
+          graph_metadata: { source_character_id: character.character_id }
+        }
+      });
+    });
+    candidate.name = producerStart.campaign.title;
+    candidate.baseline.entities = [...entities.values()].sort((left, right) => left.id.localeCompare(right.id));
+    candidate.baseline.relationships = [...relationships.values()].sort((left, right) => left.id.localeCompare(right.id));
+    const validation = validateCanonDocument(candidate);
+    if (!validation.valid) throw new Error(validation.errors.join("\n"));
+    return candidate;
+  }
+  function validateProducerMapping(workspace) {
+    const errors = [];
+    if (!workspace.producer_start) {
+      if (workspace.producer_mapping !== null && workspace.producer_mapping !== void 0) {
+        errors.push("Producer mapping must be absent when no Campaign Start is attached.");
+      }
+      return { valid: errors.length === 0, errors };
+    }
+    if (!isObject2(workspace.producer_mapping)) {
+      return { valid: false, errors: ["A deterministic producer mapping is required for an imported Campaign Start."] };
+    }
+    const expected = createProducerMapping(workspace.producer_start);
+    if (JSON.stringify(workspace.producer_mapping) !== JSON.stringify(expected)) {
+      errors.push("Producer mapping does not match the deterministic Campaign Start mapping.");
+      return { valid: false, errors };
+    }
+    const materialized = materializeCanon(workspace.canon);
+    const byId = new Map(materialized.entities.map((entity) => [entity.id, entity]));
+    if (!byId.has(expected.root_canon_entity_id)) {
+      errors.push("Producer mapping root is missing from Canon.");
+    }
+    expected.records.forEach((record) => {
+      const entity = byId.get(record.canon_entity_id);
+      if (!entity) {
+        errors.push(`Mapped ${record.source_kind} ${record.source_id} is missing from Canon.`);
+        return;
+      }
+      const sourceId = record.source_kind === "scene" ? entity.attributes?.facts?.source_scene_id : entity.attributes?.facts?.source_character_id;
+      if (sourceId !== record.source_id) {
+        errors.push(`Mapped ${record.source_kind} ${record.source_id} lost its source identity.`);
+      }
+    });
+    const expectedSceneIds = workspace.producer_start.opening_session.scenes.map((scene) => scene.id).sort();
+    const expectedCharacterIds = workspace.producer_start.opening_session.characters.map((character) => character.character_id).sort();
+    const mappedSceneIds = expected.records.filter((record) => record.source_kind === "scene").map((record) => record.source_id).sort();
+    const mappedCharacterIds = expected.records.filter((record) => record.source_kind === "character").map((record) => record.source_id).sort();
+    if (JSON.stringify(mappedSceneIds) !== JSON.stringify(expectedSceneIds)) {
+      errors.push("Producer mapping does not consume every imported scene ID.");
+    }
+    if (JSON.stringify(mappedCharacterIds) !== JSON.stringify(expectedCharacterIds)) {
+      errors.push("Producer mapping does not consume every imported character ID.");
+    }
+    if (workspace.session_number === 1 && workspace.sessions.length === 0) {
+      const briefSceneIds = (workspace.brief?.scenes ?? []).map((scene) => scene.source_scene_id).filter(Boolean).sort();
+      const briefCharacterIds = (workspace.brief?.involved_entities ?? []).map((character) => character.source_character_id).filter(Boolean).sort();
+      if (JSON.stringify(briefSceneIds) !== JSON.stringify(expectedSceneIds)) {
+        errors.push("Opening brief does not visibly consume every imported scene ID.");
+      }
+      if (JSON.stringify(briefCharacterIds) !== JSON.stringify(expectedCharacterIds)) {
+        errors.push("Opening brief does not visibly consume every imported character ID.");
+      }
+    }
+    return { valid: errors.length === 0, errors };
+  }
+  function collectBriefReferences(brief) {
+    const rows = [
+      ...brief.objective?.source_references ?? [],
+      ...(brief.stakes ?? []).flatMap((stake) => stake.source_references ?? []),
+      ...(brief.involved_entities ?? []).flatMap((entity) => entity.source_references ?? []),
+      ...(brief.continuity_callbacks ?? []).flatMap((callback) => callback.source_references ?? []),
+      ...(brief.scenes ?? []).flatMap((scene) => scene.source_references ?? [])
+    ];
+    const unique = new Map(rows.map((reference) => [
+      `${reference.kind}:${reference.id}:${reference.path ?? ""}`,
+      reference
+    ]));
+    return [...unique.values()].sort((left, right) => {
+      return left.kind.localeCompare(right.kind) || left.id.localeCompare(right.id) || String(left.path ?? "").localeCompare(String(right.path ?? ""));
+    });
+  }
+  function buildProducerOpeningBrief(workspace) {
+    const opening = workspace.producer_start.opening_session;
+    const mapping = workspace.producer_mapping;
+    const registry = materializeCanon(workspace.canon);
+    const input = { campaign_id: workspace.canon.campaign_id, registry };
+    const sceneMappings = new Map(
+      mapping.records.filter((record) => record.source_kind === "scene").map((record) => [record.source_id, record])
+    );
+    const characterMappings = new Map(
+      mapping.records.filter((record) => record.source_kind === "character").map((record) => [record.source_id, record])
+    );
+    const rootReference = { kind: "entity", id: mapping.root_canon_entity_id };
+    const objectiveText = opening.source_records?.quest?.objective?.description ? `Complete the opening objective: ${opening.source_records.quest.objective.description}` : `Complete the opening objective in "${opening.title}" and record what becomes true.`;
+    const briefId = `cw-opening-${hash(`${workspace.workspace_id}|${workspace.seed}|${opening.adventure_id}`)}`;
+    const involved = opening.characters.map((character, index) => {
+      const record = characterMappings.get(character.character_id);
+      return {
+        id: record.canon_entity_id,
+        source_character_id: character.character_id,
+        mapping_record_id: record.mapping_id,
+        name: character.name,
+        entity_type: "character",
+        role: character.role,
+        relevance_score: 100 - index,
+        source_references: [{ kind: "entity", id: record.canon_entity_id }]
+      };
+    });
+    const callbacks = opening.clues.map((clue, index) => {
+      const scene = opening.scenes[index % opening.scenes.length];
+      const record = sceneMappings.get(scene.id);
+      return {
+        callback_id: `cwc-opening-${hash(`${briefId}|${clue.id}`)}`,
+        priority: index + 1,
+        kind: "clue",
+        entity_id: record.canon_entity_id,
+        text: `${clue.clue} Reveal: ${clue.reveals}`,
+        urgency: index === 0 ? "high" : "active",
+        source_references: [{ kind: "entity", id: record.canon_entity_id }]
+      };
+    });
+    const scenes = opening.scenes.map((scene, index) => {
+      const record = sceneMappings.get(scene.id);
+      const character = involved[index % involved.length];
+      return {
+        scene_id: record.canon_entity_id,
+        source_scene_id: scene.id,
+        mapping_record_id: record.mapping_id,
+        order: scene.order,
+        title: scene.title,
+        purpose: scene.purpose,
+        beat: scene.read_aloud,
+        choice: scene.exit,
+        consequence_if_ignored: `${scene.title} remains unresolved; apply this scene's final GM move: ${scene.gm_moves.at(-1)}`,
+        focus_entity_ids: [record.canon_entity_id, character.id, mapping.root_canon_entity_id],
+        source_references: [
+          { kind: "entity", id: record.canon_entity_id },
+          { kind: "entity", id: character.id },
+          rootReference
+        ]
+      };
+    });
+    const brief = {
+      schema_version: globalThis.CampaignWorkspaceCore.VERSION,
+      generator: "Loot Table Works Campaign Workspace",
+      brief_id: briefId,
+      campaign_id: workspace.canon.campaign_id,
+      seed: workspace.seed,
+      session_number: 1,
+      tone: workspace.tone,
+      tone_label: globalThis.CampaignWorkspaceCore.TONES[workspace.tone].label,
+      gm_direction: `Run the imported ${opening.duration_minutes}-minute opening without replacing its scenes, party, or source records.`,
+      title: `Session 1: ${opening.title}`,
+      objective: {
+        text: objectiveText,
+        primary_entity_id: mapping.root_canon_entity_id,
+        continuity_signal_id: `producer:${opening.adventure_id}`,
+        source_references: [rootReference]
+      },
+      stakes: [
+        {
+          stake_id: `cwk-opening-${hash(`${briefId}|countdown`)}`,
+          entity_id: mapping.root_canon_entity_id,
+          urgency: "high",
+          text: `${opening.countdown.label} has ${opening.countdown.segments} segments before ${opening.countdown.final_state}`,
+          source_references: [rootReference]
+        },
+        {
+          stake_id: `cwk-opening-${hash(`${briefId}|location`)}`,
+          entity_id: mapping.root_canon_entity_id,
+          urgency: "active",
+          text: opening.source_records.location.local_hazard,
+          source_references: [rootReference]
+        },
+        {
+          stake_id: `cwk-opening-${hash(`${briefId}|reward`)}`,
+          entity_id: mapping.root_canon_entity_id,
+          urgency: "connected",
+          text: opening.rewards.rationale,
+          source_references: [rootReference]
+        }
+      ],
+      involved_entities: involved,
+      continuity_callbacks: callbacks,
+      scenes,
+      editorial_continuity: {
+        completed_outcome_recap: "The imported opening session is ready to play and has not yet been resolved.",
+        unresolved_choice: scenes.at(-1).choice,
+        faction_reaction: null,
+        location_change: null,
+        actionable_reveal: {
+          clue_id: opening.clues[0].id,
+          clue: opening.clues[0].clue,
+          reveals: opening.clues[0].reveals,
+          action: opening.clues[0].fail_forward
+        }
+      },
+      import_mapping: clone(mapping),
+      source_references: [],
+      reference_ledger: [],
+      state_summary: {
+        entities: registry.entities.length,
+        relationships: registry.relationships.length,
+        continuity_signals: callbacks.length,
+        critical_signals: 0,
+        fallback_used: false,
+        imported_scenes: opening.scenes.length,
+        imported_characters: opening.characters.length
+      }
+    };
+    brief.source_references = collectBriefReferences(brief);
+    brief.reference_ledger = [...new Set(brief.source_references.map((reference) => reference.id))].sort();
+    brief.validation = globalThis.CampaignWorkspaceCore.validateBrief(brief, input);
+    if (!brief.validation.valid) throw new Error(brief.validation.errors.join("\n"));
+    return brief;
+  }
+  function factionReactionFor(workspace) {
+    const contract = factionFrontsContract();
+    const state = factionFrontsSliceFor(workspace).state;
+    const frontsByFaction = new Map(contract.factions.map((faction) => [faction.faction_id, []]));
+    contract.fronts.forEach((front) => {
+      frontsByFaction.get(front.faction_a.id)?.push(front);
+      frontsByFaction.get(front.faction_b.id)?.push(front);
+    });
+    const ranked = contract.factions.map((faction) => {
+      const posture = state.faction_posture[faction.faction_id];
+      const fronts = frontsByFaction.get(faction.faction_id) ?? [];
+      const front = [...fronts].sort((left, right) => {
+        return state.front_pressure[right.front_id] - state.front_pressure[left.front_id] || left.front_id.localeCompare(right.front_id);
+      })[0];
+      return {
+        faction,
+        posture,
+        projectSegments: state.faction_project_segments[faction.faction_id],
+        front,
+        frontPressure: state.front_pressure[front.front_id],
+        score: FACTION_POSTURE_PRIORITY[posture] * 100 + state.front_pressure[front.front_id] * 10 + state.faction_project_segments[faction.faction_id]
+      };
+    }).sort((left, right) => right.score - left.score || left.faction.faction_id.localeCompare(right.faction.faction_id));
+    const selected = ranked[0];
+    const consequenceByPosture = {
+      cooperative: "offers documented aid, but requires the party to name who will be accountable for the result",
+      watchful: "posts observers at the next approach and withholds access until the party presents verifiable evidence",
+      strained: "calls in an old obligation and narrows the safe route to force a public commitment",
+      hostile: "seizes the disputed route and evidence, confronting anyone who tries to move them without answering the claim",
+      fractured: "splits into rival wings; one leaks evidence while the other blocks the party's next route"
+    };
+    return {
+      factionId: selected.faction.faction_id,
+      factionName: selected.faction.name,
+      posture: selected.posture,
+      frontId: selected.front.front_id,
+      frontTitle: selected.front.title,
+      pressure: selected.frontPressure,
+      pressureMaximum: selected.front.pressure_max,
+      consequence: `${selected.faction.name} ${consequenceByPosture[selected.posture]} within "${selected.front.title}" at ${selected.frontPressure}/${selected.front.pressure_max} pressure.`
+    };
+  }
+  function locationChangeFor(workspace) {
+    const opening = workspace.producer_start?.opening_session;
+    if (opening) {
+      const location = opening.source_records.location;
+      const destination = opening.source_records.merchant?.proprietor ? `${opening.source_records.merchant.proprietor}'s contract table` : `${opening.source_records.quest.giver_name}'s meeting place`;
+      return {
+        from: location.name,
+        to: destination,
+        text: `Move play from ${location.name} to ${destination}; the return journey turns the recorded result into a public obligation.`
+      };
+    }
+    const route = workspace.adventure.routes[(workspace.session_number - 1) % workspace.adventure.routes.length];
+    return {
+      from: workspace.adventure.product.adventure_title,
+      to: route.name,
+      text: `Move play from ${workspace.adventure.product.adventure_title} to ${route.name}; ${route.risk}`
+    };
+  }
+  function actionableRevealFor(workspace) {
+    const opening = workspace.producer_start?.opening_session;
+    if (opening) {
+      const clue = opening.clues[Math.max(0, workspace.session_number - 2) % opening.clues.length];
+      return {
+        clueId: clue.id,
+        clue: clue.clue,
+        reveals: clue.reveals,
+        action: `Place the clue at the new location. On a failed investigation, use this fail-forward result: ${clue.fail_forward}`
+      };
+    }
+    const index = Math.max(0, workspace.session_number - 2) % workspace.adventure.gm_truths.length;
+    const truth = workspace.adventure.gm_truths[index];
+    return {
+      clueId: `gullwatch-truth-${index + 1}`,
+      clue: `A physical trace from the recorded outcome points to the Gullwatch route.`,
+      reveals: truth,
+      action: `Put the trace in reach before opposition arrives; reading it reveals: ${truth}`
+    };
+  }
+  function continuityContextFor(workspace) {
+    const latest = workspace.sessions.at(-1);
+    return {
+      completedOutcomeRecap: latest?.truth ?? workspace.producer_start?.opening_session.logline ?? workspace.adventure.pitch,
+      unresolvedChoice: latest?.next_thread ?? workspace.producer_start?.opening_session.scenes.at(-1).exit ?? workspace.campaign_start.active_objectives[1].player_facing,
+      factionReaction: factionReactionFor(workspace),
+      locationChange: locationChangeFor(workspace),
+      actionableReveal: actionableRevealFor(workspace)
+    };
+  }
   function generateBriefFor(workspace) {
     const registry = materializeCanon(workspace.canon);
     return globalThis.CampaignWorkspaceCore.generate(
@@ -2485,9 +3106,13 @@ var CampaignWorkspaceRuntimeBundle = (() => {
         sessionNumber: workspace.session_number,
         sceneCount: 5,
         entityLimit: 7,
-        callbackLimit: 4
+        callbackLimit: 4,
+        continuity: continuityContextFor(workspace)
       }
     );
+  }
+  function refreshBriefFor(workspace) {
+    return workspace.producer_start && workspace.session_number === 1 && workspace.sessions.length === 0 ? buildProducerOpeningBrief(workspace) : generateBriefFor(workspace);
   }
   function validateWorkspace(value) {
     const errors = [];
@@ -2525,6 +3150,10 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     if (!canonValidation.valid) errors.push(...canonValidation.errors);
     if (canonValidation.valid && value.canon.campaign_id !== value.campaign_start?.campaign_id) {
       errors.push("Canon campaign ID does not match the campaign start.");
+    }
+    if (canonValidation.valid) {
+      const producerMappingValidation = validateProducerMapping(value);
+      if (!producerMappingValidation.valid) errors.push(...producerMappingValidation.errors);
     }
     if (!value.brief?.validation?.valid) errors.push("A valid current session brief is required.");
     if (value.brief?.campaign_id !== value.canon?.campaign_id) errors.push("Session brief campaign ID does not match Canon.");
@@ -2583,7 +3212,9 @@ var CampaignWorkspaceRuntimeBundle = (() => {
       tone: toneMap[producerStart.opening_session.tone] ?? "grounded"
     });
     workspace.producer_start = clone(producerStart);
-    workspace.brief = clone(generateBriefFor(workspace));
+    workspace.producer_mapping = createProducerMapping(workspace.producer_start);
+    workspace.canon = integrateProducerCanon(workspace.canon, workspace.producer_start, workspace.producer_mapping);
+    workspace.brief = clone(buildProducerOpeningBrief(workspace));
     const validation = validateWorkspace(workspace);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
     return workspace;
@@ -2727,7 +3358,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     });
     next.session_number += 1;
     next.updated_at = timestamp;
-    next.brief = clone(generateBriefFor(next));
+    next.brief = clone(refreshBriefFor(next));
     const nextValidation = validateWorkspace(next);
     if (!nextValidation.valid) throw new Error(nextValidation.errors.join("\n"));
     return next;
@@ -2736,7 +3367,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const validation = validateWorkspace(value);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
     const next = hydrateWorkspace(value);
-    next.brief = clone(generateBriefFor(next));
+    next.brief = clone(refreshBriefFor(next));
     const nextValidation = validateWorkspace(next);
     if (!nextValidation.valid) throw new Error(nextValidation.errors.join("\n"));
     return next;
@@ -2745,6 +3376,11 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const candidate = clone(value);
     if (isObject2(candidate) && (candidate.faction_fronts === null || candidate.faction_fronts === void 0)) {
       candidate.faction_fronts = createDefaultFactionFrontsSlice(candidate.updated_at ?? candidate.created_at);
+    }
+    if (isObject2(candidate) && candidate.producer_start && !candidate.producer_mapping) {
+      candidate.producer_mapping = createProducerMapping(candidate.producer_start);
+      candidate.canon = integrateProducerCanon(candidate.canon, candidate.producer_start, candidate.producer_mapping);
+      candidate.brief = clone(refreshBriefFor(candidate));
     }
     const validation = validateWorkspace(candidate);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
@@ -2758,6 +3394,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const timestamp = stableIso(occurredAt, next.updated_at);
     next.faction_fronts = normalizeFactionFrontsImport(input, timestamp);
     next.updated_at = timestamp;
+    next.brief = clone(refreshBriefFor(next));
     const validation = validateWorkspace(next);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
     return next;
@@ -2793,6 +3430,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     }
     next.faction_fronts.updated_at = timestamp;
     next.updated_at = timestamp;
+    next.brief = clone(refreshBriefFor(next));
     const validation = validateWorkspace(next);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
     return next;
@@ -2802,6 +3440,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const timestamp = stableIso(occurredAt, next.updated_at);
     next.faction_fronts = createDefaultFactionFrontsSlice(timestamp);
     next.updated_at = timestamp;
+    next.brief = clone(refreshBriefFor(next));
     const validation = validateWorkspace(next);
     if (!validation.valid) throw new Error(validation.errors.join("\n"));
     return next;
@@ -2844,6 +3483,14 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const factionContract = factionFrontsContract();
     const registry = materializeCanon(value.canon);
     const byId = new Map(registry.entities.map((entity) => [entity.id, entity]));
+    const opening = value.producer_start?.opening_session ?? null;
+    const producerMapping = value.producer_mapping ?? null;
+    const sceneMappings = new Map(
+      (producerMapping?.records ?? []).filter((record) => record.source_kind === "scene").map((record) => [record.source_id, record])
+    );
+    const characterMappings = new Map(
+      (producerMapping?.records ?? []).filter((record) => record.source_kind === "character").map((record) => [record.source_id, record])
+    );
     const location = byId.get(GULLWATCH_LOCATION_ID);
     const clocks = Object.entries(location.attributes?.clocks ?? {}).map(([id, clock]) => ({ id, ...clone(clock) }));
     const sessions = value.sessions.map((session) => ({
@@ -2854,12 +3501,16 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     const timeline = [
       {
         label: "Campaign start",
-        title: value.campaign_start.active_objectives[0].label,
-        detail: value.campaign_start.premise.player_facing
+        title: opening?.title ?? value.campaign_start.active_objectives[0].label,
+        detail: opening?.logline ?? value.campaign_start.premise.player_facing
       },
       ...sessions
     ];
-    const focusIds = [
+    const focusIds = opening ? [
+      producerMapping.root_canon_entity_id,
+      ...producerMapping.records.map((record) => record.canon_entity_id),
+      GULLWATCH_LOCATION_ID
+    ] : [
       "gb-thread-true-signal",
       "gb-thread-beacon-fate",
       "gb-cast-mara-vale",
@@ -2874,7 +3525,14 @@ var CampaignWorkspaceRuntimeBundle = (() => {
       type: entity.entity_type,
       detail: entity.status ?? "active"
     }));
-    const recordTargets = canonFocus.map((entry) => ({ id: entry.id, name: entry.name, type: entry.type })).sort((left, right) => {
+    const recordTargets = [...new Map([
+      ...canonFocus,
+      ...value.brief.involved_entities.map((entity) => ({
+        id: entity.id,
+        name: entity.name,
+        type: entity.entity_type
+      }))
+    ].map((entry) => [entry.id, { id: entry.id, name: entry.name, type: entry.type }])).values()].map((entry) => ({ id: entry.id, name: entry.name, type: entry.type })).sort((left, right) => {
       return Number(right.id === value.brief.objective.primary_entity_id) - Number(left.id === value.brief.objective.primary_entity_id);
     });
     const factionState = factionContract.factions.map((faction) => ({
@@ -2898,11 +3556,11 @@ var CampaignWorkspaceRuntimeBundle = (() => {
     }));
     return {
       title: value.title,
-      adventureTitle: value.campaign_start.campaign_name,
-      pitch: value.campaign_start.premise.player_facing,
-      strongStart: value.adventure.strong_start,
-      playerRange: value.adventure.product.players,
-      duration: value.adventure.product.duration,
+      adventureTitle: opening?.title ?? value.campaign_start.campaign_name,
+      pitch: opening?.logline ?? value.campaign_start.premise.player_facing,
+      strongStart: opening?.scenes[0].read_aloud ?? value.adventure.strong_start,
+      playerRange: opening?.party_size ?? value.adventure.product.players,
+      duration: opening ? `${opening.duration_minutes} minutes` : value.adventure.product.duration,
       sessionNumber: value.session_number,
       objective: value.brief.objective.text,
       objectiveUrgency: value.brief.stakes[0]?.urgency ?? "active",
@@ -2912,9 +3570,33 @@ var CampaignWorkspaceRuntimeBundle = (() => {
       },
       clocks,
       clockNotes: currentClockNotes(value.adventure, Object.fromEntries(clocks.map((clock) => [clock.id, clock]))),
-      cast: value.campaign_start.key_references.cast,
+      cast: opening ? opening.characters.map((character) => {
+        const record = characterMappings.get(character.character_id);
+        return {
+          id: record.canon_entity_id,
+          sourceCharacterId: character.character_id,
+          mappingRecordId: record.mapping_id,
+          name: character.name,
+          role: character.role,
+          wants: character.drive
+        };
+      }) : value.campaign_start.key_references.cast,
       timeline,
       brief: value.brief,
+      producerMapping: clone(producerMapping),
+      openingScenes: opening ? opening.scenes.map((scene) => {
+        const record = sceneMappings.get(scene.id);
+        return {
+          sourceSceneId: scene.id,
+          mappingRecordId: record.mapping_id,
+          canonEntityId: record.canon_entity_id,
+          order: scene.order,
+          title: scene.title,
+          purpose: scene.purpose,
+          beat: scene.read_aloud,
+          choice: scene.exit
+        };
+      }) : [],
       products: value.adventure.paid_expansions.map(workspaceProduct),
       gmTruths: value.adventure.gm_truths,
       routes: value.adventure.routes,
