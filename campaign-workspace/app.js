@@ -536,6 +536,10 @@
           <section><h2>GM truths</h2><ul>${summary.gmTruths.map((truth) => `<li>${esc(truth)}</li>`).join("")}</ul></section>
           <section><h2>Routes</h2><ul>${summary.routes.map((route) => `<li><strong>${esc(route.name)}:</strong> ${esc(route.risk)}</li>`).join("")}</ul></section>
           <section><h2>End states</h2><ul>${summary.endings.map((ending) => `<li>${esc(ending)}</li>`).join("")}</ul></section>
+          <section>
+            <h2>Creation disclosure</h2>
+            <p>Loot Table Works used generative AI assistance during development and editorial production. The released content and code were human-directed and QA-reviewed. This tool runs locally and does not call an AI service or upload campaign data.</p>
+          </section>
         </div>
       </div>`;
   }

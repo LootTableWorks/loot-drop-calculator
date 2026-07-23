@@ -18,6 +18,10 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 
 The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report stays in the browser until the tester explicitly copies it or opens a prefilled email in their own mail application.
 
+## Creation Disclosure
+
+Loot Table Works used generative AI assistance during development and editorial production. The released content and code were human-directed and QA-reviewed. The browser tool runs locally and does not call an AI service or upload campaign data.
+
 ## Runtime Contract
 
 `campaign-workspace-core.js` is a dependency-free UMD module:

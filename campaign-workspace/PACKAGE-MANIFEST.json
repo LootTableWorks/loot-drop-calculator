@@ -1,14 +1,14 @@
 {
   "product": "Gullwatch Campaign Workspace",
   "release": "campaign-workspace-static-site-v1",
-  "status": "internal_release_candidate",
-  "generated_at": "2026-07-23T22:37:04.591Z",
+  "status": "approved_public_release",
+  "generated_at": "2026-07-23T23:05:55.814Z",
   "file_count": 11,
   "files": [
     {
       "path": "app.js",
-      "bytes": 39227,
-      "sha256": "1663bc9dd29663a2049e9c25faa7956608bc657c879da05fb77ff8703709616a"
+      "bytes": 39567,
+      "sha256": "d0e7a7f752cfdf71c7dc7cf10c0e6ee0ac6416d9e3fd8b3d64b6cb0b5aa30e0b"
     },
     {
       "path": "assets/gullwatch-beacon-cover-v1.png",
@@ -43,12 +43,12 @@
     {
       "path": "index.html",
       "bytes": 4415,
-      "sha256": "82f4031bfde061564c678b62c054028a1ea62f2dbb3185596810846ed8313dbb"
+      "sha256": "987fadd49a73435b95e582407084be236c4c95778161c17dbbc96a0d1dfe0c97"
     },
     {
       "path": "README.md",
-      "bytes": 5884,
-      "sha256": "7bf1b00380e071d44228c4f24b6ef6859448252b54dc32a6f07e80c1eefec11c"
+      "bytes": 6155,
+      "sha256": "4dbb5e211c5fcf719d834f027588c401e5871fc01a95b30ee15fe3bcd4e0f65b"
     },
     {
       "path": "styles.css",
