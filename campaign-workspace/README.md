@@ -14,8 +14,9 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 - Generate the next five-beat GM brief from materialized state.
 - Export and reopen portable workspace JSON or copy Markdown.
 - Reach three attributed `$3` standalone modules from the complete free campaign outcome.
+- Run a voluntary ten-minute GM field test and copy or email a source-attributed report without background analytics.
 
-The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination.
+The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report stays in the browser until the tester explicitly copies it or opens a prefilled email in their own mail application.
 
 ## Runtime Contract
 

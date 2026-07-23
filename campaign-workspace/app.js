@@ -8,7 +8,9 @@
   const root = document.querySelector("#workspace-view");
   const fileInput = document.querySelector("#campaign-file");
   const toast = document.querySelector("#toast");
-  let activeView = "overview";
+  const validViews = new Set(["overview", "brief", "record", "timeline", "factions", "canon", "kit", "field-test"]);
+  const requestedView = new URLSearchParams(window.location.search).get("view");
+  let activeView = validViews.has(requestedView) ? requestedView : "overview";
   let workspace = null;
   let toastTimer = null;
   let clockAdjustments = { flood_tide: 0, false_signal: 0 };
@@ -344,6 +346,83 @@
       </div>`;
   }
 
+  function feedbackAttribution() {
+    const params = new URLSearchParams(window.location.search);
+    const clean = (name) => String(params.get(name) ?? "not provided")
+      .replace(/[\r\n\t]+/g, " ")
+      .slice(0, 80);
+    return {
+      source: clean("utm_source"),
+      medium: clean("utm_medium"),
+      campaign: clean("utm_campaign"),
+      content: clean("utm_content")
+    };
+  }
+
+  function feedbackTemplate() {
+    const attribution = feedbackAttribution();
+    return [
+      "Loot Table Works Campaign Workspace field report",
+      "",
+      `Workspace code: ${workspace.workspace_id}`,
+      `Source: ${attribution.source} / ${attribution.medium}`,
+      `Campaign: ${attribution.campaign} / ${attribution.content}`,
+      "",
+      "Completed (replace [ ] with [x]):",
+      "[ ] Started or imported a campaign",
+      "[ ] Recorded one session outcome",
+      "[ ] Saved or exported campaign state",
+      "[ ] Reopened the campaign for a later session",
+      "",
+      "Most useful result:",
+      "",
+      "Where I became confused or stopped:",
+      "",
+      "What was missing for my next session:",
+      "",
+      "Which optional $3 expansion, if any, would be useful and why:",
+      "",
+      "May Loot Table Works quote this feedback anonymously? Yes / No",
+      "",
+      "Please do not include private campaign or player information."
+    ].join("\n");
+  }
+
+  function renderFieldTest(summary) {
+    const subject = encodeURIComponent("Campaign Workspace field report");
+    const body = encodeURIComponent(feedbackTemplate());
+    root.innerHTML = `
+      ${heading("Ten-minute external workflow check", "GM field test", "Run one real campaign task, preserve the result, and report the exact point where the workflow helps or fails.")}
+      <section class="field-test-intro">
+        <div>
+          <p class="eyebrow">Current workspace</p>
+          <h2>${esc(summary.title)}</h2>
+          <p>Session ${summary.sessionNumber}; ${summary.eventCount} recorded Canon events. Use your own table workflow or the included Gullwatch start.</p>
+        </div>
+        <div class="privacy-note">
+          <strong>Private by default</strong>
+          <p>No analytics run here. The report stays on your device until you choose Copy or Email, and you can remove the workspace code or attribution before sending.</p>
+        </div>
+      </section>
+      <ol class="field-test-steps">
+        <li><span>01</span><div><strong>Start</strong><p>Use this Gullwatch campaign or import a Campaign Start JSON.</p></div></li>
+        <li><span>02</span><div><strong>Record</strong><p>Commit one victory, costly win, or setback with a concrete campaign truth.</p></div></li>
+        <li><span>03</span><div><strong>Preserve</strong><p>Save portable JSON and confirm that the next-session brief reflects the outcome.</p></div></li>
+        <li><span>04</span><div><strong>Return</strong><p>Reopen the save for a later session and note the first point of friction.</p></div></li>
+      </ol>
+      <section class="field-test-report">
+        <div>
+          <p class="eyebrow">Evidence that changes the product</p>
+          <h2>Send one concrete field report</h2>
+          <p>Completion checkboxes, one useful result, one point of confusion, one missing need, and the relevance of an optional $3 expansion are enough.</p>
+        </div>
+        <div class="field-test-actions">
+          <button type="button" data-action="copy-field-report">Copy report template</button>
+          <a class="primary-action" href="mailto:loottableworks@gmail.com?subject=${subject}&amp;body=${body}">Email field report</a>
+        </div>
+      </section>`;
+  }
+
   function bindViewEvents() {
     root.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", async () => {
       const action = button.dataset.action;
@@ -363,6 +442,10 @@
       if (action === "copy-canon") {
         await navigator.clipboard.writeText(runtime.toCampaignMarkdown(workspace));
         showToast("Campaign summary copied as Markdown.");
+      }
+      if (action === "copy-field-report") {
+        await navigator.clipboard.writeText(feedbackTemplate());
+        showToast("Field report template copied.");
       }
       if (action === "save") downloadCampaign();
       if (action === "import-factions") {
@@ -451,6 +534,7 @@
     if (activeView === "factions") renderFactions(summary);
     if (activeView === "canon") renderCanon(summary);
     if (activeView === "kit") renderKit(summary);
+    if (activeView === "field-test") renderFieldTest(summary);
     bindViewEvents();
   }
 
