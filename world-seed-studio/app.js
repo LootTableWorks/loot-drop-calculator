@@ -13,6 +13,12 @@
     encounters: "Encounters"
   };
   const state = { audience: "developer", scale: "district", activeTab: "brief", activePreset: null, world: null };
+  const attributionKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+  const initialSearchParams = new URLSearchParams(window.location.search);
+  const attribution = new Map(attributionKeys
+    .map((key) => [key, initialSearchParams.get(key)])
+    .filter(([, value]) => value)
+    .map(([key, value]) => [key, value.slice(0, 128)]));
   const elements = {
     seed: document.querySelector("#seed"),
     tier: document.querySelector("#tier"),
@@ -104,6 +110,7 @@
       view: state.audience,
       modules: selectedModules().join(",")
     });
+    attribution.forEach((value, key) => params.set(key, value));
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }
 

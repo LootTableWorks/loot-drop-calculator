@@ -21,8 +21,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 18078,
-      "sha256": "6c5f8d2714c62bce3830de6ea4e72f75cc9d9f83497ad4556c4ecc3f579e82de"
+      "bytes": 18497,
+      "sha256": "c24052f4477c40cb37d9557b7d99b997c1592ec25d85c2301f46a27ed835fea6"
     },
     {
       "path": "assets/saltglass-coast-map-v1.png",
@@ -35,9 +35,14 @@
       "sha256": "0217f132a45f8255998f9ea489bc560e2d17a3be45f7d09048200546e861f659"
     },
     {
+      "path": "d03/index.html",
+      "bytes": 1467,
+      "sha256": "b35eb771a1527621598fb5efacab78dba1261c283eb9e50896d38d1387dea09d"
+    },
+    {
       "path": "index.html",
-      "bytes": 9086,
-      "sha256": "968b2f1d05a8d7d46eab69daeea5e87b37f537da8dcb0c070954e4e1fccda4cb"
+      "bytes": 9195,
+      "sha256": "ce535d30ba4566ce89d759b9a4c036a3414dd1b8a9f128da418a1e77700bb961"
     },
     {
       "path": "styles.css",
