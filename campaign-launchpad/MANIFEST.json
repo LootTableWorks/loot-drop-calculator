@@ -19,13 +19,13 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 882,
-      "sha256": "dbdf996503bc28b057eab4b48ea094a8605884e07249324856944984d87bfcf7"
+      "bytes": 1138,
+      "sha256": "4e2f46c7507e31f15e26e93f1bffe4e8114d681689d381618e6db75d10f22b17"
     },
     {
       "path": "app.js",
-      "bytes": 5697,
-      "sha256": "5273eb4135c9589b8b5a4430303472a5ddbce32d1f3f1cdb43a427a71495224a"
+      "bytes": 6488,
+      "sha256": "3dae3c4e67622c418fdeb3cc351c7876f01a706350c8797822b2ea0aff80c9cf"
     },
     {
       "path": "assets/campaign-launchpad-party-v1.jpg",
@@ -34,13 +34,33 @@
     },
     {
       "path": "campaign-launchpad-core.js",
-      "bytes": 10141,
-      "sha256": "c1408ac3700664d0e0c7662193fd3e4727b020310740b92631ed1430b5d32cb4"
+      "bytes": 10193,
+      "sha256": "a2c1b360e375fde478b3512fbac54ad2b19a7a1b23c54391e44b68e65978e1cb"
+    },
+    {
+      "path": "campaign-start-adapter.js",
+      "bytes": 2393,
+      "sha256": "b0123582d37c58572dd2bd9a7bf02e4bcefb3f8c94cf5a73d8af5a705703c7a6"
+    },
+    {
+      "path": "campaign-start-contract.js",
+      "bytes": 28874,
+      "sha256": "adb257ff08f401b61567a7099d9aa8157ebaa07057056447aeaee0b5cbc2a23d"
+    },
+    {
+      "path": "campaign-start-one-shot-core.js",
+      "bytes": 21443,
+      "sha256": "9090dd7fac0353861cdf775ab6e971afc26dd112486bbf844c7bce81f9272c41"
+    },
+    {
+      "path": "campaign-start-one-shot-data.js",
+      "bytes": 218292,
+      "sha256": "047e0272d1e222de22af36be524dec6729bdb8f5e1e0b73db1f3fced217089a4"
     },
     {
       "path": "index.html",
-      "bytes": 11053,
-      "sha256": "b64bcd3beaf7bbe992c3b2272fea714b30f1b330f2fd46466a43197952e2888b"
+      "bytes": 11374,
+      "sha256": "a27451b07a1e8c288d8540058ee8228dff0fe799d605b473306f2d1c82d9b04a"
     },
     {
       "path": "styles.css",

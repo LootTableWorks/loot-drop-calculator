@@ -3,7 +3,17 @@
 
   const core = window.OneShotCore;
   const source = window.OneShotSource;
-  const state = { tone: "heroic", threat: "standard", durationMinutes: 180, activeTab: "run-sheet", oneShot: null };
+  const startAdapter = window.OneShotCampaignStartAdapter;
+  if (!startAdapter) throw new Error("Campaign Start adapter is missing");
+  const state = {
+    tone: "heroic",
+    threat: "standard",
+    durationMinutes: 180,
+    activeTab: "run-sheet",
+    campaignScope: null,
+    campaignSpotlight: null,
+    oneShot: null
+  };
   const productDescriptions = {
     items: "Expand every reward, clue object, and signature item with economy-ready records.",
     merchants: "Add contract givers, stock, prices, restocks, and canonical item links.",
@@ -88,6 +98,8 @@
       party: elements.partySize.value,
       tier: elements.maximumTier.value
     });
+    if (state.campaignScope) params.set("scope", state.campaignScope);
+    if (state.campaignSpotlight) params.set("spotlight", state.campaignSpotlight);
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }
 
@@ -102,6 +114,8 @@
     if (Number.isInteger(party) && party >= 3 && party <= 6) elements.partySize.value = String(party);
     const tier = Number(params.get("tier"));
     if (Number.isInteger(tier) && tier >= 1 && tier <= 5) elements.maximumTier.value = String(tier);
+    if (window.CampaignStartContract.SCOPE_PRESETS[params.get("scope")]) state.campaignScope = params.get("scope");
+    if (window.CampaignStartContract.SPOTLIGHT_PRESETS[params.get("spotlight")]) state.campaignSpotlight = params.get("spotlight");
   }
 
   function trackedProductUrl(product, placement) {
@@ -258,16 +272,19 @@
   });
   document.querySelectorAll("#tone-control button").forEach((button) => button.addEventListener("click", () => {
     state.tone = button.dataset.tone;
+    state.campaignSpotlight = null;
     setSegment("#tone-control", "tone", state.tone);
     generate();
   }));
   document.querySelectorAll("#threat-control button").forEach((button) => button.addEventListener("click", () => {
     state.threat = button.dataset.threat;
+    state.campaignScope = null;
     setSegment("#threat-control", "threat", state.threat);
     generate();
   }));
   document.querySelectorAll("#duration-control button").forEach((button) => button.addEventListener("click", () => {
     state.durationMinutes = Number(button.dataset.duration);
+    state.campaignScope = null;
     setSegment("#duration-control", "duration", state.durationMinutes);
     generate();
   }));
@@ -290,6 +307,18 @@
   });
   document.querySelector("#print-packet").addEventListener("click", () => window.print());
   document.querySelector("#download-json").addEventListener("click", () => downloadText(JSON.stringify(state.oneShot, null, 2), "application/json", `${state.oneShot.adventure_id}.json`));
+  document.querySelector("#download-campaign-start").addEventListener("click", () => {
+    try {
+      const start = startAdapter.create(state.oneShot, {
+        scope: state.campaignScope,
+        spotlight: state.campaignSpotlight
+      });
+      downloadText(JSON.stringify(start, null, 2), "application/json", startAdapter.filename(start));
+      showToast("Campaign Start JSON saved");
+    } catch (error) {
+      showToast(error.message || "Campaign Start export failed");
+    }
+  });
 
   generate();
 })();

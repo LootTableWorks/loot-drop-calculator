@@ -2,7 +2,9 @@
   "use strict";
 
   const core = window.CampaignLaunchpadCore;
+  const startAdapter = window.CampaignLaunchpadStartAdapter;
   if (!core) throw new Error("Campaign Launchpad core is missing");
+  if (!startAdapter) throw new Error("Campaign Start adapter is missing");
 
   const state = { plan: null };
   const $ = (id) => document.getElementById(id);
@@ -109,6 +111,22 @@
     notify("Markdown plan saved");
   }
 
+  function downloadCampaignStart() {
+    try {
+      const start = startAdapter.create(state.plan);
+      const blob = new Blob([JSON.stringify(start, null, 2)], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = startAdapter.filename(start);
+      anchor.click();
+      URL.revokeObjectURL(url);
+      notify("Campaign Start JSON saved");
+    } catch (error) {
+      notify(error.message || "Campaign Start export failed");
+    }
+  }
+
   document.querySelectorAll("[data-scope]").forEach((button) => button.addEventListener("click", () => { setPressed("scope-control", "scope", button.dataset.scope); build(); }));
   document.querySelectorAll("[data-spotlight]").forEach((button) => button.addEventListener("click", () => { setPressed("spotlight-control", "spotlight", button.dataset.spotlight); build(); }));
   $("party").addEventListener("input", () => { $("party-output").textContent = $("party").value; build(); });
@@ -119,6 +137,7 @@
   $("copy-plan").addEventListener("click", () => copyText(core.toMarkdown(state.plan), "Campaign plan copied").catch(() => notify("Clipboard unavailable")));
   $("share-plan").addEventListener("click", () => copyText(window.location.href, "Share link copied").catch(() => notify("Clipboard unavailable")));
   $("download-plan").addEventListener("click", downloadMarkdown);
+  $("download-campaign-start").addEventListener("click", downloadCampaignStart);
 
   loadUrl();
   build();

@@ -17,14 +17,14 @@
       "sha256": "625df16c0654db9ba65cb072490ecc91a4ccb0fee0ffe8b103b2db7c41c43ec2"
     },
     {
-      "path": "assets/world-seed-studio-preview-v2.png",
-      "bytes": 823890,
-      "sha256": "0217f132a45f8255998f9ea489bc560e2d17a3be45f7d09048200546e861f659"
+      "path": "assets/campaign-workspace-preview-v1.png",
+      "bytes": 153820,
+      "sha256": "d2bfc697710df948eef2bd8105c4364358376c47e62cc0f9fa3319eff003ccde"
     },
     {
       "path": "index.html",
-      "bytes": 33887,
-      "sha256": "a6a4e821c71634f82197301186491be1847976e88f225d60660a0b3009b7d3d5"
+      "bytes": 35520,
+      "sha256": "f6fd21310e98bee97c348596a2aa8c921578b267cec6703c8de87ebea2206891"
     },
     {
       "path": "robots.txt",

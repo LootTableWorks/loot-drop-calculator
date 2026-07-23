@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Run Gullwatch Beacon as a persistent, local-first campaign with canonical clocks, consequences, and next-session briefs.">
+  <title>Gullwatch Campaign Workspace | Loot Table Works</title>
+  <link rel="stylesheet" href="styles.css?v=20260723-gullwatch-workspace-11">
+</head>
+<body>
+  <header class="app-bar">
+    <a class="brand" href="../" aria-label="Loot Table Works tools">
+      <img src="assets/loot-table-works-avatar-512.png" alt="">
+      <span><strong>Loot Table Works</strong><small>World Foundry</small></span>
+    </a>
+    <div class="campaign-identity">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="campaign-title">Gullwatch Campaign</span>
+      <small id="save-status">Local save ready</small>
+    </div>
+    <div class="header-actions">
+      <button id="open-campaign" class="quiet-action" type="button">Open</button>
+      <button id="save-campaign" class="quiet-action" type="button">Save</button>
+      <button id="reset-campaign" class="primary-action" type="button">New campaign</button>
+      <input id="campaign-file" type="file" accept=".json,application/json" hidden>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="workspace-nav" aria-label="Campaign workspace">
+      <div class="campaign-mark">
+        <span>GW</span>
+        <div>
+          <strong>Signal at Gullwatch</strong>
+          <small id="campaign-meta">Session 1 / Canon verified</small>
+        </div>
+      </div>
+      <nav role="tablist" aria-label="Workspace views">
+        <button type="button" role="tab" aria-selected="true" data-view="overview">Overview</button>
+        <button type="button" role="tab" aria-selected="false" data-view="brief">Next session</button>
+        <button type="button" role="tab" aria-selected="false" data-view="record">Record outcome</button>
+        <button type="button" role="tab" aria-selected="false" data-view="timeline">Timeline</button>
+        <button type="button" role="tab" aria-selected="false" data-view="factions">Factions</button>
+        <button type="button" role="tab" aria-selected="false" data-view="canon">Canon</button>
+        <button type="button" role="tab" aria-selected="false" data-view="kit">Source kit</button>
+      </nav>
+      <div class="nav-foot">
+        <span id="entity-count">0 entities</span>
+        <span id="event-count">0 events</span>
+        <span class="verified">Validated locally</span>
+      </div>
+    </aside>
+
+    <main id="workspace-view" tabindex="-1"></main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="campaign-workspace-data.js?v=20260723-gullwatch-workspace-11"></script>
+  <script src="gullwatch-adventure-data.js?v=20260723-gullwatch-workspace-11"></script>
+  <script src="campaign-workspace-runtime.js?v=20260723-gullwatch-workspace-11"></script>
+  <script src="app.js?v=20260723-gullwatch-workspace-11"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "product": "Gullwatch Campaign Workspace",
+  "release": "campaign-workspace-static-site-v1",
+  "status": "internal_release_candidate",
+  "generated_at": "2026-07-23T15:21:52.593Z",
+  "file_count": 11,
+  "files": [
+    {
+      "path": "app.js",
+      "bytes": 26123,
+      "sha256": "33e99361a64c7d93b74902318f38504dc16fba1b11e4fc6927f5ba81bfa9721d"
+    },
+    {
+      "path": "assets/gullwatch-beacon-cover-v1.png",
+      "bytes": 2688900,
+      "sha256": "91dcfe20abf064ecd982d4923af72d785009fac08cf657d61b8cb469b2f02827"
+    },
+    {
+      "path": "assets/gullwatch-beacon-map-v1.jpg",
+      "bytes": 704528,
+      "sha256": "ac38dec19907da6d6427d2413654868e060f2081941f621d6243ef3dd05e0860"
+    },
+    {
+      "path": "assets/loot-table-works-avatar-512.png",
+      "bytes": 3757,
+      "sha256": "ce4d6db49f9b7914635ae9dd4d74f4ed104976f2f2f087ff16beed325d97388c"
+    },
+    {
+      "path": "campaign-workspace-data.js",
+      "bytes": 218300,
+      "sha256": "c0082c458e94a6d7a0e2108a583e6da2c5b817b012ee4e042ef97057e64aa126"
+    },
+    {
+      "path": "campaign-workspace-runtime.js",
+      "bytes": 158409,
+      "sha256": "9a51d1a6a1e453b7b1500e560dc95344120f8c9a8218e9fed59ae1f5a2e58f8f"
+    },
+    {
+      "path": "gullwatch-adventure-data.js",
+      "bytes": 11186,
+      "sha256": "6383fa0c156e7e3e7afdfbd53abce9d393567920d71c37701c7b9fe87148b3b9"
+    },
+    {
+      "path": "index.html",
+      "bytes": 3099,
+      "sha256": "df301fda72bbe7dce6035542d762b2f9953668ba03b8f5b991848a352e9c5be0"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5627,
+      "sha256": "a979018e157765562f895cd3982bef682a34c2d18267703f0666f1a490e58b4c"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 17141,
+      "sha256": "965faa4475209c7329e49522b8c76f61b1a0748cc6e9ce9fdd815d70f9e3bed3"
+    },
+    {
+      "path": "USAGE-TERMS.md",
+      "bytes": 2826,
+      "sha256": "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+    }
+  ]
+}
