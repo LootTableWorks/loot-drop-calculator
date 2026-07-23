@@ -1,0 +1,35 @@
+{
+  "release_id": "run-one-shot-tonight-v1",
+  "prepared_at": "2026-07-23T21:24:04.896Z",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/",
+  "promise": "Choose one urgent promise, run it tonight, record the ending, and prepare the next session from consequences.",
+  "free_destinations": 3,
+  "paid_standalone_destinations": 3,
+  "bundle_destinations": 0,
+  "background_analytics": false,
+  "publication_allowed": true,
+  "release_authority": "delegated_internal_aaa_qa",
+  "approved_at": "2026-07-23T14:23:27.9430559-07:00",
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 16705,
+      "sha256": "2472a5f4dd8ec9f59cbcc290c56164e7c09d76e3e15dbc68e8f719611fa30f3a"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 10250,
+      "sha256": "4b89a8254cd9fce8f06f3e05c4e434243f4d45d61a2366a2e8e7abf9f7447073"
+    },
+    {
+      "path": "README.md",
+      "bytes": 945,
+      "sha256": "dd28cd2924df9ccb11f1c97094a99966b37ea1b820076cf80a36bbb2b41b94fe"
+    },
+    {
+      "path": "release-approval.json",
+      "bytes": 1958,
+      "sha256": "722140062c62ac392eedc054d5a70a45f4d360ff61ae76711ab69b06f1c90cf1"
+    }
+  ]
+}

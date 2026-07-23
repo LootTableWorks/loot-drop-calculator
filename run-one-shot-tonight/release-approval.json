@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "release_id": "run-one-shot-tonight-v1",
+  "approved_at": "2026-07-23T14:23:27.9430559-07:00",
+  "authority": "delegated_internal_aaa_qa",
+  "publication_allowed": true,
+  "scope": "Search-focused system-neutral GM field guide for the verified Gullwatch Beacon to Campaign Workspace workflow.",
+  "qa": {
+    "functional_tests_passed": 8,
+    "desktop_render": "passed_1440x1000",
+    "mobile_render": "passed_390x844",
+    "horizontal_overflow_count": 0,
+    "broken_image_count": 0,
+    "source_coded_acquisition_links": 11,
+    "public_paid_standalone_destinations": 3,
+    "bundle_destinations": 0,
+    "background_analytics": false,
+    "hosted_runtime_dependency": false,
+    "third_party_compatibility_claims": false
+  },
+  "evidence": [
+    {
+      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-hero.png",
+      "sha256": "25733902fb38fa062e975adbf55eb672302c34414e10a87a740187bda9eefc9b"
+    },
+    {
+      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-workflow.png",
+      "sha256": "6310e589c6b95e87cc5e01b7f7de5120c933dfc44b36f46b25dd7fac0535ebce"
+    },
+    {
+      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-continuity.png",
+      "sha256": "5b22e085c53735351b896bd1d3695e1d92e5e137680ab0e19683e943adfef228"
+    },
+    {
+      "path": "quality/evidence/run-one-shot-tonight-v1/mobile-390x844-hero.png",
+      "sha256": "a2962e987c5ab14edd8380869850aeddad21e61381f4fc899466c648241b45c0"
+    },
+    {
+      "path": "quality/evidence/run-one-shot-tonight-v1/mobile-390x844-continuity.png",
+      "sha256": "a53df8052c9d23a974f672dc965f97c34f6179430ca8f0d9ef037d0e84f4911d"
+    }
+  ],
+  "stop_conditions": [
+    "Any source or staged hash drift",
+    "Any broken public destination",
+    "Any desktop or mobile overflow",
+    "Any changed price, license, AI disclosure, or product-content claim",
+    "Any unreviewed bundle or private offer link"
+  ]
+}
