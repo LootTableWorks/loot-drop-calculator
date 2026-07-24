@@ -547,6 +547,10 @@
   function renderCloseout(summary) {
     if (!summary.brief || !returnMilestone?.session_committed) return "";
     const expansion = expansionForMilestone();
+    const preview = returnLoop.previewForProduct(expansion.product_id);
+    const previewLines = preview.excerpt_lines
+      .map((line) => `<li>${esc(line)}</li>`)
+      .join("");
     const returnConfirmed = returnMilestone.separate_session_return_confirmed;
     const returnAvailable = !returnConfirmed && canConfirmLaterReturn();
     const recommendationAvailable =
@@ -600,8 +604,11 @@
           <section class="receipt-actions" aria-labelledby="receipt-actions-title">
             <p class="eyebrow">Optional local receipt</p>
             <h3 id="receipt-actions-title">Keep a content-free checkpoint receipt</h3>
-            <p>The receipt includes a random receipt ID, producer class, bounded route attribution, milestone booleans, session count, approved product IDs, and a coarse age bucket. It excludes campaign and player names; campaign, workspace, player, entity, transaction, event, mapping, source, and device IDs; campaign text; save contents; exact timestamps; credentials; and recovery data.</p>
             <p>This optional local receipt is not proof of play, return, demand, a paid visit, purchase, or revenue, and it is never sent automatically.</p>
+            <details class="receipt-inventory">
+              <summary>What the receipt includes and excludes</summary>
+              <p>The receipt includes a random receipt ID, producer class, bounded route attribution, milestone booleans, session count, approved product IDs, and a coarse age bucket. It excludes campaign and player names; campaign, workspace, player, entity, transaction, event, mapping, source, and device IDs; campaign text; save contents; exact timestamps; credentials; and recovery data.</p>
+            </details>
             <div>
               <button type="button" data-action="copy-receipt">Copy receipt</button>
               <button type="button" data-action="download-receipt">Download receipt</button>
@@ -609,14 +616,25 @@
           </section>
         </div>
         <aside class="closeout-recommendation" aria-labelledby="closeout-recommendation-title">
-          <div>
-            <p class="eyebrow">Optional / $${expansion.price_usd} standalone</p>
-            <h3 id="closeout-recommendation-title">${esc(expansion.title)}</h3>
-            <p>${esc(expansion.reason)}</p>
+          <div class="recommendation-preview-body">
+            <div class="recommendation-overview">
+              <p class="eyebrow">Optional / $${expansion.price_usd} standalone</p>
+              <h3 id="closeout-recommendation-title">${esc(expansion.title)}</h3>
+              <p class="recommendation-outcome">${esc(preview.immediate_outcome)}</p>
+              <p class="compatibility-note"><strong>Compatibility:</strong> ${esc(preview.compatibility_note)}</p>
+            </div>
+            <section class="public-demo-excerpt" aria-labelledby="public-demo-excerpt-title">
+              <p class="eyebrow">Public demo excerpt</p>
+              <h4 id="public-demo-excerpt-title">${esc(preview.excerpt_title)}</h4>
+              <ul>${previewLines}</ul>
+              <p>${preview.demo_count} demo ${esc(preview.unit_label)} / ${preview.full_count} in the full kit</p>
+            </section>
           </div>
-          ${recommendationAvailable
-            ? `<a href="${esc(expansion.url)}" target="_blank" rel="noopener" data-action="paid-expansion" data-product-id="${esc(expansion.product_id)}">View relevant expansion</a>`
-            : `<span class="recommendation-gate">Save + copy/print to unlock</span>`}
+          <div class="recommendation-action">
+            ${recommendationAvailable
+              ? `<a href="${esc(expansion.url)}" target="_blank" rel="noopener" data-action="paid-expansion" data-product-id="${esc(expansion.product_id)}">${esc(preview.cta_label)}</a>`
+              : `<span class="recommendation-gate">Save + copy/print to unlock</span>`}
+          </div>
         </aside>
       </section>`;
   }
@@ -1112,7 +1130,7 @@
   function renderNavigation() {
     const summary = snapshot();
     document.querySelector("#campaign-title").textContent = summary.title;
-    document.querySelector("#campaign-meta").textContent = `Session ${summary.sessionNumber} / Canon verified`;
+    document.querySelector("#campaign-meta").textContent = `Session ${summary.sessionNumber} / Canon structure checked locally`;
     document.querySelector("#entity-count").textContent = `${summary.entityCount} entities`;
     document.querySelector("#event-count").textContent = `${summary.eventCount} events`;
     updateTabs();

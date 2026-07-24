@@ -154,4 +154,4 @@ Run the complete package build from this directory:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 ```
 
-The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1-2.zip` and the matching GitHub Pages directory. It does not deploy or publish.
+The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1-2-1.zip` and the matching GitHub Pages directory. It does not deploy or publish.

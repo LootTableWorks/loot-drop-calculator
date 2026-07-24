@@ -5,7 +5,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function createCampaignWorkspaceReturnLoop() {
   "use strict";
 
-  const VERSION = "1.2.0";
+  const VERSION = "1.2.1";
   const RECEIPT_SCHEMA_VERSION = "1.0.0";
   const STORAGE_KEY = "loot-table-works:campaign-workspace:return-loop:v1";
   const PRODUCER_CLASSES = new Set(["gullwatch", "campaign_launchpad"]);
@@ -71,6 +71,54 @@
       title: "World Foundry Enemy Loot & Reward Kit",
       price_usd: 3,
       url: "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=campaign_workspace&utm_medium=web&utm_campaign=wf4w_revenue_v1&utm_content=cw12_closeout_loot"
+    }
+  });
+
+  const PAID_PREVIEW_MAP = deepFreeze({
+    "fantasy-encounter-room-data-kit": {
+      product_id: "fantasy-encounter-room-data-kit",
+      demo_count: 30,
+      full_count: 180,
+      unit_label: "encounters",
+      excerpt_title: "Gullwatch Beacon: Constricted Crossing",
+      excerpt_lines: [
+        "Tier-2 coastal encounter built to control movement across a narrow transition.",
+        "The crossing shifts under excess weight; stress marks reveal the unsafe span.",
+        "Reduce carried weight, reinforce one span, or cross in timed groups."
+      ],
+      immediate_outcome: "Prepare a three-phase encounter with a telegraphed hazard, two enemy groups, mitigation options, and explicit resolution outcomes.",
+      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
+      cta_label: "Preview 30 encounters + view the $3 full kit"
+    },
+    "fantasy-quest-contract-reward-data-kit": {
+      product_id: "fantasy-quest-contract-reward-data-kit",
+      demo_count: 30,
+      full_count: 240,
+      unit_label: "quests",
+      excerpt_title: "Recover Brineworn Relic at Gullwatch Beacon",
+      excerpt_lines: [
+        "Recover one documented Brineworn Relic while preserving ownership and condition.",
+        "A second claimant presents credible provenance as salt jams the beacon shutters.",
+        "Failure leaves the relic disputed and subjects later Gullwatch work to stricter evidence demands."
+      ],
+      immediate_outcome: "Put a 60-minute recovery contract on the table with its objective, complication, alternate resolution, consequence, and world impact ready.",
+      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
+      cta_label: "Preview 30 quests + view the $3 full kit"
+    },
+    "enemy-loot-table-drop-profile-kit": {
+      product_id: "enemy-loot-table-drop-profile-kit",
+      demo_count: 20,
+      full_count: 250,
+      unit_label: "profiles",
+      excerpt_title: "Brinejaw Corsairs Runner",
+      excerpt_lines: [
+        "Tier-1 coastal raider that circles isolated targets and retreats behind thrown cover.",
+        "Reward identity: stolen cargo and salt-weathered weapons.",
+        "Includes one guaranteed Brineworn Amulet, one conditional Brineworn Shell, and six weighted drops."
+      ],
+      immediate_outcome: "Resolve this raider's reward using guaranteed, conditional, and weighted results plus an 85-129 currency range.",
+      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
+      cta_label: "Preview 20 profiles + view the $3 full kit"
     }
   });
 
@@ -399,6 +447,11 @@
     });
   }
 
+  function previewForProduct(productId) {
+    assertProductId(productId, "productId", false);
+    return PAID_PREVIEW_MAP[productId];
+  }
+
   function assertEventInput(event, input) {
     const keysByEvent = {
       campaign_started: new Set(),
@@ -571,6 +624,7 @@
     VERSION,
     STORAGE_KEY,
     PRODUCT_MAP,
+    previewForProduct,
     createMilestone,
     recordMilestone,
     canConfirmSeparateReturn,
