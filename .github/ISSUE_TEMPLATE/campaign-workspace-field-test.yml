@@ -7,7 +7,7 @@ body:
       value: |
         Thank you for testing Campaign Workspace.
 
-        This GitHub issue will be public. Use fictional or redacted details only. Do not attach a campaign save, player names, contact information, private notes, licensed rules text, or other sensitive material.
+        This GitHub issue will be public. Submitting requires a signed-in GitHub account, and the public issue will show your GitHub username and profile. Use fictional or redacted details only. Do not attach a campaign save, player names, contact information, private notes, licensed rules text, or other sensitive material.
 
         Generative AI assisted development and editorial production. The released content and code were human-directed and QA-reviewed. Campaign Workspace runs locally and does not upload campaign data or call a hosted AI service.
 
@@ -17,7 +17,7 @@ body:
       label: Public report consent
       description: Confirm both statements before continuing.
       options:
-        - label: I understand this report will be public.
+        - label: I understand this report and my GitHub username and profile will be public.
           required: true
         - label: I removed personal information, private campaign material, and licensed rules text.
           required: true
@@ -28,6 +28,7 @@ body:
       label: Furthest completed workflow stage
       description: Choose the last step you actually completed.
       options:
+        - Opened Campaign Workspace but did not complete orientation
         - Opened and oriented to the Gullwatch campaign
         - Inspected the playable source kit and next-session brief
         - Recorded and committed one fictional or redacted outcome
@@ -42,8 +43,8 @@ body:
       label: Portable save roundtrip
       description: Did Save followed by Open preserve the outcome and next-session brief?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
         - Not attempted
     validations:
       required: true
@@ -54,8 +55,8 @@ body:
       label: Separate later return
       description: Did you return at least 24 hours later and reopen the campaign for later preparation?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
         - Not yet
     validations:
       required: true
@@ -94,6 +95,7 @@ body:
       label: What became easier or clearer?
       description: Name the visible output or decision that helped.
       placeholder: "Example: The next-session brief carried the unresolved choice into a concrete opening scene."
+      render: markdown
     validations:
       required: true
 
@@ -101,8 +103,9 @@ body:
     id: friction
     attributes:
       label: Where did you hesitate, stop, or distrust the result?
-      description: Name the step, control, or output and what you expected instead.
+      description: Name the step, control, or output and what you expected instead. Enter None if nothing caused hesitation.
       placeholder: "Example: I could not tell whether Save replaced my earlier local campaign."
+      render: markdown
     validations:
       required: true
 
@@ -110,8 +113,9 @@ body:
     id: missing_table_material
     attributes:
       label: What was still missing before you could run the next session?
-      description: Use fictional or redacted details only.
+      description: Use fictional or redacted details only. Enter None if nothing was missing.
       placeholder: "Example: I still needed one concise opposition motive for scene three."
+      render: markdown
     validations:
       required: true
 
