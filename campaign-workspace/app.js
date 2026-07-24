@@ -169,6 +169,49 @@
     return true;
   }
 
+  function fieldTestProgress(milestone, options = {}) {
+    const sourceOpened = options.sourceOpened === true;
+    const outcomeCommitted = milestone?.session_committed === true;
+    const portableSaved = milestone?.portable_export === true || options.portableSaved === true;
+    const campaignReopened = options.campaignReopened === true;
+    return Object.freeze({
+      sourceOpened,
+      outcomeCommitted,
+      portableSaved,
+      campaignReopened,
+      reportReady: sourceOpened && outcomeCommitted && portableSaved
+    });
+  }
+
+  function fieldReportText(attribution, progress) {
+    const check = (complete) => complete ? "[x]" : "[ ]";
+    return [
+      "Loot Table Works Campaign Workspace field report",
+      "",
+      `Source: ${attribution.source} / ${attribution.medium}`,
+      `Campaign: ${attribution.campaign} / ${attribution.content}`,
+      "",
+      `Report status: ${progress.reportReady ? "ready" : "in progress"}`,
+      "Completed:",
+      `${check(progress.sourceOpened)} Opened the Source kit`,
+      `${check(progress.outcomeCommitted)} Recorded one session outcome`,
+      `${check(progress.portableSaved)} Saved portable campaign JSON`,
+      `${check(progress.campaignReopened)} Reopened campaign state`,
+      "",
+      "Most useful result:",
+      "",
+      "Where I became confused or stopped:",
+      "",
+      "What was missing for my next session:",
+      "",
+      "Which optional $3 expansion, if any, would be useful and why:",
+      "",
+      "May Loot Table Works quote this feedback anonymously? Yes / No",
+      "",
+      "Please do not include private campaign or player information."
+    ].join("\n");
+  }
+
   const testApi = Object.freeze({
     STORAGE_KEY,
     BACKUP_STORAGE_KEY,
@@ -180,7 +223,9 @@
     applyTabState,
     localDayIndex,
     producerClassFor,
-    focusActionControl
+    focusActionControl,
+    fieldTestProgress,
+    fieldReportText
   });
   globalScope.CampaignWorkspaceAppHelpers = testApi;
   if (typeof module !== "undefined" && module.exports) module.exports = testApi;
@@ -195,6 +240,9 @@
   const toast = document.querySelector("#toast");
   const recoveryPanel = document.querySelector("#recovery-panel");
   const recoveryMessage = document.querySelector("#recovery-message");
+  const tabList = document.querySelector("#workspace-tabs");
+  const previousTabScroll = document.querySelector(".nav-scroll-previous");
+  const nextTabScroll = document.querySelector(".nav-scroll-next");
   const journal = createLocalJournal(localStorage, runtime); // Routes localStorage.setItem through validated journal writes.
   const validViews = new Set(["overview", "brief", "record", "timeline", "factions", "canon", "kit", "field-test"]);
   const requestedView = new URLSearchParams(window.location.search).get("view");
@@ -205,6 +253,9 @@
   let recoveryState = null;
   let initialLoadResult = null;
   let returnMilestone = null;
+  let fieldTestSourceOpened = activeView === "kit";
+  let fieldTestPortableSaved = false;
+  let fieldTestCampaignReopened = false;
   const pageSessionNonce = getPageSessionNonce();
 
   const esc = (value) => String(value ?? "")
@@ -411,19 +462,47 @@
   }
 
   function updateTabs() {
-    return applyTabState(
+    const selectedTab = applyTabState(
       Array.from(document.querySelectorAll('[role="tab"][data-view]')),
       root,
       activeView
     );
+    alignSelectedTab(selectedTab);
+    return selectedTab;
+  }
+
+  function updateTabScrollControls() {
+    if (!tabList || !previousTabScroll || !nextTabScroll) return;
+    const maximum = Math.max(0, tabList.scrollWidth - tabList.clientWidth);
+    previousTabScroll.disabled = tabList.scrollLeft <= 1;
+    nextTabScroll.disabled = tabList.scrollLeft >= maximum - 1;
+  }
+
+  function alignSelectedTab(selectedTab) {
+    if (!selectedTab || !tabList || !window.matchMedia("(max-width: 900px)").matches) return;
+    const maximum = Math.max(0, tabList.scrollWidth - tabList.clientWidth);
+    const target = Math.max(
+      0,
+      Math.min(maximum, selectedTab.offsetLeft - ((tabList.clientWidth - selectedTab.offsetWidth) / 2))
+    );
+    tabList.scrollTo({ left: target, behavior: "auto" });
+    window.requestAnimationFrame(updateTabScrollControls);
+  }
+
+  function resizeFieldReport(textarea) {
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.ceil(textarea.scrollHeight + 2)}px`;
   }
 
   function setView(view, options = {}) {
     if (!validViews.has(view)) throw new Error(`Unknown workspace view: ${view}`);
+    if (view === "kit") fieldTestSourceOpened = true;
     activeView = view;
     render();
     const selectedTab = updateTabs();
     if (options.focus === "tab") selectedTab.focus({ preventScroll: true });
+    else if (options.focus === "heading") root.querySelector("h1")?.focus({ preventScroll: true });
     else root.focus({ preventScroll: true });
   }
 
@@ -432,7 +511,7 @@
       <header class="view-heading">
         <div>
           <p class="eyebrow">${esc(eyebrow)}</p>
-          <h1>${esc(title)}</h1>
+          <h1 tabindex="-1">${esc(title)}</h1>
           <p>${esc(description)}</p>
         </div>
         ${actions ? `<div class="view-actions">${actions}</div>` : ""}
@@ -588,6 +667,10 @@
           Milestone data stays on this device under a separate local key until you explicitly copy or download a receipt.
           There is no account, hosted analytics, or automatic submission.
         </p>
+        <div class="closeout-field-report">
+          <button type="button" data-action="return-field-report">Return to field report</button>
+          <span>Review the local progress checklist and send feedback only when you choose.</span>
+        </div>
         <div class="closeout-support">
           <section class="return-checkpoint" aria-labelledby="return-checkpoint-title">
             <p class="eyebrow">Later return</p>
@@ -900,65 +983,95 @@
   }
 
   function feedbackTemplate() {
-    const attribution = feedbackAttribution();
-    return [
-      "Loot Table Works Campaign Workspace field report",
-      "",
-      `Workspace code: ${workspace.workspace_id}`,
-      `Source: ${attribution.source} / ${attribution.medium}`,
-      `Campaign: ${attribution.campaign} / ${attribution.content}`,
-      "",
-      "Completed (replace [ ] with [x]):",
-      "[ ] Started or imported a campaign",
-      "[ ] Recorded one session outcome",
-      "[ ] Saved or exported campaign state",
-      "[ ] Reopened the campaign for a later session",
-      "",
-      "Most useful result:",
-      "",
-      "Where I became confused or stopped:",
-      "",
-      "What was missing for my next session:",
-      "",
-      "Which optional $3 expansion, if any, would be useful and why:",
-      "",
-      "May Loot Table Works quote this feedback anonymously? Yes / No",
-      "",
-      "Please do not include private campaign or player information."
-    ].join("\n");
+    return fieldReportText(feedbackAttribution(), fieldTestProgress(returnMilestone, {
+      sourceOpened: fieldTestSourceOpened,
+      portableSaved: fieldTestPortableSaved,
+      campaignReopened: fieldTestCampaignReopened
+    }));
+  }
+
+  function currentFieldReportText() {
+    return root.querySelector("#field-report-text")?.value ?? feedbackTemplate();
+  }
+
+  function fieldTestProgressItem(label, complete) {
+    return `
+      <li class="${complete ? "complete" : ""}">
+        <span aria-hidden="true">${complete ? "OK" : "--"}</span>
+        <span>${esc(label)}</span>
+        <strong>${complete ? "Complete" : "Pending"}</strong>
+      </li>`;
   }
 
   function renderFieldTest(summary) {
+    const progress = fieldTestProgress(returnMilestone, {
+      sourceOpened: fieldTestSourceOpened,
+      portableSaved: fieldTestPortableSaved,
+      campaignReopened: fieldTestCampaignReopened
+    });
+    const report = feedbackTemplate();
     const subject = encodeURIComponent("Campaign Workspace field report");
-    const body = encodeURIComponent(feedbackTemplate());
+    const body = encodeURIComponent(report);
     root.innerHTML = `
-      ${heading("Ten-minute external workflow check", "GM field test", "Run one real campaign task, preserve the result, and report the exact point where the workflow helps or fails.")}
+      ${heading("First pass: about ten minutes", "GM field test", "Run one real campaign task now. A later-day return is optional and should be reported only when it actually happens.")}
       <section class="field-test-intro">
         <div>
           <p class="eyebrow">Current workspace</p>
           <h2>${esc(summary.title)}</h2>
-          <p>Session ${summary.sessionNumber}; ${summary.eventCount} recorded Canon events. Use your own table workflow or the included Gullwatch start.</p>
+          <p>Session ${summary.sessionNumber}; ${summary.eventCount} recorded Canon events. Begin with the included source, record one consequential outcome, then save a portable copy.</p>
         </div>
         <div class="privacy-note">
           <strong>Private by default</strong>
-          <p>No analytics run here. The report stays on your device until you choose Copy or Email, and you can remove the workspace code or attribution before sending.</p>
+          <p>No analytics run here. Progress and report text stay on your device until you explicitly copy, download, email, or open the public GitHub form. No workspace ID is included.</p>
         </div>
       </section>
-      <ol class="field-test-steps">
-        <li><span>01</span><div><strong>Start</strong><p>Use this Gullwatch campaign or import a Campaign Start JSON.</p></div></li>
-        <li><span>02</span><div><strong>Record</strong><p>Commit one victory, costly win, or setback with a concrete campaign truth.</p></div></li>
-        <li><span>03</span><div><strong>Preserve</strong><p>Save portable JSON and confirm that the next-session brief reflects the outcome.</p></div></li>
-        <li><span>04</span><div><strong>Return</strong><p>Reopen the save for a later session and note the first point of friction.</p></div></li>
-      </ol>
-      <section class="field-test-report">
+      <section class="activation-rail" aria-labelledby="activation-rail-title">
+        <div class="activation-start">
+          <p class="eyebrow">Start here</p>
+          <h2 id="activation-rail-title">Run one complete continuity loop</h2>
+          <p>Everything below is local. The two reference links open in new tabs so this source-coded field report remains available.</p>
+          <button type="button" class="primary-action" data-action="begin-field-test">Begin with Source kit</button>
+          <div class="activation-reference-links">
+            <a href="../gullwatch-beacon/" target="_blank" rel="noopener" data-action="mark-source-opened">Open the complete Gullwatch kit</a>
+            <a href="../run-one-shot-tonight/" target="_blank" rel="noopener">Read the one-shot workflow</a>
+          </div>
+        </div>
         <div>
+          <p class="eyebrow">Local progress</p>
+          <ul class="activation-progress">
+            ${fieldTestProgressItem("Source kit opened", progress.sourceOpened)}
+            ${fieldTestProgressItem("Outcome committed", progress.outcomeCommitted)}
+            ${fieldTestProgressItem("Portable JSON saved", progress.portableSaved)}
+            ${fieldTestProgressItem("Campaign state reopened", progress.campaignReopened)}
+          </ul>
+          <p class="report-readiness ${progress.reportReady ? "ready" : ""}">
+            <strong>${progress.reportReady ? "Report ready" : "Report in progress"}</strong>
+            <span>${progress.reportReady
+              ? "Add one useful result and one specific point of friction."
+              : "Open the source, commit an outcome, and save JSON to complete the first pass."}</span>
+          </p>
+        </div>
+      </section>
+      <section class="field-test-report">
+        <div class="field-report-copy">
           <p class="eyebrow">Evidence that changes the product</p>
           <h2>Send one concrete field report</h2>
-          <p>Completion checkboxes, one useful result, one point of confusion, one missing need, and the relevance of an optional $3 expansion are enough.</p>
+          <p>Edit or remove attribution before sending if you prefer. An unattributed report will not be counted as source-attributed evidence.</p>
+          <label for="field-report-text">Field report text</label>
+          <textarea id="field-report-text" spellcheck="true">${esc(report)}</textarea>
         </div>
-        <div class="field-test-actions">
-          <button type="button" data-action="copy-field-report">Copy report template</button>
-          <a class="primary-action" href="mailto:loottableworks@gmail.com?subject=${subject}&amp;body=${body}">Email field report</a>
+        <div class="field-report-delivery">
+          <p><strong>To:</strong> loottableworks@gmail.com</p>
+          <p><strong>Subject:</strong> Campaign Workspace field report</p>
+          <div class="field-test-actions">
+            <button type="button" data-action="copy-field-report">Copy report</button>
+            <button type="button" data-action="download-field-report">Download .txt</button>
+            <a class="primary-action" data-action="email-field-report" href="mailto:loottableworks@gmail.com?subject=${subject}&amp;body=${body}">Open email draft</a>
+          </div>
+          <div class="public-report-option">
+            <a href="https://github.com/LootTableWorks/loot-drop-calculator/issues/new?template=campaign-workspace-field-test.yml" target="_blank" rel="noopener">Use the public GitHub report form</a>
+            <p>Requires GitHub sign-in. Your report, username, and profile will be public.</p>
+          </div>
         </div>
       </section>`;
   }
@@ -969,6 +1082,9 @@
       if (action === "open-brief") setView("brief");
       if (action === "record") setView("record");
       if (action === "cancel-record") setView("overview");
+      if (action === "begin-field-test") setView("kit", { focus: "heading" });
+      if (action === "return-field-report") setView("field-test", { focus: "heading" });
+      if (action === "mark-source-opened") fieldTestSourceOpened = true;
       if (action === "generate-brief") {
         workspace = runtime.generateBrief(workspace);
         const saved = saveLocal();
@@ -1036,8 +1152,24 @@
         showToast("Campaign summary copied as Markdown.");
       }
       if (action === "copy-field-report") {
-        await navigator.clipboard.writeText(feedbackTemplate());
-        showToast("Field report template copied.");
+        const report = currentFieldReportText();
+        try {
+          await navigator.clipboard.writeText(report);
+          showToast("Field report copied.");
+        } catch {
+          const text = root.querySelector("#field-report-text");
+          text?.focus({ preventScroll: true });
+          text?.select();
+          showToast("Copy was blocked. The full report remains selected; use Download .txt or your browser copy command.");
+        }
+      }
+      if (action === "download-field-report") {
+        try {
+          downloadText(currentFieldReportText(), "loot-table-works-campaign-field-report.txt");
+          showToast("Field report downloaded as text.");
+        } catch {
+          showToast("The field report could not be downloaded. Its text remains selectable.");
+        }
       }
       if (action === "save") downloadCampaign();
       if (action === "import-factions") {
@@ -1058,6 +1190,17 @@
     if (returnConsent && returnButton) {
       returnConsent.addEventListener("change", () => {
         returnButton.disabled = !returnConsent.checked;
+      });
+    }
+
+    const fieldReport = root.querySelector("#field-report-text");
+    const emailFieldReport = root.querySelector('[data-action="email-field-report"]');
+    if (fieldReport && emailFieldReport) {
+      resizeFieldReport(fieldReport);
+      fieldReport.addEventListener("input", () => {
+        resizeFieldReport(fieldReport);
+        const subject = encodeURIComponent("Campaign Workspace field report");
+        emailFieldReport.href = `mailto:loottableworks@gmail.com?subject=${subject}&body=${encodeURIComponent(fieldReport.value)}`;
       });
     }
 
@@ -1220,6 +1363,7 @@
     anchor.remove();
     URL.revokeObjectURL(url);
     const recorded = recordReturnEvent("portable_exported");
+    fieldTestPortableSaved = true;
     if (recorded) render();
     showToast(recorded
       ? "Portable campaign JSON saved; local closeout updated."
@@ -1260,6 +1404,17 @@
       event.preventDefault();
       setView(tabs[targetIndex].dataset.view, { focus: "tab" });
     });
+  });
+  previousTabScroll.addEventListener("click", () => {
+    tabList.scrollBy({ left: -Math.max(160, tabList.clientWidth * 0.75), behavior: "smooth" });
+  });
+  nextTabScroll.addEventListener("click", () => {
+    tabList.scrollBy({ left: Math.max(160, tabList.clientWidth * 0.75), behavior: "smooth" });
+  });
+  tabList.addEventListener("scroll", updateTabScrollControls, { passive: true });
+  window.addEventListener("resize", () => {
+    alignSelectedTab(document.querySelector('[role="tab"][aria-selected="true"]'));
+    updateTabScrollControls();
   });
   document.querySelector("#download-recovery-data").addEventListener("click", () => {
     if (!recoveryState) return;
@@ -1302,6 +1457,9 @@
       return;
     }
     initializeMilestone(workspace, { reset: true, startEvent: "campaign_started" });
+    fieldTestSourceOpened = false;
+    fieldTestPortableSaved = false;
+    fieldTestCampaignReopened = false;
     activeView = "overview";
     render();
     showToast("New Gullwatch campaign created.");
@@ -1325,6 +1483,7 @@
       }
       if (!factionImport) {
         initializeMilestone(workspace, { reset: true, startEvent: "campaign_imported" });
+        fieldTestCampaignReopened = true;
       }
       activeView = factionImport ? "factions" : "overview";
       render();
@@ -1346,6 +1505,7 @@
       throw new Error("Campaign Workspace runtime data is unavailable.");
     }
     workspace = loadOrCreate();
+    fieldTestCampaignReopened = initialLoadResult.source !== "none";
     initializeMilestone(workspace, {
       startEvent: initialLoadResult.source === "none" ? "campaign_started" : "campaign_imported"
     });

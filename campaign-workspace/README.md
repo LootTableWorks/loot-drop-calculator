@@ -18,9 +18,15 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 - Confirm a later return only from a separate page session on a later date and only after explicit user consent.
 - See one optional state-relevant `$3` encounter, quest, or enemy-loot expansion after saving the campaign and copying or printing the next-session brief.
 - Reach three attributed `$3` standalone modules from the complete free campaign outcome.
-- Run a voluntary ten-minute GM field test and copy or email a source-attributed report without background analytics.
+- Run a voluntary first-pass GM field test with direct source-kit and one-shot-guide handoffs, a local progress rail, and a source-attributed report.
 
-The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, or opens a prefilled email in their own mail application.
+The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, opens a prefilled email in their own mail application, or chooses the separately warned public GitHub report form. The default report excludes workspace IDs, campaign prose, player data, and save contents.
+
+## Field-Test Activation Rail
+
+The Field test view presents one bounded local workflow: open the included Source kit, commit a campaign outcome, save portable JSON, and return to an editable plain-text report. It also links to the complete free Gullwatch Beacon kit and the worked one-shot guide in new tabs so a source-coded field-test URL remains intact.
+
+Source-kit opened, outcome committed, portable JSON saved, and campaign state reopened are rendered from the current page session and existing local milestone state. They are not transmitted or counted as demand. The report preserves the four inbound UTM values by default, omits `workspace_id`, and is never stored automatically. Copy failure leaves the report selected and available for browser copy or `.txt` download. Email remains a user-initiated `mailto:` draft. The optional GitHub route requires sign-in and creates a public report associated with the tester's public GitHub identity.
 
 ## Creation Disclosure
 
@@ -154,4 +160,4 @@ Run the complete package build from this directory:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 ```
 
-The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1-2-1.zip` and the matching GitHub Pages directory. It does not deploy or publish.
+The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1-3-0.zip` and the matching GitHub Pages directory. It does not deploy or publish.

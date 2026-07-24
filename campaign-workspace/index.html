@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Run Gullwatch Beacon as a persistent, local-first campaign with canonical clocks, consequences, and next-session briefs.">
   <title>Gullwatch Campaign Workspace | Loot Table Works</title>
-  <link rel="stylesheet" href="styles.css?v=20260723-gullwatch-workspace-17">
+  <link rel="stylesheet" href="styles.css?v=20260723-gullwatch-workspace-21">
 </head>
 <body>
   <header class="app-bar">
@@ -47,16 +47,20 @@
           <small id="campaign-meta">Session 1 / Canon structure checked locally</small>
         </div>
       </div>
-      <nav role="tablist" aria-label="Workspace views">
-        <button id="workspace-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="workspace-view" tabindex="0" data-view="overview">Overview</button>
-        <button id="workspace-tab-brief" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="brief">Next session</button>
-        <button id="workspace-tab-record" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="record">Record outcome</button>
-        <button id="workspace-tab-timeline" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="timeline">Timeline</button>
-        <button id="workspace-tab-factions" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="factions">Factions</button>
-        <button id="workspace-tab-canon" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="canon">Canon</button>
-        <button id="workspace-tab-kit" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="kit">Source kit</button>
-        <button id="workspace-tab-field-test" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="field-test">Field test</button>
-      </nav>
+      <div class="workspace-nav-tabs">
+        <button class="nav-scroll nav-scroll-previous" type="button" aria-label="Scroll workspace views left" aria-controls="workspace-tabs">&lsaquo;</button>
+        <nav role="tablist" id="workspace-tabs" aria-label="Workspace views">
+          <button id="workspace-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="workspace-view" tabindex="0" data-view="overview">Overview</button>
+          <button id="workspace-tab-brief" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="brief">Next session</button>
+          <button id="workspace-tab-record" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="record">Record outcome</button>
+          <button id="workspace-tab-timeline" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="timeline">Timeline</button>
+          <button id="workspace-tab-factions" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="factions">Factions</button>
+          <button id="workspace-tab-canon" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="canon">Canon</button>
+          <button id="workspace-tab-kit" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="kit">Source kit</button>
+          <button id="workspace-tab-field-test" type="button" role="tab" aria-selected="false" aria-controls="workspace-view" tabindex="-1" data-view="field-test">Field test</button>
+        </nav>
+        <button class="nav-scroll nav-scroll-next" type="button" aria-label="Scroll workspace views right" aria-controls="workspace-tabs">&rsaquo;</button>
+      </div>
       <div class="nav-foot">
         <span id="entity-count">0 entities</span>
         <span id="event-count">0 events</span>
@@ -69,10 +73,10 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="campaign-workspace-data.js?v=20260723-gullwatch-workspace-17"></script>
-  <script src="gullwatch-adventure-data.js?v=20260723-gullwatch-workspace-17"></script>
-  <script src="campaign-workspace-runtime.js?v=20260723-gullwatch-workspace-17"></script>
-  <script src="campaign-workspace-return-loop.js?v=20260723-gullwatch-workspace-17"></script>
-  <script src="app.js?v=20260723-gullwatch-workspace-17"></script>
+  <script src="campaign-workspace-data.js?v=20260723-gullwatch-workspace-21"></script>
+  <script src="gullwatch-adventure-data.js?v=20260723-gullwatch-workspace-21"></script>
+  <script src="campaign-workspace-runtime.js?v=20260723-gullwatch-workspace-21"></script>
+  <script src="campaign-workspace-return-loop.js?v=20260723-gullwatch-workspace-21"></script>
+  <script src="app.js?v=20260723-gullwatch-workspace-21"></script>
 </body>
 </html>
