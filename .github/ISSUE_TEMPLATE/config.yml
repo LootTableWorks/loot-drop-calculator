@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Run the private local field test
+    url: https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/?view=field-test&utm_source=github&utm_medium=issue_chooser&utm_campaign=wf4w_revenue_v1&utm_content=field_test_private_route
+    about: Test locally first. Nothing is sent until you explicitly copy, email, or create a public issue.

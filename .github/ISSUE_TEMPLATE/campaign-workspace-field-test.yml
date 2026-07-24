@@ -1,0 +1,139 @@
+name: Campaign Workspace field-test report
+description: Report one real workflow result without attaching campaign files or private data.
+title: "[Field Test] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing Campaign Workspace.
+
+        This GitHub issue will be public. Use fictional or redacted details only. Do not attach a campaign save, player names, contact information, private notes, licensed rules text, or other sensitive material.
+
+        Generative AI assisted development and editorial production. The released content and code were human-directed and QA-reviewed. Campaign Workspace runs locally and does not upload campaign data or call a hosted AI service.
+
+  - type: checkboxes
+    id: public_report_consent
+    attributes:
+      label: Public report consent
+      description: Confirm both statements before continuing.
+      options:
+        - label: I understand this report will be public.
+          required: true
+        - label: I removed personal information, private campaign material, and licensed rules text.
+          required: true
+
+  - type: dropdown
+    id: furthest_stage
+    attributes:
+      label: Furthest completed workflow stage
+      description: Choose the last step you actually completed.
+      options:
+        - Opened and oriented to the Gullwatch campaign
+        - Inspected the playable source kit and next-session brief
+        - Recorded and committed one fictional or redacted outcome
+        - Saved and reopened the portable campaign JSON
+        - Returned on a separate later visit and reopened the campaign
+    validations:
+      required: true
+
+  - type: dropdown
+    id: save_roundtrip
+    attributes:
+      label: Portable save roundtrip
+      description: Did Save followed by Open preserve the outcome and next-session brief?
+      options:
+        - Yes
+        - No
+        - Not attempted
+    validations:
+      required: true
+
+  - type: dropdown
+    id: separate_return
+    attributes:
+      label: Separate later return
+      description: Did you return at least 24 hours later and reopen the campaign for later preparation?
+      options:
+        - Yes
+        - No
+        - Not yet
+    validations:
+      required: true
+
+  - type: dropdown
+    id: discovery_source
+    attributes:
+      label: Where did you find the workflow?
+      options:
+        - GitHub repository
+        - Run a One-Shot Tonight guide
+        - Gullwatch Beacon on itch.io
+        - Direct invitation
+        - Bluesky
+        - Other or not sure
+    validations:
+      required: true
+
+  - type: input
+    id: source_code
+    attributes:
+      label: Source code
+      description: Optional. If a link or invitation included a short source code, enter only that code.
+      placeholder: "Example: readme_field_test"
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and device
+      description: Optional. General details only; do not include account, network, or device identifiers.
+      placeholder: "Example: Firefox on Windows desktop"
+
+  - type: textarea
+    id: useful_result
+    attributes:
+      label: What became easier or clearer?
+      description: Name the visible output or decision that helped.
+      placeholder: "Example: The next-session brief carried the unresolved choice into a concrete opening scene."
+    validations:
+      required: true
+
+  - type: textarea
+    id: friction
+    attributes:
+      label: Where did you hesitate, stop, or distrust the result?
+      description: Name the step, control, or output and what you expected instead.
+      placeholder: "Example: I could not tell whether Save replaced my earlier local campaign."
+    validations:
+      required: true
+
+  - type: textarea
+    id: missing_table_material
+    attributes:
+      label: What was still missing before you could run the next session?
+      description: Use fictional or redacted details only.
+      placeholder: "Example: I still needed one concise opposition motive for scene three."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: optional_expansion
+    attributes:
+      label: Would any optional expansion be relevant?
+      description: This is not a purchase request. Choose the closest honest answer.
+      options:
+        - Encounter and threat material
+        - Quest and consequence material
+        - Reward and loot material
+        - A different expansion
+        - No optional expansion is relevant
+        - Not sure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: final_boundary
+    attributes:
+      label: Final privacy check
+      options:
+        - label: I did not attach a campaign save or include private campaign data.
+          required: true

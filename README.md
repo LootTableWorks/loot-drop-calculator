@@ -13,7 +13,7 @@ Create a system-neutral fantasy one-shot, run it, record what changed, and prepa
 3. **Record what changed.** [Campaign Workspace](https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/) preserves outcomes, unresolved choices, clocks, factions, clues, and location changes in a portable local save.
 4. **Continue next week.** Generate a next-session brief from the same campaign state, then export JSON or Markdown without creating an account.
 
-The voluntary [ten-minute GM field test](https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/?view=field-test&utm_source=github&utm_medium=repository&utm_campaign=wf4w_revenue_v1&utm_content=readme_field_test) reports only when the tester explicitly copies or emails the result. It has no background analytics or campaign-data upload.
+The voluntary [ten-minute GM field test](https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/?view=field-test&utm_source=github&utm_medium=repository&utm_campaign=wf4w_revenue_v1&utm_content=readme_field_test) reports only when the tester explicitly copies or emails the result. It has no background analytics or campaign-data upload. Testers with a GitHub account can instead submit a [structured public field-test report](https://github.com/LootTableWorks/loot-drop-calculator/issues/new?template=campaign-workspace-field-test.yml); the form prohibits save attachments and private campaign data.
 
 ## Free Browser Tools
 
