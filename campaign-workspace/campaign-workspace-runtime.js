@@ -984,7 +984,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
             source_type: "validated_play_tonight_content",
             path: "shared/world-foundry/play-tonight/gullwatch-beacon/content/adventure.json",
             schema_version: "1.0.0",
-            sha256: "4ffc7d78a4d764e232547b4188fe5dfb7800ce1a3ecd03fcd27d7fc4a87cd20e"
+            sha256: "6e896e879b56e38140f8da67787e79dd986a832e6a6cc54f1040ed0ee8e804a4"
           },
           {
             source_id: "gullwatch-play-tonight-manifest-v1",
@@ -1490,6 +1490,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
         const DOCUMENT_TYPE = "loot-table-works.campaign-start";
         const LAUNCHPAD_GENERATOR = "Loot Table Works Campaign Launchpad";
         const ONE_SHOT_GENERATOR = "Loot Table Works One-Shot Forge";
+        const PRODUCER_ORIGINS = Object.freeze(["campaign_launchpad", "one_shot_forge"]);
         const TOOL_IDS = Object.freeze(["world", "party", "session", "arc", "chronicle"]);
         const PRODUCT_IDS = Object.freeze(["items", "merchants", "recipes", "loot", "quests", "encounters"]);
         const SCOPE_PRESETS = Object.freeze({
@@ -1887,20 +1888,25 @@ var CampaignWorkspaceRuntimeBundle = (() => {
           };
         }
         function campaignStartFingerprint(start) {
-          return stableStringify({
+          const fingerprint = {
             schema_version: start.schema_version,
             document_type: start.document_type,
             campaign: start.campaign,
             workflow: start.workflow,
             opening_session: start.opening_session,
             source_ledger: start.source_ledger
-          });
+          };
+          if (start.producer_origin !== void 0) fingerprint.producer_origin = start.producer_origin;
+          return stableStringify(fingerprint);
         }
         function validateCampaignStart(start) {
           const errors = [];
           if (!isObject3(start)) return { valid: false, errors: ["campaignStart: must be an object."] };
           if (start.schema_version !== VERSION) addError(errors, "campaignStart.schema_version", `must equal ${VERSION}.`);
           if (start.document_type !== DOCUMENT_TYPE) addError(errors, "campaignStart.document_type", `must equal "${DOCUMENT_TYPE}".`);
+          if (start.producer_origin !== void 0 && !PRODUCER_ORIGINS.includes(start.producer_origin)) {
+            addError(errors, "campaignStart.producer_origin", "must identify Campaign Launchpad or One-Shot Forge.");
+          }
           if (!isObject3(start.campaign)) addError(errors, "campaignStart.campaign", "must be an object.");
           if (!isObject3(start.workflow)) addError(errors, "campaignStart.workflow", "must be a Campaign Launchpad document.");
           if (!isObject3(start.opening_session)) addError(errors, "campaignStart.opening_session", "must be a One-Shot Forge document.");
@@ -1957,11 +1963,16 @@ var CampaignWorkspaceRuntimeBundle = (() => {
           if (!pairValidation.valid) throw new Error(pairValidation.errors.join("\n"));
           const launchpad = deepClone(input.launchpad);
           const oneShot = deepClone(input.oneShot);
+          const producerOrigin = input.producerOrigin ?? "campaign_launchpad";
+          if (!PRODUCER_ORIGINS.includes(producerOrigin)) {
+            throw new Error("Campaign Start producerOrigin must identify Campaign Launchpad or One-Shot Forge.");
+          }
           const scope = SCOPE_PRESETS[launchpad.options.scope];
           const spotlight = SPOTLIGHT_PRESETS[launchpad.options.spotlight];
           const start = {
             schema_version: VERSION,
             document_type: DOCUMENT_TYPE,
+            producer_origin: producerOrigin,
             start_id: "",
             campaign: {
               seed: launchpad.options.seed,
@@ -1992,6 +2003,7 @@ var CampaignWorkspaceRuntimeBundle = (() => {
         return {
           VERSION,
           DOCUMENT_TYPE,
+          PRODUCER_ORIGINS,
           SCOPE_PRESETS,
           SPOTLIGHT_PRESETS,
           hash: hash2,

@@ -13,14 +13,36 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 - Import the validated JSON wrapper exported by the Faction Fronts browser and export the normalized state again.
 - Generate the next five-beat GM brief from materialized state.
 - Export and reopen portable workspace JSON or copy Markdown.
+- Close a committed session with primary save, next-session Markdown, and scoped print actions.
+- Keep an optional content-free return receipt in separate local storage without changing campaign JSON or recovery.
+- Confirm a later return only from a separate page session on a later date and only after explicit user consent.
+- See one optional state-relevant `$3` encounter, quest, or enemy-loot expansion after saving the campaign and copying or printing the next-session brief.
 - Reach three attributed `$3` standalone modules from the complete free campaign outcome.
 - Run a voluntary ten-minute GM field test and copy or email a source-attributed report without background analytics.
 
-The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report stays in the browser until the tester explicitly copies it or opens a prefilled email in their own mail application.
+The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, or opens a prefilled email in their own mail application.
 
 ## Creation Disclosure
 
 Loot Table Works used generative AI assistance during development and editorial production. The released content and code were human-directed and QA-reviewed. The browser tool runs locally and does not call an AI service or upload campaign data.
+
+## Session Closeout And Return Checkpoint
+
+After a session transaction is successfully written to the validated local campaign journal, the next-session view adds an unframed closeout checkpoint. Its primary actions:
+
+1. Download the existing portable Campaign Workspace JSON.
+2. Copy the deterministic next-session brief as Markdown.
+3. Print only the scoped next-session run sheet, including objective, stakes, callbacks, cast, faction consequence, and five scene beats without app navigation or campaign-management chrome.
+
+The closeout also offers two secondary actions to copy or download a content-free checkpoint receipt. That receipt is built by `campaign-workspace-return-loop.js` and stored under `loot-table-works:campaign-workspace:return-loop:v1`, separate from the primary campaign and backup keys. Its exact bounded fields are a random receipt ID, producer class, route attribution, completion booleans, session count, approved product IDs, and a coarse age bucket. It excludes campaign and player names; campaign, workspace, player, entity, transaction, event, mapping, source, and device IDs; campaign prose; save contents; hashes; exact timestamps; credentials; and recovery data.
+
+The module records campaign start/import, committed session count, portable export, next-session copy or print, explicit separate-session return, and the one recommended or clicked approved product locally. No event is sent in the background. Copying or downloading a receipt is always user-controlled. This optional local receipt is not proof of play, return, demand, a paid visit, purchase, or revenue, and it is never sent automatically.
+
+A return cannot be confirmed in the same page session or on the milestone's local calendar creation day. A page-session nonce is kept in `sessionStorage`, so reloading the same tab does not manufacture a return. If session storage is unavailable, this local checkpoint gate fails closed. On a later local calendar date, the user must open a new tab or browser session and check the explicit confirmation before the local receipt changes. Changing the device time zone can change this coarse local-day boundary, so the checkpoint remains supporting evidence rather than verified retention.
+
+Both supported Campaign Start fixtures normalize Campaign Launchpad workflow data and One-Shot Forge opening-session data into the same validated v1 document. Because that document does not preserve which tool initiated the export, the receipt uses the truthful bounded producer class `campaign_launchpad` for either Campaign Start fixture rather than inventing a One-Shot-specific origin.
+
+The recommendation is intentionally secondary to preservation and preparation. It deterministically selects exactly one public `$3` standalone product from the encounter, quest, or enemy-loot allowlist using only the coarse recorded target kind, with the quest kit as the documented fallback. Its link remains withheld until the current closeout records both a portable campaign export and a next-session copy or print action. A later session commit resets those two prerequisites. It never links to a bundle or private offer.
 
 ## Runtime Contract
 
@@ -132,4 +154,4 @@ Run the complete package build from this directory:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 ```
 
-The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1.zip` and the matching GitHub Pages directory. It does not deploy or publish.
+The build writes `machines/machine-005/dist/campaign-workspace-static-site-v1-2.zip` and the matching GitHub Pages directory. It does not deploy or publish.

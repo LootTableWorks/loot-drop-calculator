@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Run Gullwatch Beacon as a persistent, local-first campaign with canonical clocks, consequences, and next-session briefs.">
   <title>Gullwatch Campaign Workspace | Loot Table Works</title>
-  <link rel="stylesheet" href="styles.css?v=20260723-gullwatch-workspace-13">
+  <link rel="stylesheet" href="styles.css?v=20260723-gullwatch-workspace-15">
 </head>
 <body>
   <header class="app-bar">
@@ -22,7 +22,7 @@
       <button id="open-campaign" class="quiet-action" type="button">Open</button>
       <button id="save-campaign" class="quiet-action" type="button">Save</button>
       <button id="reset-campaign" class="primary-action" type="button">New campaign</button>
-      <input id="campaign-file" type="file" accept=".json,application/json" hidden>
+      <input id="campaign-file" type="file" accept=".json,application/json" aria-label="Open campaign or faction state JSON" hidden>
     </div>
   </header>
 
@@ -69,9 +69,10 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="campaign-workspace-data.js?v=20260723-gullwatch-workspace-13"></script>
-  <script src="gullwatch-adventure-data.js?v=20260723-gullwatch-workspace-13"></script>
-  <script src="campaign-workspace-runtime.js?v=20260723-gullwatch-workspace-13"></script>
-  <script src="app.js?v=20260723-gullwatch-workspace-13"></script>
+  <script src="campaign-workspace-data.js?v=20260723-gullwatch-workspace-15"></script>
+  <script src="gullwatch-adventure-data.js?v=20260723-gullwatch-workspace-15"></script>
+  <script src="campaign-workspace-runtime.js?v=20260723-gullwatch-workspace-15"></script>
+  <script src="campaign-workspace-return-loop.js?v=20260723-gullwatch-workspace-15"></script>
+  <script src="app.js?v=20260723-gullwatch-workspace-15"></script>
 </body>
 </html>

@@ -3,6 +3,8 @@
 
   const STORAGE_KEY = "loot-table-works:gullwatch-campaign-workspace:v1";
   const BACKUP_STORAGE_KEY = `${STORAGE_KEY}:backup`;
+  const PAGE_SESSION_NONCE_KEY = "loot-table-works:campaign-workspace:return-loop:page-session";
+  const UNAVAILABLE_SESSION_NONCE = `page-${"0".repeat(32)}`;
   const RECOVERY_REQUIRED_CODE = "CAMPAIGN_RECOVERY_REQUIRED";
 
   function createRecoveryRequiredError(message) {
@@ -148,6 +150,25 @@
     return selectedTab;
   }
 
+  function localDayIndex(value = new Date()) {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+      throw new TypeError("A valid local date is required.");
+    }
+    return Math.floor(Date.UTC(value.getFullYear(), value.getMonth(), value.getDate()) / 86400000);
+  }
+
+  function producerClassFor(value) {
+    if (value?.producer_start) return "campaign_launchpad";
+    return "gullwatch";
+  }
+
+  function focusActionControl(scope, action) {
+    const control = scope?.querySelector?.(`[data-action="${action}"]`);
+    if (!control || typeof control.focus !== "function") return false;
+    control.focus({ preventScroll: true });
+    return true;
+  }
+
   const testApi = Object.freeze({
     STORAGE_KEY,
     BACKUP_STORAGE_KEY,
@@ -156,7 +177,10 @@
     serializeValidatedWorkspace,
     createLocalJournal,
     tabIndexForKey,
-    applyTabState
+    applyTabState,
+    localDayIndex,
+    producerClassFor,
+    focusActionControl
   });
   globalScope.CampaignWorkspaceAppHelpers = testApi;
   if (typeof module !== "undefined" && module.exports) module.exports = testApi;
@@ -165,6 +189,7 @@
   const runtime = globalThis.CampaignWorkspaceRuntime;
   const source = globalThis.PlayerChronicleSource;
   const adventure = globalThis.GullwatchAdventureSource;
+  const returnLoop = globalThis.CampaignWorkspaceReturnLoop;
   const root = document.querySelector("#workspace-view");
   const fileInput = document.querySelector("#campaign-file");
   const toast = document.querySelector("#toast");
@@ -179,6 +204,8 @@
   let clockAdjustments = { flood_tide: 0, false_signal: 0 };
   let recoveryState = null;
   let initialLoadResult = null;
+  let returnMilestone = null;
+  const pageSessionNonce = getPageSessionNonce();
 
   const esc = (value) => String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -190,6 +217,144 @@
   const humanize = (value) => String(value ?? "")
     .replaceAll("_", " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+  function createPageSessionNonce() {
+    const cryptoApi = globalThis.crypto;
+    if (cryptoApi && typeof cryptoApi.randomUUID === "function") {
+      return `page-${cryptoApi.randomUUID().replaceAll("-", "").toLowerCase()}`;
+    }
+    let token = "";
+    for (let index = 0; index < 4; index += 1) {
+      token += Math.floor(Math.random() * 0x100000000).toString(16).padStart(8, "0");
+    }
+    return `page-${token}`;
+  }
+
+  function getPageSessionNonce() {
+    try {
+      const existing = sessionStorage.getItem(PAGE_SESSION_NONCE_KEY);
+      if (existing && /^page-[0-9a-f]{32}$/.test(existing)) return existing;
+      const created = createPageSessionNonce();
+      sessionStorage.setItem(PAGE_SESSION_NONCE_KEY, created);
+      return created;
+    } catch {
+      return UNAVAILABLE_SESSION_NONCE;
+    }
+  }
+
+  function milestoneAttribution() {
+    const params = new URLSearchParams(window.location.search);
+    const token = (name) => {
+      const raw = String(params.get(name) ?? "").slice(0, 64);
+      const safe = raw.replace(/[^A-Za-z0-9_-]+/g, "_").replace(/^[^A-Za-z0-9]+/, "");
+      return safe || null;
+    };
+    return {
+      source: token("utm_source"),
+      medium: token("utm_medium"),
+      campaign: token("utm_campaign"),
+      content: token("utm_content")
+    };
+  }
+
+  function latestTargetKind(value) {
+    const latest = value?.sessions?.at(-1);
+    if (!latest) return null;
+    const target = runtime.summarize(value).recordTargets.find((entry) => entry.id === latest.target_id);
+    return target?.type ?? null;
+  }
+
+  function readMilestone() {
+    try {
+      const raw = localStorage.getItem(returnLoop.STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      returnLoop.createReceipt(parsed);
+      return parsed;
+    } catch {
+      return null;
+    }
+  }
+
+  function persistMilestone() {
+    try {
+      const serialized = JSON.stringify(returnMilestone);
+      localStorage.setItem(returnLoop.STORAGE_KEY, serialized);
+      const verified = JSON.parse(localStorage.getItem(returnLoop.STORAGE_KEY));
+      returnLoop.createReceipt(verified);
+      return JSON.stringify(verified) === serialized;
+    } catch {
+      return false;
+    }
+  }
+
+  function createWorkspaceMilestone(value) {
+    const sessionCount = Array.isArray(value?.sessions) ? value.sessions.length : 0;
+    const input = {
+      producerClass: producerClassFor(value),
+      attribution: milestoneAttribution(),
+      pageSessionNonce,
+      dayIndex: localDayIndex(),
+      startedOrImported: true,
+      sessionCount
+    };
+    let next;
+    try {
+      next = returnLoop.createMilestone(input);
+    } catch (error) {
+      try {
+        next = returnLoop.createMilestone({ ...input, attribution: null });
+      } catch {
+        throw error;
+      }
+    }
+    if (sessionCount > 0) {
+      next = returnLoop.recordMilestone(next, "expansion_recommended", {
+        targetKind: latestTargetKind(value)
+      });
+    }
+    return next;
+  }
+
+  function initializeMilestone(value, options = {}) {
+    const sessionCount = Array.isArray(value?.sessions) ? value.sessions.length : 0;
+    let existing = options.reset === true ? null : readMilestone();
+    if (
+      !existing ||
+      existing.producer_class !== producerClassFor(value) ||
+      existing.session_count > sessionCount
+    ) {
+      existing = createWorkspaceMilestone(value);
+    } else if (sessionCount > existing.session_count) {
+      existing = returnLoop.recordMilestone(existing, "session_committed", {
+        sessionCount,
+        targetKind: latestTargetKind(value)
+      });
+    } else if (sessionCount > 0 && existing.recommended_product_id === null) {
+      existing = returnLoop.recordMilestone(existing, "expansion_recommended", {
+        targetKind: latestTargetKind(value)
+      });
+    }
+    if (options.startEvent) {
+      existing = returnLoop.recordMilestone(existing, options.startEvent);
+    }
+    returnMilestone = existing;
+    persistMilestone();
+  }
+
+  function recordReturnEvent(event, input = {}) {
+    if (!returnMilestone) return false;
+    const previous = returnMilestone;
+    try {
+      returnMilestone = returnLoop.recordMilestone(returnMilestone, event, input);
+      if (persistMilestone()) return true;
+      returnMilestone = previous;
+      return false;
+    } catch {
+      returnMilestone = previous;
+      return false;
+    }
+  }
 
   function showToast(message) {
     window.clearTimeout(toastTimer);
@@ -303,6 +468,7 @@
       ${heading("Persistent campaign / local canon", summary.title, summary.pitch,
         `<button type="button" data-action="open-brief">Prepare next session</button>
          <button type="button" class="primary-action" data-action="record">Record outcome</button>`)}
+      ${renderCloseout(summary)}
       <section class="campaign-ribbon">
         <div class="campaign-image"><img src="assets/gullwatch-beacon-cover-v1.png" alt="Gullwatch Beacon above a storm-dark coast"></div>
         <div class="campaign-summary">
@@ -342,7 +508,162 @@
             <div class="objective"><strong>${esc(summary.nextDecision.label)}</strong><p>${esc(summary.nextDecision.text)}</p></div>
           </section>
         </div>
-      </div>`;
+      </div>
+      ${renderNextSessionPrintSheet(summary)}`;
+  }
+
+  function expansionForMilestone() {
+    const selected = returnLoop.selectExpansion({ targetKind: latestTargetKind(workspace) });
+    if (!returnMilestone?.recommended_product_id || selected.product_id === returnMilestone.recommended_product_id) {
+      return selected;
+    }
+    const product = Object.values(returnLoop.PRODUCT_MAP)
+      .find((entry) => entry.product_id === returnMilestone.recommended_product_id);
+    return product
+      ? {
+          target_kind: null,
+          product_id: product.product_id,
+          title: product.title,
+          price_usd: product.price_usd,
+          reason: "This is the one approved expansion recorded for the latest session closeout.",
+          url: product.url
+        }
+      : selected;
+  }
+
+  function canConfirmLaterReturn() {
+    if (!returnMilestone) return false;
+    try {
+      return returnLoop.canConfirmSeparateReturn(returnMilestone, {
+        pageSessionNonce,
+        dayIndex: localDayIndex(),
+        confirmed: true
+      });
+    } catch {
+      return false;
+    }
+  }
+
+  function renderCloseout(summary) {
+    if (!summary.brief || !returnMilestone?.session_committed) return "";
+    const expansion = expansionForMilestone();
+    const returnConfirmed = returnMilestone.separate_session_return_confirmed;
+    const returnAvailable = !returnConfirmed && canConfirmLaterReturn();
+    const recommendationAvailable =
+      returnMilestone.portable_export && returnMilestone.next_session_copy_or_print;
+    const returnStatus = returnConfirmed
+      ? "A separate page-session return is recorded in the local receipt."
+      : returnAvailable
+        ? "This is a different page session on a later date. Confirm only if this is a real campaign return."
+        : "Return confirmation unlocks in a new tab or browser session on a later date. Reloading this tab does not count.";
+    return `
+      <section class="session-closeout" aria-labelledby="session-closeout-title">
+        <header class="closeout-heading">
+          <div>
+            <p class="eyebrow">Session ${returnMilestone.session_count} preserved</p>
+            <h2 id="session-closeout-title">Close the table. Keep the world moving.</h2>
+            <p>Your Canon transaction is saved. Take the portable campaign and next-session run sheet before leaving.</p>
+          </div>
+          <span>Local-first closeout</span>
+        </header>
+        <div class="closeout-primary-actions" aria-label="Primary session closeout actions">
+          <button type="button" class="primary-action" data-action="closeout-save">
+            <strong>Save campaign JSON</strong>
+            <span>Portable campaign and Canon</span>
+          </button>
+          <button type="button" class="primary-action" data-action="closeout-copy">
+            <strong>Copy next-session Markdown</strong>
+            <span>Run sheet for your notes</span>
+          </button>
+          <button type="button" class="primary-action" data-action="closeout-print">
+            <strong>Print next-session run sheet</strong>
+            <span>Only the prepared session prints</span>
+          </button>
+        </div>
+        <p class="local-ledger-note">
+          Milestone data stays on this device under a separate local key until you explicitly copy or download a receipt.
+          There is no account, hosted analytics, or automatic submission.
+        </p>
+        <div class="closeout-support">
+          <section class="return-checkpoint" aria-labelledby="return-checkpoint-title">
+            <p class="eyebrow">Later return</p>
+            <h3 id="return-checkpoint-title">Confirm a separate session</h3>
+            <p>${esc(returnStatus)}</p>
+            ${returnConfirmed
+              ? `<span class="return-confirmed">Later return confirmed locally</span>`
+              : `<label class="return-consent">
+                 <input id="confirm-later-return" type="checkbox"${returnAvailable ? "" : " disabled"}>
+                   <span>I reopened this campaign for a later session.</span>
+                 </label>
+                 <button type="button" data-action="confirm-later-return" disabled>Confirm later return</button>`}
+          </section>
+          <section class="receipt-actions" aria-labelledby="receipt-actions-title">
+            <p class="eyebrow">Optional local receipt</p>
+            <h3 id="receipt-actions-title">Keep a content-free checkpoint receipt</h3>
+            <p>The receipt includes a random receipt ID, producer class, bounded route attribution, milestone booleans, session count, approved product IDs, and a coarse age bucket. It excludes campaign and player names; campaign, workspace, player, entity, transaction, event, mapping, source, and device IDs; campaign text; save contents; exact timestamps; credentials; and recovery data.</p>
+            <p>This optional local receipt is not proof of play, return, demand, a paid visit, purchase, or revenue, and it is never sent automatically.</p>
+            <div>
+              <button type="button" data-action="copy-receipt">Copy receipt</button>
+              <button type="button" data-action="download-receipt">Download receipt</button>
+            </div>
+          </section>
+        </div>
+        <aside class="closeout-recommendation" aria-labelledby="closeout-recommendation-title">
+          <div>
+            <p class="eyebrow">Optional / $${expansion.price_usd} standalone</p>
+            <h3 id="closeout-recommendation-title">${esc(expansion.title)}</h3>
+            <p>${esc(expansion.reason)}</p>
+          </div>
+          ${recommendationAvailable
+            ? `<a href="${esc(expansion.url)}" target="_blank" rel="noopener" data-action="paid-expansion" data-product-id="${esc(expansion.product_id)}">View relevant expansion</a>`
+            : `<span class="recommendation-gate">Save + copy/print to unlock</span>`}
+        </aside>
+      </section>`;
+  }
+
+  function renderNextSessionPrintSheet(summary) {
+    const brief = summary.brief;
+    if (!brief) return "";
+    const stakes = brief.stakes.map((stake) =>
+      `<li><strong>${esc(stake.urgency)}</strong><span>${esc(stake.text)}</span></li>`).join("");
+    const callbacks = brief.continuity_callbacks.map((callback) =>
+      `<li>${esc(callback.text)}</li>`).join("");
+    const cast = (summary.cast ?? []).map((person) =>
+      `<li><strong>${esc(person.name)}</strong><span>${esc(person.role)}</span><span>Wants: ${esc(person.wants)}</span></li>`).join("");
+    const faction = brief.editorial_continuity?.faction_reaction;
+    const factionLabel = faction?.faction_name
+      ? `${faction.faction_name} / ${faction.posture}`
+      : "No named faction";
+    const factionConsequence = faction?.consequence
+      ?? "No named faction consequence is active in this prepared brief.";
+    const scenes = brief.scenes.map((scene) => `
+      <article>
+        <header><span>${String(scene.order).padStart(2, "0")}</span><div><small>${esc(scene.purpose)}</small><h2>${esc(scene.title)}</h2></div></header>
+        <p>${esc(scene.beat)}</p>
+        <p><strong>Choice:</strong> ${esc(scene.choice)}</p>
+      </article>`).join("");
+    return `
+      <section class="next-session-print-sheet" aria-hidden="true">
+        <header class="print-sheet-heading">
+          <p>Loot Table Works / Campaign Workspace</p>
+          <h1>${esc(brief.title)}</h1>
+          <span>Session ${summary.sessionNumber} / ${esc(summary.title)}</span>
+        </header>
+        <section class="print-objective">
+          <small>Objective</small>
+          <h2>${esc(brief.objective.text)}</h2>
+          <p>${esc(brief.gm_direction)}</p>
+        </section>
+        <div class="print-brief-grid">
+          <section><h2>Stakes</h2><ul>${stakes}</ul></section>
+          <section><h2>Continuity callbacks</h2><ol>${callbacks}</ol></section>
+        </div>
+        <div class="print-continuity-grid">
+          <section class="print-cast"><h2>Cast</h2><ul>${cast}</ul></section>
+          <section class="print-faction"><h2>Faction consequence</h2><strong>${esc(factionLabel)}</strong><p>${esc(factionConsequence)}</p></section>
+        </div>
+        <section class="print-scenes"><h2>Session beats</h2>${scenes}</section>
+      </section>`;
   }
 
   function renderBrief(summary) {
@@ -366,6 +687,7 @@
         `<button type="button" data-action="copy-brief">Copy Markdown</button>
          <button type="button" data-action="generate-brief">Regenerate</button>
          <button type="button" class="primary-action" data-action="record">Record outcome</button>`)}
+      ${renderCloseout(summary)}
       <section class="brief-header">
         <p class="eyebrow">Objective</p>
         <h2>${esc(brief.objective.text)}</h2>
@@ -377,7 +699,8 @@
       <section class="panel">
         <div class="panel-heading"><h2>Session beats</h2><span>${brief.scenes.length} scenes</span></div>
         <div class="scene-grid">${scenes}</div>
-      </section>`;
+      </section>
+      ${renderNextSessionPrintSheet(summary)}`;
   }
 
   function renderRecord(summary) {
@@ -539,6 +862,7 @@
           <section>
             <h2>Creation disclosure</h2>
             <p>Loot Table Works used generative AI assistance during development and editorial production. The released content and code were human-directed and QA-reviewed. This tool runs locally and does not call an AI service or upload campaign data.</p>
+            <p><a href="USAGE-TERMS.md">Usage terms</a></p>
           </section>
         </div>
       </div>`;
@@ -622,7 +946,7 @@
   }
 
   function bindViewEvents() {
-    root.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", async () => {
+    root.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", async (event) => {
       const action = button.dataset.action;
       if (action === "open-brief") setView("brief");
       if (action === "record") setView("record");
@@ -634,8 +958,60 @@
         if (saved) showToast("Next-session brief rebuilt from current Canon.");
       }
       if (action === "copy-brief") {
-        await navigator.clipboard.writeText(runtime.briefToMarkdown(workspace.brief));
-        showToast("GM brief copied as Markdown.");
+        try {
+          await navigator.clipboard.writeText(runtime.briefToMarkdown(workspace.brief));
+        } catch {
+          showToast("The GM brief could not be copied. Use Save JSON or Print instead.");
+          return;
+        }
+        const recorded = recordReturnEvent("next_session_copied");
+        if (recorded) render();
+        showToast(recorded
+          ? "GM brief copied as Markdown; local closeout updated."
+          : "GM brief copied. The local closeout milestone was not updated.");
+      }
+      if (action === "closeout-save") downloadCampaign();
+      if (action === "closeout-copy") {
+        try {
+          await navigator.clipboard.writeText(runtime.briefToMarkdown(workspace.brief));
+        } catch {
+          showToast("The next-session run sheet could not be copied. Use Save JSON or Print instead.");
+          return;
+        }
+        const recorded = recordReturnEvent("next_session_copied");
+        if (recorded) render();
+        showToast(recorded
+          ? "Next-session run sheet copied; local closeout updated."
+          : "Next-session run sheet copied. The local closeout milestone was not updated.");
+      }
+      if (action === "closeout-print") printNextSession();
+      if (action === "copy-receipt") {
+        try {
+          await navigator.clipboard.writeText(currentReceiptText());
+          showToast("Content-free local receipt copied.");
+        } catch {
+          showToast("The local receipt could not be copied.");
+        }
+      }
+      if (action === "download-receipt") {
+        try {
+          downloadText(
+            currentReceiptText(),
+            `${returnMilestone.receipt_id}.json`,
+            "application/json"
+          );
+          showToast("Content-free local receipt downloaded.");
+        } catch {
+          showToast("The local receipt could not be downloaded.");
+        }
+      }
+      if (action === "confirm-later-return") confirmLaterReturn();
+      if (action === "paid-expansion") {
+        const recorded = recordReturnEvent("paid_expansion_clicked", { productId: button.dataset.productId });
+        if (!recorded) {
+          event.preventDefault();
+          showToast("Save the campaign and copy or print the run sheet before opening the expansion.");
+        }
       }
       if (action === "copy-canon") {
         await navigator.clipboard.writeText(runtime.toCampaignMarkdown(workspace));
@@ -659,6 +1035,14 @@
       }
     }));
 
+    const returnConsent = root.querySelector("#confirm-later-return");
+    const returnButton = root.querySelector('[data-action="confirm-later-return"]');
+    if (returnConsent && returnButton) {
+      returnConsent.addEventListener("change", () => {
+        returnButton.disabled = !returnConsent.checked;
+      });
+    }
+
     root.querySelectorAll(".clock-adjuster button").forEach((button) => button.addEventListener("click", () => {
       const row = button.closest(".clock-adjuster");
       const clockId = row.dataset.clock;
@@ -670,19 +1054,31 @@
     const form = root.querySelector("#outcome-form");
     if (form) form.addEventListener("submit", (event) => {
       event.preventDefault();
-      workspace = runtime.recordSession(workspace, {
+      const previousWorkspace = workspace;
+      const targetId = root.querySelector("#outcome-target").value;
+      const targetKind = snapshot().recordTargets.find((target) => target.id === targetId)?.type ?? null;
+      workspace = runtime.recordSession(previousWorkspace, {
         outcome: new FormData(form).get("outcome"),
-        targetId: root.querySelector("#outcome-target").value,
+        targetId,
         truth: root.querySelector("#outcome-truth").value.trim(),
         nextThread: root.querySelector("#outcome-thread").value.trim(),
         clockAdjustments
       });
-      clockAdjustments = { flood_tide: 0, false_signal: 0 };
       const saved = saveLocal();
+      if (!saved) {
+        workspace = previousWorkspace;
+        return;
+      }
+      clockAdjustments = { flood_tide: 0, false_signal: 0 };
+      const milestoneRecorded = recordReturnEvent("session_committed", {
+        sessionCount: workspace.sessions.length,
+        targetKind
+      });
       activeView = "brief";
-      renderNavigation();
       render();
-      if (saved) showToast(`Session ${workspace.session_number - 1} committed; the next brief is ready.`);
+      showToast(milestoneRecorded
+        ? `Session ${workspace.session_number - 1} committed; closeout and the next brief are ready.`
+        : `Session ${workspace.session_number - 1} committed, but the local closeout milestone was not recorded.`);
     });
 
     root.querySelectorAll("[data-faction-posture]").forEach((select) => select.addEventListener("change", () => {
@@ -737,6 +1133,64 @@
     bindViewEvents();
   }
 
+  function currentReceiptText() {
+    const receipt = returnLoop.createReceipt(returnMilestone);
+    returnLoop.assertReceiptSafe(receipt);
+    return returnLoop.serializeReceipt(receipt);
+  }
+
+  function confirmLaterReturn() {
+    const checkbox = root.querySelector("#confirm-later-return");
+    if (!checkbox?.checked) {
+      showToast("Confirm that this is a real later return first.");
+      return;
+    }
+    const previous = returnMilestone;
+    try {
+      returnMilestone = returnLoop.confirmSeparateReturn(returnMilestone, {
+        pageSessionNonce,
+        dayIndex: localDayIndex(),
+        confirmed: true
+      });
+      if (!persistMilestone()) {
+        returnMilestone = previous;
+        showToast("The later return was not recorded because local receipt storage could not be verified.");
+        return;
+      }
+      render();
+      showToast("Later return confirmed in the content-free local receipt.");
+    } catch (error) {
+      returnMilestone = previous;
+      showToast(error.message);
+    }
+  }
+
+  function printNextSession() {
+    if (!workspace.brief) {
+      showToast("Build a next-session brief before printing.");
+      return;
+    }
+    const recorded = recordReturnEvent("next_session_printed");
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      document.body.classList.remove("printing-next-session");
+      if (recorded) render();
+      focusActionControl(root, "closeout-print");
+    };
+    document.body.classList.add("printing-next-session");
+    window.addEventListener("afterprint", cleanup, { once: true });
+    try {
+      window.print();
+      showToast(recorded
+        ? "Next-session run sheet opened for printing; local closeout updated."
+        : "Next-session run sheet opened for printing. The local closeout milestone was not updated.");
+    } finally {
+      window.setTimeout(cleanup, 1000);
+    }
+  }
+
   function downloadCampaign() {
     const blob = new Blob([runtime.serialize(workspace)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -747,7 +1201,11 @@
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
-    showToast("Portable campaign JSON saved.");
+    const recorded = recordReturnEvent("portable_exported");
+    if (recorded) render();
+    showToast(recorded
+      ? "Portable campaign JSON saved; local closeout updated."
+      : "Portable campaign JSON saved. No closeout export milestone was recorded.");
   }
 
   function downloadFactionState() {
@@ -816,11 +1274,16 @@
     fileInput.click();
   });
   document.querySelector("#reset-campaign").addEventListener("click", () => {
+    const previousWorkspace = workspace;
     workspace = runtime.createDefault(source, adventure, {
       seed: `gullwatch-${Date.now().toString(36)}`,
       createdAt: new Date().toISOString()
     });
-    if (!saveLocal()) return;
+    if (!saveLocal()) {
+      workspace = previousWorkspace;
+      return;
+    }
+    initializeMilestone(workspace, { reset: true, startEvent: "campaign_started" });
     activeView = "overview";
     render();
     showToast("New Gullwatch campaign created.");
@@ -831,21 +1294,27 @@
     try {
       const parsed = JSON.parse(await file.text());
       const factionImport = fileInput.dataset.intent === "factions" || runtime.isFactionStateDocument(parsed);
+      const previousWorkspace = workspace;
       workspace = parsed.document_type === "loot-table-works.campaign-start"
         ? runtime.createFromCampaignStart(source, adventure, parsed, { createdAt: new Date().toISOString() })
         : factionImport
           ? runtime.importFactionState(workspace, parsed, new Date().toISOString())
           : runtime.hydrate(parsed);
       const saved = saveLocal();
+      if (!saved) {
+        workspace = previousWorkspace;
+        return;
+      }
+      if (!factionImport) {
+        initializeMilestone(workspace, { reset: true, startEvent: "campaign_imported" });
+      }
       activeView = factionImport ? "factions" : "overview";
       render();
-      if (saved) {
-        showToast(factionImport
-          ? "Faction Fronts browser state imported."
-          : parsed.document_type === "loot-table-works.campaign-start"
-          ? "Campaign Start imported into Gullwatch."
-          : "Campaign opened and validated.");
-      }
+      showToast(factionImport
+        ? "Faction Fronts browser state imported."
+        : parsed.document_type === "loot-table-works.campaign-start"
+        ? "Campaign Start imported into Gullwatch."
+        : "Campaign opened and validated.");
     } catch (error) {
       showToast(error.message);
     } finally {
@@ -855,8 +1324,13 @@
   });
 
   try {
-    if (!runtime || !source || !adventure) throw new Error("Campaign Workspace runtime data is unavailable.");
+    if (!runtime || !source || !adventure || !returnLoop) {
+      throw new Error("Campaign Workspace runtime data is unavailable.");
+    }
     workspace = loadOrCreate();
+    initializeMilestone(workspace, {
+      startEvent: initialLoadResult.source === "none" ? "campaign_started" : "campaign_imported"
+    });
     if (initialLoadResult.recovered) {
       setSaveStatus("Recovered validated backup");
       showToast(initialLoadResult.issue);

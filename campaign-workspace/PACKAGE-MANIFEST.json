@@ -1,14 +1,14 @@
 {
   "product": "Gullwatch Campaign Workspace",
-  "release": "campaign-workspace-static-site-v1",
-  "status": "approved_public_release",
-  "generated_at": "2026-07-23T23:05:55.814Z",
-  "file_count": 11,
+  "release": "campaign-workspace-static-site-v1-2",
+  "status": "internal_release_candidate",
+  "generated_at": "2026-07-24T01:56:12.083Z",
+  "file_count": 12,
   "files": [
     {
       "path": "app.js",
-      "bytes": 39567,
-      "sha256": "d0e7a7f752cfdf71c7dc7cf10c0e6ee0ac6416d9e3fd8b3d64b6cb0b5aa30e0b"
+      "bytes": 59105,
+      "sha256": "cfcbda347a05d2ef0335d68be042e46e46e48fece7fc91f415f8617bb03bd501"
     },
     {
       "path": "assets/gullwatch-beacon-cover-v1.png",
@@ -31,29 +31,34 @@
       "sha256": "c0082c458e94a6d7a0e2108a583e6da2c5b817b012ee4e042ef97057e64aa126"
     },
     {
+      "path": "campaign-workspace-return-loop.js",
+      "bytes": 23314,
+      "sha256": "ce318671607411e9e2422340d0bedda3578a1ee6d86e0c0e7f9410c1ca80646a"
+    },
+    {
       "path": "campaign-workspace-runtime.js",
-      "bytes": 193705,
-      "sha256": "dfceaac02776110384650f2cfa5879a2d5b7b931f6f15d955cf590007f79f804"
+      "bytes": 194510,
+      "sha256": "a31f2b147c51875c79da349b54748443ab122c7b6e07713fbc801a5a1449e5f4"
     },
     {
       "path": "gullwatch-adventure-data.js",
-      "bytes": 11186,
-      "sha256": "6383fa0c156e7e3e7afdfbd53abce9d393567920d71c37701c7b9fe87148b3b9"
+      "bytes": 11228,
+      "sha256": "4698209c0f8c625adc5ac98a69a8db46046a531232b9ee0bad5fa2d00d5fd983"
     },
     {
       "path": "index.html",
-      "bytes": 4415,
-      "sha256": "987fadd49a73435b95e582407084be236c4c95778161c17dbbc96a0d1dfe0c97"
+      "bytes": 4558,
+      "sha256": "ece115fb431e4b877db64d4039061426975bedef8506fcd1a44d5a728da4b1de"
     },
     {
       "path": "README.md",
-      "bytes": 6155,
-      "sha256": "4dbb5e211c5fcf719d834f027588c401e5871fc01a95b30ee15fe3bcd4e0f65b"
+      "bytes": 9816,
+      "sha256": "0bc6a16bfbc419b3cd747300d080e0fc41a404b459da067d2be6eac247a43633"
     },
     {
       "path": "styles.css",
-      "bytes": 20549,
-      "sha256": "203a7c17db5a85641156a15f0a6290c2b308125284d064809472eec44f9142d7"
+      "bytes": 26931,
+      "sha256": "7bbe5774d82823579d999d2644b44a440aae299b21df9cd3c67cb3912fb560d3"
     },
     {
       "path": "USAGE-TERMS.md",
