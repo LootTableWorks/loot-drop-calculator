@@ -9,7 +9,9 @@
   const shareButton = document.getElementById("share-preview");
   const shareStatus = document.getElementById("share-status");
   const workspaceLink = document.getElementById("workspace-link");
+  const attributedLinks = Array.from(document.querySelectorAll("[data-attribution-action]"));
   let activeEnding = preview.defaultEnding;
+  const incomingAttribution = readIncomingAttribution();
 
   const fields = {
     label: document.getElementById("ending-label"),
@@ -46,6 +48,39 @@
       : preview.defaultEnding;
   }
 
+  function safeAttributionValue(value, fallback) {
+    const normalized = String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .slice(0, 48);
+    return normalized || fallback;
+  }
+
+  function readIncomingAttribution() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      source: safeAttributionValue(params.get("utm_source"), "direct"),
+      campaign: safeAttributionValue(params.get("utm_campaign"), "ltw_recovery_2026_07")
+    };
+  }
+
+  function updateAttributedLink(link, action) {
+    const url = new URL(link.href, window.location.href);
+    url.searchParams.set("utm_source", "aftermath_preview");
+    url.searchParams.set("utm_medium", "owned_handoff");
+    url.searchParams.set("utm_campaign", incomingAttribution.campaign);
+    url.searchParams.set(
+      "utm_content",
+      `${action}_from_${incomingAttribution.source}`
+    );
+    link.href = url.toString();
+  }
+
+  attributedLinks.forEach((link) => {
+    updateAttributedLink(link, link.dataset.attributionAction);
+  });
+
   function setClock(clock, value) {
     clock.value.textContent = `${value} / 6`;
     clock.bar.style.width = `${(value / 6) * 100}%`;
@@ -76,9 +111,12 @@
 
     const workspaceUrl = new URL("../campaign-workspace/", window.location.href);
     workspaceUrl.searchParams.set("utm_source", "aftermath_preview");
-    workspaceUrl.searchParams.set("utm_medium", "owned_page");
-    workspaceUrl.searchParams.set("utm_campaign", "ltw_recovery_2026_07");
-    workspaceUrl.searchParams.set("utm_content", `ending_${endingId.replaceAll("-", "_")}_workspace`);
+    workspaceUrl.searchParams.set("utm_medium", "owned_handoff");
+    workspaceUrl.searchParams.set("utm_campaign", incomingAttribution.campaign);
+    workspaceUrl.searchParams.set(
+      "utm_content",
+      `ending_${endingId.replaceAll("-", "_")}_workspace_from_${incomingAttribution.source}`
+    );
     workspaceLink.href = workspaceUrl.toString();
 
     if (updateUrl) {

@@ -11,8 +11,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 14546,
-      "sha256": "2ddb6acfed53c82f6ffc523b0af667493b8a1a49ac99931b2ea6d33ffa989ead"
+      "bytes": 14912,
+      "sha256": "4cbba5daf03c3492d950da2e4727d7244a61fac7a2797cb29ae7a28af84a4751"
     },
     {
       "path": "styles.css",
@@ -21,8 +21,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 5195,
-      "sha256": "6a5c5a2e9eca6d4bc6d7ac78bde335013cc05b81548e88a66e28b62f244206cf"
+      "bytes": 6490,
+      "sha256": "ce5a66277a6ae480f59cf9d5caebde01cc96311a56f3420aa910aac35a1fe4f6"
     },
     {
       "path": "preview-data.js",
