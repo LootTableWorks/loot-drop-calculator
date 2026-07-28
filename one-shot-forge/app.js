@@ -103,6 +103,15 @@
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }
 
+  function shareUrl() {
+    const url = new URL(window.location.href);
+    url.searchParams.set("utm_source", "user_share");
+    url.searchParams.set("utm_medium", "social");
+    url.searchParams.set("utm_campaign", "one_shot_forge_share");
+    url.searchParams.set("utm_content", state.oneShot.adventure_id);
+    return url.toString();
+  }
+
   function loadUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("seed")) elements.seed.value = params.get("seed").slice(0, 64);
@@ -300,6 +309,26 @@
   document.querySelector("#copy-link").addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(window.location.href); showToast("Share link copied"); }
     catch { showToast("Copy unavailable in this browser"); }
+  });
+  document.querySelector("#share-adventure").addEventListener("click", async () => {
+    const url = shareUrl();
+    const title = `${state.oneShot.title} | One-Shot Forge`;
+    const text = `${state.oneShot.duration_minutes}-minute system-neutral fantasy one-shot with ${state.oneShot.validation.scene_count} scenes and ${state.oneShot.validation.character_count} pregenerated characters.`;
+    if (typeof navigator.share === "function") {
+      try {
+        await navigator.share({ title, text, url });
+        showToast("Adventure shared");
+        return;
+      } catch (error) {
+        if (error && error.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
+      showToast("Share text copied");
+    } catch {
+      showToast("Sharing is unavailable in this browser");
+    }
   });
   document.querySelector("#copy-markdown").addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(core.toMarkdown(state.oneShot)); showToast("Markdown packet copied"); }

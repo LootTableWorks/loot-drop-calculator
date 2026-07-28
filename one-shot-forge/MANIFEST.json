@@ -28,8 +28,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 15827,
-      "sha256": "38d30633debfea15f7a99cef0a2b5ec909981ad90dcd4534921292726ad7aa8d"
+      "bytes": 17031,
+      "sha256": "c4e52d0756fef025e126ece65a594a28215c83886b55dde747c09580934188f5"
     },
     {
       "path": "assets/one-shot-forge-coastal-map-v1.jpg",
@@ -43,8 +43,8 @@
     },
     {
       "path": "campaign-start-contract.js",
-      "bytes": 28874,
-      "sha256": "adb257ff08f401b61567a7099d9aa8157ebaa07057056447aeaee0b5cbc2a23d"
+      "bytes": 29613,
+      "sha256": "ccea108344deebf80529b530eff663a1836523d2ea8851fdad8c82efc9f84cbf"
     },
     {
       "path": "campaign-start-launchpad-core.js",
@@ -53,8 +53,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9882,
-      "sha256": "f1b0a47780d2e34b8219a8a099f3deecfd951663ac4a4e8562fc4fc1119c32e9"
+      "bytes": 9987,
+      "sha256": "36e634ce6fce4a20a927749636f5e04909aa5550a6c8bd68082fa3253828065d"
     },
     {
       "path": "one-shot-core.js",
