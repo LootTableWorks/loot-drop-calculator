@@ -1,17 +1,17 @@
 {
   "version": "1.0.0",
   "release_id": "run-one-shot-tonight-v1",
-  "approved_at": "2026-07-23T14:23:27.9430559-07:00",
+  "approved_at": "2026-07-28T15:09:41-07:00",
   "authority": "delegated_internal_aaa_qa",
   "publication_allowed": true,
   "scope": "Search-focused system-neutral GM field guide for the verified Gullwatch Beacon to Campaign Workspace workflow.",
   "qa": {
-    "functional_tests_passed": 8,
-    "desktop_render": "passed_1440x1000",
-    "mobile_render": "passed_390x844",
+    "functional_tests_passed": 9,
+    "desktop_render": "passed_1280x720_aftermath_handoff",
+    "mobile_render": "passed_390x844_aftermath_handoff",
     "horizontal_overflow_count": 0,
     "broken_image_count": 0,
-    "source_coded_acquisition_links": 11,
+    "source_coded_acquisition_links": 12,
     "public_paid_standalone_destinations": 3,
     "bundle_destinations": 0,
     "background_analytics": false,
@@ -38,6 +38,14 @@
     {
       "path": "quality/evidence/run-one-shot-tonight-v1/mobile-390x844-continuity.png",
       "sha256": "a53df8052c9d23a974f672dc965f97c34f6179430ca8f0d9ef037d0e84f4911d"
+    },
+    {
+      "path": "quality/evidence/gullwatch-aftermath-owned-preview-v1/guide-handoff-desktop-1280x720.png",
+      "sha256": "833eac6a32a7a22e18917b37f800fa6f5036e759f7e30cdfabed583a42c2deed"
+    },
+    {
+      "path": "quality/evidence/gullwatch-aftermath-owned-preview-v1/guide-handoff-mobile-390x844-frame.png",
+      "sha256": "fd725ea1a5d85e2158e9a8a5d29c6364ba2e31e7a6ef944dc5eeae373680ddd0"
     }
   ],
   "stop_conditions": [

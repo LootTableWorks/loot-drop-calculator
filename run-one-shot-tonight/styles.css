@@ -370,6 +370,25 @@ figcaption {
   color: #fff;
 }
 
+.continuation-band {
+  background: #f2f0e9;
+}
+
+.continuation-band figure img {
+  border-color: rgba(165, 61, 55, .34);
+}
+
+.continuation-button {
+  margin-top: .5rem;
+  background: var(--signal);
+  color: #fff;
+}
+
+.continuation-button:hover {
+  color: #fff;
+  filter: brightness(.92);
+}
+
 .workspace-band .kicker {
   color: var(--brass);
 }

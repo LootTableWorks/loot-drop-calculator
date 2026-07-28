@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "gullwatch-aftermath-owned-preview-v1",
+  "status": "APPROVED_PUBLIC_OWNED_PREVIEW",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-aftermath/",
+  "publication_allowed": true,
+  "paid_checkout_present": false,
+  "private_product_archive_present": false,
+  "background_analytics": false,
+  "file_count": 10,
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 14546,
+      "sha256": "2ddb6acfed53c82f6ffc523b0af667493b8a1a49ac99931b2ea6d33ffa989ead"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 12588,
+      "sha256": "ab72ca58021147b70984bb7f0cc5832336a7218d545b077dee90623c0f96e1ad"
+    },
+    {
+      "path": "app.js",
+      "bytes": 5195,
+      "sha256": "6a5c5a2e9eca6d4bc6d7ac78bde335013cc05b81548e88a66e28b62f244206cf"
+    },
+    {
+      "path": "preview-data.js",
+      "bytes": 3426,
+      "sha256": "7c82145073712d0722a59e917c066dd601c0e8e3388edac14ab6a1ba078f494d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 754,
+      "sha256": "f8c3970d4fdc77a9fe57cad8cd96244a8b85cfe2b296842a7d46372fb25bd0e9"
+    },
+    {
+      "path": "assets/gullwatch-aftermath-hero-v1.png",
+      "bytes": 2276062,
+      "sha256": "48403fe498948fe1d310404397ea25740bbc0f137ebffdfc2226c728dfe29c97"
+    },
+    {
+      "path": "assets/gullwatch-aftermath-cover-v1.png",
+      "bytes": 1729969,
+      "sha256": "6eb267457e08b232a866c59fc5697280981fc25b61d8ee64f5966f9d195fb935"
+    },
+    {
+      "path": "assets/preview-01-inside-v1.png",
+      "bytes": 406420,
+      "sha256": "ef91ceef1a6897df67dd04939ba09fd9d0cbddb262d0f0523bb5d0e7a180a845"
+    },
+    {
+      "path": "assets/preview-02-branches-v1.png",
+      "bytes": 80943,
+      "sha256": "8f5a6fe0e29baa350b1dd2268808689a7787cf3e2dea6fa0a8b85872c8403f09"
+    },
+    {
+      "path": "assets/preview-03-workspace-v1.png",
+      "bytes": 95622,
+      "sha256": "a27d9dd53d13acccbd4fa49696c8d18d5cd48ca968b88a0d26173a2632dcd7d2"
+    }
+  ]
+}
