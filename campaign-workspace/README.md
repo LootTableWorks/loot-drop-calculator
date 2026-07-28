@@ -26,6 +26,13 @@ The browser package has no analytics, hosted AI, remote runtime dependency, paid
 
 The Field test view presents one bounded local workflow: open the included Source kit, commit a campaign outcome, save portable JSON, and return to an editable plain-text report. It also links to the complete free Gullwatch Beacon kit and the worked one-shot guide in new tabs so a source-coded field-test URL remains intact.
 
+A first visit without an existing local save or an explicit `view` query now
+opens a focused starting gate instead of the advanced workspace. It offers
+exactly three honest paths: open the Gullwatch source kit, build a different
+Campaign Start in Campaign Launchpad, or open portable campaign JSON. Existing
+local campaigns and source-coded field-test routes bypass the gate without
+changing their state.
+
 Source-kit opened, outcome committed, portable JSON saved, and campaign state reopened are rendered from the current page session and existing local milestone state. They are not transmitted or counted as demand. The report preserves the four inbound UTM values by default, omits `workspace_id`, and is never stored automatically. Copy failure leaves the report selected and available for browser copy or `.txt` download. Email remains a user-initiated `mailto:` draft. The optional GitHub route requires sign-in and creates a public report associated with the tester's public GitHub identity.
 
 ## Creation Disclosure

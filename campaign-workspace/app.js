@@ -6,6 +6,7 @@
   const PAGE_SESSION_NONCE_KEY = "loot-table-works:campaign-workspace:return-loop:page-session";
   const UNAVAILABLE_SESSION_NONCE = `page-${"0".repeat(32)}`;
   const RECOVERY_REQUIRED_CODE = "CAMPAIGN_RECOVERY_REQUIRED";
+  const VALID_VIEW_IDS = Object.freeze(["overview", "brief", "record", "timeline", "factions", "canon", "kit", "field-test"]);
 
   function createRecoveryRequiredError(message) {
     const error = new Error(message);
@@ -212,6 +213,10 @@
     ].join("\n");
   }
 
+  function shouldShowFirstRun(loadSource, requestedView) {
+    return loadSource === "none" && !VALID_VIEW_IDS.includes(requestedView);
+  }
+
   const testApi = Object.freeze({
     STORAGE_KEY,
     BACKUP_STORAGE_KEY,
@@ -225,7 +230,8 @@
     producerClassFor,
     focusActionControl,
     fieldTestProgress,
-    fieldReportText
+    fieldReportText,
+    shouldShowFirstRun
   });
   globalScope.CampaignWorkspaceAppHelpers = testApi;
   if (typeof module !== "undefined" && module.exports) module.exports = testApi;
@@ -244,7 +250,7 @@
   const previousTabScroll = document.querySelector(".nav-scroll-previous");
   const nextTabScroll = document.querySelector(".nav-scroll-next");
   const journal = createLocalJournal(localStorage, runtime); // Routes localStorage.setItem through validated journal writes.
-  const validViews = new Set(["overview", "brief", "record", "timeline", "factions", "canon", "kit", "field-test"]);
+  const validViews = new Set(VALID_VIEW_IDS);
   const requestedView = new URLSearchParams(window.location.search).get("view");
   let activeView = validViews.has(requestedView) ? requestedView : "overview";
   let workspace = null;
@@ -256,6 +262,7 @@
   let fieldTestSourceOpened = activeView === "kit";
   let fieldTestPortableSaved = false;
   let fieldTestCampaignReopened = false;
+  let firstRunActive = false;
   const pageSessionNonce = getPageSessionNonce();
 
   const esc = (value) => String(value ?? "")
@@ -589,6 +596,39 @@
         </div>
       </div>
       ${renderNextSessionPrintSheet(summary)}`;
+  }
+
+  function renderFirstRun() {
+    document.body.classList.add("first-run-active");
+    root.setAttribute("aria-labelledby", "first-run-title");
+    root.innerHTML = `
+      <section class="first-run-hero">
+        <div class="first-run-shade" aria-hidden="true"></div>
+        <div class="first-run-content">
+          <p class="eyebrow">Loot Table Works / Campaign Workspace</p>
+          <h1 id="first-run-title" tabindex="-1">Run tonight. Continue next week.</h1>
+          <p class="first-run-lead">Start with a complete Gullwatch session, build a different campaign opening, or return to a portable save.</p>
+          <div class="first-run-actions" aria-label="Choose a campaign starting point">
+            <button type="button" class="primary-action" data-action="start-gullwatch-demo">
+              <strong>Start Gullwatch free</strong>
+              <span>Open the playable source kit</span>
+            </button>
+            <a href="../campaign-launchpad/?utm_source=campaign_workspace&amp;utm_medium=first_run&amp;utm_campaign=ltw_recovery_2026_07&amp;utm_content=build_own_start">
+              <strong>Build my own start</strong>
+              <span>Choose party direction and world seed</span>
+            </a>
+            <button type="button" data-action="open-saved-campaign">
+              <strong>Open a saved campaign</strong>
+              <span>Continue from portable JSON</span>
+            </button>
+          </div>
+          <div class="first-run-proof" aria-label="Campaign Workspace boundaries">
+            <span><strong>10 min</strong> Gullwatch preparation</span>
+            <span><strong>Local-first</strong> campaign state</span>
+            <span><strong>No account</strong> required</span>
+          </div>
+        </div>
+      </section>`;
   }
 
   function expansionForMilestone() {
@@ -1079,6 +1119,19 @@
   function bindViewEvents() {
     root.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", async (event) => {
       const action = button.dataset.action;
+      if (action === "start-gullwatch-demo") {
+        firstRunActive = false;
+        fieldTestSourceOpened = true;
+        const saved = saveLocal();
+        initializeMilestone(workspace, { reset: true, startEvent: "campaign_started" });
+        activeView = "kit";
+        render();
+        showToast(saved ? "Gullwatch source kit opened and saved locally." : "Gullwatch source kit opened.");
+      }
+      if (action === "open-saved-campaign") {
+        delete fileInput.dataset.intent;
+        fileInput.click();
+      }
       if (action === "open-brief") setView("brief");
       if (action === "record") setView("record");
       if (action === "cancel-record") setView("overview");
@@ -1281,6 +1334,12 @@
   }
 
   function render() {
+    if (firstRunActive) {
+      renderFirstRun();
+      bindViewEvents();
+      return;
+    }
+    document.body.classList.remove("first-run-active");
     const summary = snapshot();
     renderNavigation();
     if (activeView === "overview") renderOverview(summary);
@@ -1460,6 +1519,7 @@
     fieldTestSourceOpened = false;
     fieldTestPortableSaved = false;
     fieldTestCampaignReopened = false;
+    firstRunActive = false;
     activeView = "overview";
     render();
     showToast("New Gullwatch campaign created.");
@@ -1484,6 +1544,7 @@
       if (!factionImport) {
         initializeMilestone(workspace, { reset: true, startEvent: "campaign_imported" });
         fieldTestCampaignReopened = true;
+        firstRunActive = false;
       }
       activeView = factionImport ? "factions" : "overview";
       render();
@@ -1506,9 +1567,12 @@
     }
     workspace = loadOrCreate();
     fieldTestCampaignReopened = initialLoadResult.source !== "none";
-    initializeMilestone(workspace, {
-      startEvent: initialLoadResult.source === "none" ? "campaign_started" : "campaign_imported"
-    });
+    firstRunActive = shouldShowFirstRun(initialLoadResult.source, requestedView);
+    if (!firstRunActive) {
+      initializeMilestone(workspace, {
+        startEvent: initialLoadResult.source === "none" ? "campaign_started" : "campaign_imported"
+      });
+    }
     if (initialLoadResult.recovered) {
       setSaveStatus("Recovered validated backup");
       showToast(initialLoadResult.issue);
