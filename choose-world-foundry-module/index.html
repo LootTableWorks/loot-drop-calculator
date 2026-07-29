@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Choose the right $3 World Foundry data module for items, shops, crafting, loot, quests, or encounters. Compare exact contents, tools, dependencies, and product limits.">
+    <meta name="theme-color" content="#171a1d">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="icon" href="data:,">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="Choose Your World Foundry Module">
+    <meta property="og:description" content="Match one production problem to the focused $3 data module built to solve it.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/">
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/assets/world-foundry-selector-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Loot Table Works World Foundry module selector comparing six focused fantasy game data packs.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Choose Your World Foundry Module">
+    <meta name="twitter:description" content="Compare six focused $3 fantasy game data modules by outcome, contents, tools, and dependencies.">
+    <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/assets/world-foundry-selector-preview.png">
+    <title>Choose Your World Foundry Module | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css?v=1.0.0">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "World Foundry standalone data modules",
+        "numberOfItems": 6,
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "World Foundry Item Catalog & Economy Kit"},
+          {"@type": "ListItem", "position": 2, "name": "World Foundry Merchant & Shop Kit"},
+          {"@type": "ListItem", "position": 3, "name": "World Foundry Crafting & Recipe Kit"},
+          {"@type": "ListItem", "position": 4, "name": "World Foundry Enemy Loot & Reward Kit"},
+          {"@type": "ListItem", "position": 5, "name": "World Foundry Quest, Contract & Reward Kit"},
+          {"@type": "ListItem", "position": 6, "name": "World Foundry Encounter & Threat Kit"}
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#selector">Skip to module selector</a>
+
+    <header class="site-header">
+      <a class="brand" href="../world-foundry/" aria-label="Loot Table Works World Foundry home">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>World Foundry</small></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#selector">Choose</a>
+        <a href="#compare">Compare all six</a>
+        <a href="../world-foundry/">Free tools</a>
+      </nav>
+      <span class="price-lock">Standalone price <strong>$3</strong></span>
+    </header>
+
+    <main>
+      <section class="selector-shell" id="selector" aria-labelledby="selector-title">
+        <div class="selector-heading">
+          <p class="eyebrow">World Foundry module selector</p>
+          <h1 id="selector-title">Buy the system you need next.</h1>
+          <p>Choose one production problem. We will show the focused module, its exact contents, what it depends on, and what it does not include.</p>
+        </div>
+
+        <div class="selector-grid">
+          <form class="selector-controls" aria-label="Module selection controls">
+            <fieldset>
+              <legend>1. What are you building?</legend>
+              <div class="segmented" data-control="audience">
+                <label><input type="radio" name="audience" value="game-developer" checked><span>Game developer</span></label>
+                <label><input type="radio" name="audience" value="game-master"><span>Game master</span></label>
+                <label><input type="radio" name="audience" value="tool-builder"><span>Tool builder</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>2. Which system must work first?</legend>
+              <div class="problem-list">
+                <label>
+                  <input type="radio" name="problem" value="items" checked>
+                  <span><strong>Items and economy</strong><small>Canonical objects, values, hooks, tags, and exports</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="problem" value="merchants">
+                  <span><strong>Merchants and shops</strong><small>Stock, regional fit, prices, buyback, and restocks</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="problem" value="crafting">
+                  <span><strong>Crafting and recipes</strong><small>Ingredients, outputs, cost, yield, and disciplines</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="problem" value="loot">
+                  <span><strong>Enemy loot and rewards</strong><small>Weighted drops, guarantees, simulation, and curves</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="problem" value="quests">
+                  <span><strong>Quests and campaigns</strong><small>Staged contracts, arcs, consequences, and state</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="problem" value="encounters">
+                  <span><strong>Encounters and threats</strong><small>Phases, threat budgets, sequences, and outcomes</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>3. How will you use the records?</legend>
+              <div class="segmented compact" data-control="workflow">
+                <label><input type="radio" name="workflow" value="offline" checked><span>Offline tools</span></label>
+                <label><input type="radio" name="workflow" value="engine"><span>Game engine</span></label>
+                <label><input type="radio" name="workflow" value="tabletop"><span>At the table</span></label>
+              </div>
+            </fieldset>
+          </form>
+
+          <section class="recommendation" aria-live="polite" aria-atomic="true" aria-labelledby="result-title">
+            <div class="recommendation-topline">
+              <span>Recommended starting module</span>
+              <strong>$3 standalone</strong>
+            </div>
+            <div class="recommendation-main">
+              <img id="result-cover" src="assets/item-catalog-cover.png" width="630" height="500" alt="World Foundry Item Catalog and Economy Kit cover.">
+              <div>
+                <p class="module-code" id="result-code">WF-01 / Foundation</p>
+                <h2 id="result-title">Item Catalog &amp; Economy Kit</h2>
+                <p class="result-reason" id="result-reason">Start with the stable records every other World Foundry system references.</p>
+                <div class="proof-strip" id="result-proof" aria-label="Included content summary">
+                  <span><strong>500</strong> items</span>
+                  <span><strong>50</strong> families</span>
+                  <span><strong>2</strong> offline tools</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="recommendation-details">
+              <section>
+                <h3>What you can do</h3>
+                <ul id="result-capabilities">
+                  <li>Browse and filter complete item records.</li>
+                  <li>Build reproducible collections for loot, shops, crafting, or quests.</li>
+                  <li>Export JSON or CSV and load records into supported engines.</li>
+                </ul>
+              </section>
+              <section class="dependency-panel">
+                <h3>Dependency check</h3>
+                <p id="result-dependency"><strong>No other World Foundry module required.</strong> This is the canonical foundation for the connected module line.</p>
+                <p class="workflow-note" id="result-workflow">Best fit for offline exploration and export. Everything runs locally with no account or paid API.</p>
+              </section>
+            </div>
+
+            <div class="boundary">
+              <strong>Know before buying</strong>
+              <p id="result-boundary">Structured item data and workflow tools. No icons, sprites, illustrations, maps, audio, hosted service, or rules-specific stat blocks.</p>
+            </div>
+
+            <div class="result-actions">
+              <a class="primary-action" id="result-link" href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=item_catalog" target="_blank" rel="noopener">View exact files on itch.io <span aria-hidden="true">-&gt;</span></a>
+              <a class="secondary-action" href="#compare">Compare all six</a>
+            </div>
+            <p class="purchase-note">The product page is the final authority for current files, terms, and disclosures. No bundle is offered here.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="comparison" id="compare" aria-labelledby="compare-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Exact standalone catalog</p>
+            <h2 id="compare-title">Six focused modules. One shared ID system.</h2>
+          </div>
+          <p>Each module costs $3. Start at the row matching your immediate bottleneck; add connected modules only when your project needs those relationships.</p>
+        </div>
+
+        <div class="table-scroll" tabindex="0" aria-label="Scrollable World Foundry module comparison">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Module</th>
+                <th scope="col">Verified content</th>
+                <th scope="col">Offline workflow</th>
+                <th scope="col">Reference boundary</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><span>WF-01</span> Item Catalog &amp; Economy</th>
+                <td>500 items / 50 families</td>
+                <td>Explorer + collection builder</td>
+                <td>Self-contained foundation</td>
+                <td><a href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=item_catalog_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>WF-02</span> Merchant &amp; Shop</th>
+                <td>150 merchants / 1,500 stock links</td>
+                <td>Browser + economy simulator</td>
+                <td>Uses Item Catalog IDs; mapping supported</td>
+                <td><a href="https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=merchant_shop_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>WF-03</span> Crafting &amp; Recipe</th>
+                <td>300 recipes / 900 ingredient links</td>
+                <td>Browser + cost simulator</td>
+                <td>Uses Item Catalog IDs; mapping supported</td>
+                <td><a href="https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=crafting_recipes_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>WF-04</span> Enemy Loot &amp; Reward</th>
+                <td>250 profiles / 2,000 rewards</td>
+                <td>Browser + simulator + curve studio</td>
+                <td>Uses Item Catalog IDs; mapping supported</td>
+                <td><a href="https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=enemy_loot_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>WF-05</span> Quest, Contract &amp; Reward</th>
+                <td>240 quests / 40 six-quest arcs</td>
+                <td>Library + chain studio + state board</td>
+                <td>Includes locations; external IDs are mapped</td>
+                <td><a href="https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=quest_contracts_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+              <tr>
+                <th scope="row"><span>WF-06</span> Encounter &amp; Threat</th>
+                <td>180 encounters / 540 phases</td>
+                <td>Console + threat studio + state board</td>
+                <td>External Item, Quest, Location, and Loot IDs</td>
+                <td><a href="https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=module_selector&amp;utm_medium=owned_web&amp;utm_campaign=standalone_modules&amp;utm_content=encounter_threats_compare" target="_blank" rel="noopener">$3 / inspect</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-footer">
+          <p><strong>Shared format:</strong> original system-neutral fantasy content, structured JSON/CSV, documented schemas, stable IDs, commercial-use terms, and offline operation.</p>
+          <p><strong>Shared boundary:</strong> these are production data and preparation tools, not visual asset, battle-map, token, audio, or rules-engine packs.</p>
+        </div>
+      </section>
+
+      <section class="next-step" aria-labelledby="next-step-title">
+        <div>
+          <p class="eyebrow">Not ready to buy?</p>
+          <h2 id="next-step-title">Test the workflow before adding data.</h2>
+          <p>Use the free World Foundry utilities and Gullwatch play kit to check whether the workflow fits your game or table.</p>
+        </div>
+        <a href="../world-foundry/">Open the free tool catalog <span aria-hidden="true">-&gt;</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <span>Loot Table Works / World Foundry</span>
+      <span>Original system-neutral fantasy content</span>
+      <a href="../world-foundry/">Field guide and catalog</a>
+    </footer>
+
+    <script src="app.js?v=1.0.0"></script>
+  </body>
+</html>
