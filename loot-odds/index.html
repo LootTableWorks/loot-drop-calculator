@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Estimate independent loot drop probabilities, expected drops, and attempts needed for game design planning.">
+    <meta name="author" content="Loot Table Works">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#116a63">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/loot-odds/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Loot Table Works">
+    <meta property="og:title" content="Loot Drop Probability Calculator">
+    <meta property="og:description" content="A free probability calculator for prototyping loot tables, event rewards, and game economies.">
+    <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/loot-odds/">
+    <meta name="twitter:card" content="summary">
+    <title>Loot Drop Probability Calculator | Loot Table Works</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Loot Drop Probability Calculator","applicationCategory":"DeveloperApplication","operatingSystem":"Any","url":"https://loottableworks.github.io/loot-drop-calculator/loot-odds/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="tool">
+        <div class="intro">
+          <p class="brand"><a href="../" data-preserve-utm>Loot Table Works</a></p>
+          <nav class="tool-switch" aria-label="Loot Table Works sections">
+            <a href="../gullwatch-beacon/" data-preserve-utm>Play</a>
+            <a href="../campaign-workspace/" data-preserve-utm>Continue</a>
+            <a class="active" href="./" aria-current="page" data-preserve-utm>Developer tools</a>
+          </nav>
+          <p class="eyebrow">Game design planning tool</p>
+          <h1>Loot Drop Probability Calculator</h1>
+          <p>Estimate drop odds for independent attempts. Useful for prototypes, loot tables, event rewards, and balancing notes.</p>
+        </div>
+
+        <form id="calculator-form" class="controls">
+          <label>
+            Attempts
+            <input id="attempts" type="number" min="0" max="10000" step="1" value="25">
+          </label>
+          <label>
+            Drop chance per attempt (%)
+            <input id="drop-chance" type="number" min="0" max="100" step="0.01" value="5">
+          </label>
+          <label>
+            Target drops
+            <input id="target-drops" type="number" min="1" max="10000" step="1" value="3">
+          </label>
+          <label>
+            Desired confidence (%)
+            <input id="confidence" type="number" min="0" max="99.999" step="0.1" value="95">
+          </label>
+          <button type="submit">Calculate</button>
+        </form>
+
+        <section class="results" aria-live="polite">
+          <div id="output" class="result-grid"></div>
+          <button id="copy-result" type="button" class="secondary">Copy Result</button>
+        </section>
+
+        <p class="note">Assumes each attempt is independent and has the same drop chance. It does not model pity timers, changing rates, market value, or real-money decisions. This is a planning tool only; verify important decisions independently.</p>
+
+        <section class="offer" id="product">
+          <div>
+            <p class="eyebrow">Prototype faster</p>
+            <h2>Need item data for the loot table?</h2>
+            <p>Try the current 100-item demo while testing drops, shops, quest rewards, and placeholder inventories. Upgrade to the 500-item kit when you need more variety, offline workflow tools, and engine integrations.</p>
+          </div>
+          <div class="offer-actions">
+            <a class="button-link" href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=loot_drop_calculator&amp;utm_medium=free_tool&amp;utm_campaign=item_catalog&amp;utm_content=free_demo" data-preserve-utm>Try the Free Demo</a>
+            <a class="button-link premium-link" href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=loot_drop_calculator&amp;utm_medium=free_tool&amp;utm_campaign=item_catalog&amp;utm_content=paid_kit" data-preserve-utm>View the $3 Full Kit</a>
+            <span class="pending">The free demo and paid kit are verified on the same itch.io product page.</span>
+          </div>
+        </section>
+
+        <section class="details">
+          <h2>What The Free Demo Includes</h2>
+          <ul>
+            <li>100 original fantasy item records</li>
+            <li>CSV and JSON formats</li>
+            <li>Offline searchable item explorer and collection builder</li>
+            <li>Schema, field guide, and Unity, Godot, TypeScript, and JavaScript loaders</li>
+            <li>System-neutral fields for shops, loot, crafting, and quests</li>
+          </ul>
+        </section>
+
+        <footer class="site-footer">
+          <strong class="footer-brand">Loot Table Works</strong>
+          <span>Original tools and data packs for game design prototyping.</span>
+          <a href="../free-rpg-tools/" data-preserve-utm>Browse all developer tools</a>
+          <a href="../integration-guides/" data-preserve-utm>Read integration guides</a>
+        </footer>
+      </section>
+    </main>
+
+    <script src="../calculator.js"></script>
+    <script src="../app.js"></script>
+    <script src="../front-door.js"></script>
+  </body>
+</html>

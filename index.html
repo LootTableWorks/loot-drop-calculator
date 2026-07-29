@@ -3,115 +3,122 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Estimate independent loot drop probabilities, expected drops, and attempts needed for game design planning.">
+    <meta name="description" content="Run the free Gullwatch Beacon one-shot tonight, then carry its consequences into your next session with original, system-neutral tools from Loot Table Works.">
     <meta name="author" content="Loot Table Works">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#116a63">
+    <meta name="theme-color" content="#0b1718">
     <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Loot Table Works">
-    <meta property="og:title" content="Loot Drop Probability Calculator">
-    <meta property="og:description" content="A free probability calculator for prototyping loot tables, event rewards, and game economies.">
+    <meta property="og:title" content="Run Tonight. Continue Next Week.">
+    <meta property="og:description" content="Start with a complete free one-shot kit. Keep the ending, the pressure, and the next decision ready for another session.">
     <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/">
-    <meta name="twitter:card" content="summary">
-    <title>Loot Drop Probability Calculator | Loot Table Works</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Loot Drop Probability Calculator","applicationCategory":"DeveloperApplication","operatingSystem":"Any","url":"https://loottableworks.github.io/loot-drop-calculator/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Loot Table Works"}}</script>
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/assets/gullwatch-beacon-hero-v2.png">
+    <meta property="og:image:alt" content="Gullwatch Beacon free one-shot kit artwork showing four adventurers approaching a storm-lashed lighthouse.">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Run Tonight. Continue Next Week. | Loot Table Works</title>
+    <link rel="stylesheet" href="front-door.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Loot Table Works",
+        "url": "https://loottableworks.github.io/loot-drop-calculator/",
+        "description": "Original, system-neutral tabletop adventures and local-first campaign tools.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Loot Table Works"
+        }
+      }
+    </script>
   </head>
   <body>
-    <main class="shell">
-      <section class="tool">
-        <div class="intro">
-          <p class="brand">Loot Table Works</p>
-          <nav class="tool-switch" aria-label="Free game design tools">
-            <a class="active" href="./" aria-current="page">Loot Odds</a>
-            <a href="gullwatch-beacon/">Play Tonight</a>
-            <a href="gullwatch-aftermath/">Gullwatch Aftermath</a>
-            <a href="shop-inventory-generator/">Shop Generator</a>
-            <a href="world-seed-studio/">World Seed Studio</a>
-            <a href="rpg-data-doctor/">Data Doctor</a>
-            <a href="rpg-data-bridge/">Data Bridge</a>
-            <a href="campaign-launchpad/">Campaign Launchpad</a>
-            <a href="campaign-workspace/">Campaign Workspace</a>
-            <a href="one-shot-forge/">One-Shot Forge</a>
-            <a href="character-foundry/">Character Foundry</a>
-            <a href="campaign-arc-forge/">Campaign Arc Forge</a>
-            <a href="player-chronicle/">Player Chronicle</a>
-            <a href="run-one-shot-tonight/">One-Shot Prep Guide</a>
-            <a href="integration-guides/">Integration Guides</a>
-            <a href="world-foundry/">Guides &amp; Packs</a>
-          </nav>
-          <p class="eyebrow">Game design planning tool</p>
-          <h1>Loot Drop Probability Calculator</h1>
-          <p>Estimate drop odds for independent attempts. Useful for prototypes, loot tables, event rewards, and balancing notes.</p>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="./" aria-label="Loot Table Works home">
+        <span class="wordmark-mark" aria-hidden="true">LTW</span>
+        <span>Loot Table Works</span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="gullwatch-beacon/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=run_tonight_continue_next_week&amp;utm_content=nav_play" data-preserve-utm>Play</a>
+        <a href="campaign-workspace/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=run_tonight_continue_next_week&amp;utm_content=nav_continue" data-preserve-utm>Continue</a>
+        <a href="loot-odds/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=audience_split&amp;utm_content=nav_developer_tools" data-preserve-utm>Developer tools</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-media" src="assets/gullwatch-beacon-hero-v2.png" alt="">
+        <div class="hero-scrim" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">A complete, free one-shot start</p>
+          <h1 id="hero-title">Run tonight.<br>Continue next week.</h1>
+          <p class="hero-copy">Open Gullwatch Beacon with ten-minute prep, four playable scenes, maps, tokens, handouts, and a GM run sheet. When the table decides how it ends, keep that consequence ready for the next session.</p>
+          <a class="primary-action" href="gullwatch-beacon/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=run_tonight_continue_next_week&amp;utm_content=primary_start" data-preserve-utm>Start Gullwatch free</a>
+          <p class="trust-line">No account. No install. No background analytics.</p>
         </div>
+      </section>
 
-        <form id="calculator-form" class="controls">
-          <label>
-            Attempts
-            <input id="attempts" type="number" min="0" max="10000" step="1" value="25">
-          </label>
-          <label>
-            Drop chance per attempt (%)
-            <input id="drop-chance" type="number" min="0" max="100" step="0.01" value="5">
-          </label>
-          <label>
-            Target drops
-            <input id="target-drops" type="number" min="1" max="10000" step="1" value="3">
-          </label>
-          <label>
-            Desired confidence (%)
-            <input id="confidence" type="number" min="0" max="99.999" step="0.1" value="95">
-          </label>
-          <button type="submit">Calculate</button>
-        </form>
+      <section class="play-flow" aria-labelledby="flow-title">
+        <div class="section-heading">
+          <p class="eyebrow">One clear path</p>
+          <h2 id="flow-title">From first read to the next decision</h2>
+        </div>
+        <ol class="flow-steps">
+          <li>
+            <span class="step-number">01</span>
+            <h3>Open the kit</h3>
+            <p>Read the compact GM material, place the supplied maps and tokens, and start from a playable situation.</p>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <h3>Run four scenes</h3>
+            <p>Use system-neutral pressure, clues, characters, and handouts without adopting another publisher's rules or setting.</p>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <h3>Keep what changed</h3>
+            <p>Record the ending, unresolved promise, and next player intention so the campaign grows from play instead of restarting.</p>
+          </li>
+        </ol>
+      </section>
 
-        <section class="results" aria-live="polite">
-          <div id="output" class="result-grid"></div>
-          <button id="copy-result" type="button" class="secondary">Copy Result</button>
-        </section>
+      <section class="continuity-band" aria-labelledby="continuity-title">
+        <div>
+          <p class="eyebrow">After the one-shot</p>
+          <h2 id="continuity-title">Close the session without losing the campaign.</h2>
+        </div>
+        <div class="continuity-copy">
+          <p>Campaign Workspace turns the result at the table into a portable local save and a focused next-session brief. Your campaign data stays in the active browser unless you choose to export it.</p>
+          <a class="text-link" href="campaign-workspace/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=run_tonight_continue_next_week&amp;utm_content=continuity_workspace" data-preserve-utm>Open Campaign Workspace <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
 
-        <p class="note">Assumes each attempt is independent and has the same drop chance. It does not model pity timers, changing rates, market value, or real-money decisions. This is a planning tool only; verify important decisions independently.</p>
-
-        <section class="offer" id="product">
-          <div>
-            <p class="eyebrow">Prototype faster</p>
-            <h2>Need item data for the loot table?</h2>
-            <p>Try the current 100-item demo while testing drops, shops, quest rewards, and placeholder inventories. Upgrade to the 500-item kit when you need more variety, offline workflow tools, and engine integrations.</p>
-          </div>
-          <div class="offer-actions">
-            <a class="button-link" href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=loot_drop_calculator&amp;utm_medium=free_tool&amp;utm_campaign=item_catalog&amp;utm_content=free_demo">Try the Free Demo</a>
-            <a class="button-link premium-link" href="https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=loot_drop_calculator&amp;utm_medium=free_tool&amp;utm_campaign=item_catalog&amp;utm_content=paid_kit">View the $3 Full Kit</a>
-            <span class="pending">The free demo and paid kit are verified on the same itch.io product page.</span>
-          </div>
-        </section>
-
-        <section class="details">
-          <h2>What The Free Demo Includes</h2>
-          <ul>
-            <li>100 original fantasy item records</li>
-            <li>CSV and JSON formats</li>
-            <li>Offline searchable item explorer and collection builder</li>
-            <li>Schema, field guide, and Unity, Godot, TypeScript, and JavaScript loaders</li>
-            <li>System-neutral fields for shops, loot, crafting, and quests</li>
-          </ul>
-        </section>
-
-        <footer class="site-footer">
-          <strong class="footer-brand">Loot Table Works</strong>
-          <span>Original tools and data packs for game design prototyping.</span>
-          <a href="gullwatch-beacon/">Download a complete free one-shot</a>
-          <a href="gullwatch-aftermath/">Preview the Gullwatch continuation</a>
-          <a href="run-one-shot-tonight/">Follow the one-shot prep workflow</a>
-          <a href="campaign-launchpad/">Build a connected campaign</a>
-          <a href="campaign-workspace/">Run and continue a campaign</a>
-          <a href="free-rpg-tools/">Find the right free RPG tool</a>
-          <a href="world-foundry/">Browse the World Foundry catalog</a>
-        </footer>
+      <section class="audience-split" aria-labelledby="builder-title">
+        <div>
+          <p class="eyebrow">Building games instead?</p>
+          <h2 id="builder-title">The production tools have their own workbench.</h2>
+        </div>
+        <div class="builder-links">
+          <a href="loot-odds/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=audience_split&amp;utm_content=loot_odds" data-preserve-utm>
+            <strong>Calculate loot odds</strong>
+            <span>Model independent drops and target confidence.</span>
+          </a>
+          <a href="free-rpg-tools/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=audience_split&amp;utm_content=tool_directory" data-preserve-utm>
+            <strong>Browse developer tools</strong>
+            <span>Find generators, validators, data bridges, and integration guides.</span>
+          </a>
+        </div>
       </section>
     </main>
 
-    <script src="calculator.js"></script>
-    <script src="app.js"></script>
+    <footer class="site-footer">
+      <span>Loot Table Works</span>
+      <p>Original, system-neutral fantasy content. AI-assisted, human-directed, and QA-reviewed.</p>
+      <a href="world-foundry/?utm_source=owned_site&amp;utm_medium=front_door&amp;utm_campaign=audience_split&amp;utm_content=footer_catalog" data-preserve-utm>Full catalog</a>
+    </footer>
+
+    <script src="front-door.js"></script>
   </body>
 </html>

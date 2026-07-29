@@ -1,13 +1,22 @@
 (function attachCampaignWorkspaceReturnLoop(root, factory) {
-  const api = factory();
+  const offerManifestApi = typeof module !== "undefined" && module.exports
+    ? require("./campaign-workspace-offer-manifest.js")
+    : root?.CampaignWorkspaceOfferManifest;
+  const api = factory(offerManifestApi);
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (root) root.CampaignWorkspaceReturnLoop = api;
-})(typeof globalThis !== "undefined" ? globalThis : this, function createCampaignWorkspaceReturnLoop() {
+})(typeof globalThis !== "undefined" ? globalThis : this, function createCampaignWorkspaceReturnLoop(offerManifestApi) {
   "use strict";
 
-  const VERSION = "1.2.1";
+  if (!offerManifestApi) {
+    throw new Error("Campaign Workspace requires the commercial offer manifest before the return-loop module.");
+  }
+
+  const VERSION = "1.3.0";
   const RECEIPT_SCHEMA_VERSION = "1.0.0";
   const STORAGE_KEY = "loot-table-works:campaign-workspace:return-loop:v1";
+  const DEFAULT_OFFER_MANIFEST = offerManifestApi.DEFAULT_MANIFEST;
+  const COMMERCIAL_OFFER = offerManifestApi.resolveOffer(DEFAULT_OFFER_MANIFEST);
   const PRODUCER_CLASSES = new Set(["gullwatch", "campaign_launchpad"]);
   const ATTRIBUTION_KEYS = ["source", "medium", "campaign", "content"];
   const ATTRIBUTION_VALUES = Object.freeze({
@@ -33,15 +42,13 @@
       "loot",
       "cw12_closeout_encounter",
       "cw12_closeout_quest",
-      "cw12_closeout_loot"
+      "cw12_closeout_loot",
+      "cw12_closeout_gullwatch_aftermath_preview",
+      "cw12_closeout_gullwatch_aftermath"
     ])
   });
   const AGE_BUCKETS = new Set(["unknown", "same_day", "1_2_days", "3_7_days", "8_30_days", "31_plus_days"]);
-  const PRODUCT_IDS = new Set([
-    "fantasy-encounter-room-data-kit",
-    "fantasy-quest-contract-reward-data-kit",
-    "enemy-loot-table-drop-profile-kit"
-  ]);
+  const PRODUCT_IDS = new Set([COMMERCIAL_OFFER.product_id]);
   const EVENTS = new Set([
     "campaign_started",
     "campaign_imported",
@@ -52,81 +59,6 @@
     "expansion_recommended",
     "paid_expansion_clicked"
   ]);
-
-  const PRODUCT_MAP = deepFreeze({
-    encounter: {
-      product_id: "fantasy-encounter-room-data-kit",
-      title: "World Foundry Encounter & Threat Kit",
-      price_usd: 3,
-      url: "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=campaign_workspace&utm_medium=web&utm_campaign=wf4w_revenue_v1&utm_content=cw12_closeout_encounter"
-    },
-    quest: {
-      product_id: "fantasy-quest-contract-reward-data-kit",
-      title: "World Foundry Quest, Contract & Reward Kit",
-      price_usd: 3,
-      url: "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=campaign_workspace&utm_medium=web&utm_campaign=wf4w_revenue_v1&utm_content=cw12_closeout_quest"
-    },
-    loot: {
-      product_id: "enemy-loot-table-drop-profile-kit",
-      title: "World Foundry Enemy Loot & Reward Kit",
-      price_usd: 3,
-      url: "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=campaign_workspace&utm_medium=web&utm_campaign=wf4w_revenue_v1&utm_content=cw12_closeout_loot"
-    }
-  });
-
-  const PAID_PREVIEW_MAP = deepFreeze({
-    "fantasy-encounter-room-data-kit": {
-      product_id: "fantasy-encounter-room-data-kit",
-      demo_count: 30,
-      full_count: 180,
-      unit_label: "encounters",
-      excerpt_title: "Gullwatch Beacon: Constricted Crossing",
-      excerpt_lines: [
-        "Tier-2 coastal encounter built to control movement across a narrow transition.",
-        "The crossing shifts under excess weight; stress marks reveal the unsafe span.",
-        "Reduce carried weight, reinforce one span, or cross in timed groups."
-      ],
-      immediate_outcome: "Prepare a three-phase encounter with a telegraphed hazard, two enemy groups, mitigation options, and explicit resolution outcomes.",
-      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
-      cta_label: "Preview 30 encounters + view the $3 full kit"
-    },
-    "fantasy-quest-contract-reward-data-kit": {
-      product_id: "fantasy-quest-contract-reward-data-kit",
-      demo_count: 30,
-      full_count: 240,
-      unit_label: "quests",
-      excerpt_title: "Recover Brineworn Relic at Gullwatch Beacon",
-      excerpt_lines: [
-        "Recover one documented Brineworn Relic while preserving ownership and condition.",
-        "A second claimant presents credible provenance as salt jams the beacon shutters.",
-        "Failure leaves the relic disputed and subjects later Gullwatch work to stricter evidence demands."
-      ],
-      immediate_outcome: "Put a 60-minute recovery contract on the table with its objective, complication, alternate resolution, consequence, and world impact ready.",
-      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
-      cta_label: "Preview 30 quests + view the $3 full kit"
-    },
-    "enemy-loot-table-drop-profile-kit": {
-      product_id: "enemy-loot-table-drop-profile-kit",
-      demo_count: 20,
-      full_count: 250,
-      unit_label: "profiles",
-      excerpt_title: "Brinejaw Corsairs Runner",
-      excerpt_lines: [
-        "Tier-1 coastal raider that circles isolated targets and retreats behind thrown cover.",
-        "Reward identity: stolen cargo and salt-weathered weapons.",
-        "Includes one guaranteed Brineworn Amulet, one conditional Brineworn Shell, and six weighted drops."
-      ],
-      immediate_outcome: "Resolve this raider's reward using guaranteed, conditional, and weighted results plus an 85-129 currency range.",
-      compatibility_note: "Separate offline toolkit; it does not import into Campaign Workspace yet.",
-      cta_label: "Preview 20 profiles + view the $3 full kit"
-    }
-  });
-
-  const TARGET_GROUPS = Object.freeze({
-    encounter: new Set(["encounter", "enemy", "creature", "immediate_high_pressure_threat"]),
-    quest: new Set(["thread", "quest", "faction", "project", "unresolved_obligation"]),
-    loot: new Set(["item", "reward", "merchant", "recipe", "asset", "material_consequence"])
-  });
 
   const MILESTONE_KEYS = new Set([
     "schema_version",
@@ -273,7 +205,7 @@
   function assertProductId(value, label, optional = true) {
     if (optional && value === null) return;
     if (typeof value !== "string" || !PRODUCT_IDS.has(value)) {
-      throw new TypeError(`${label} must be an approved public product ID${optional ? " or null" : ""}.`);
+      throw new TypeError(`${label} must be the approved Gullwatch Aftermath product ID${optional ? " or null" : ""}.`);
     }
   }
 
@@ -399,7 +331,7 @@
       paid_expansion_click: false,
       session_count: sessionCount,
       recommended_product_id: sessionCount > 0
-        ? PRODUCT_MAP.quest.product_id
+        ? COMMERCIAL_OFFER.product_id
         : null,
       clicked_product_id: null,
       age_bucket: dayIndex === null ? "unknown" : "same_day",
@@ -418,38 +350,27 @@
     return token.toLowerCase().replace(/-+/g, "_");
   }
 
-  function productGroupForTarget(targetKind) {
-    for (const [group, targets] of Object.entries(TARGET_GROUPS)) {
-      if (targets.has(targetKind)) return group;
-    }
-    return "quest";
-  }
-
   function selectExpansion(input = {}) {
-    assertExactKeys(input, new Set(["targetKind"]), "selectExpansion input");
+    assertExactKeys(input, new Set(["targetKind", "offerManifest"]), "selectExpansion input");
     const targetKind = normalizeTargetKind(input.targetKind);
-    const group = productGroupForTarget(targetKind);
-    const product = PRODUCT_MAP[group];
-    const reason = group === "encounter"
-      ? "The recorded target is an immediate threat that benefits from connected encounter material."
-      : group === "loot"
-        ? "The recorded target is a material consequence that benefits from coherent reward material."
-        : targetKind && TARGET_GROUPS.quest.has(targetKind)
-          ? "The recorded target is an unresolved obligation that benefits from connected quest material."
-          : "Quest material is the neutral fallback when the recorded target has no approved category.";
+    const product = offerManifestApi.resolveOffer(input.offerManifest ?? DEFAULT_OFFER_MANIFEST);
     return deepFreeze({
       target_kind: targetKind,
       product_id: product.product_id,
       title: product.title,
       price_usd: product.price_usd,
-      reason,
-      url: product.url
+      reason: "Continue the Gullwatch outcome already recorded in this workspace.",
+      url: product.url,
+      storefront_gate: product.storefront_gate,
+      purchase_available: product.purchase_available,
+      cta_label: product.cta_label,
+      status_note: product.status_note
     });
   }
 
   function previewForProduct(productId) {
     assertProductId(productId, "productId", false);
-    return PAID_PREVIEW_MAP[productId];
+    return COMMERCIAL_OFFER.preview;
   }
 
   function assertEventInput(event, input) {
@@ -461,7 +382,7 @@
       next_session_copied: new Set(),
       next_session_printed: new Set(),
       expansion_recommended: new Set(["targetKind"]),
-      paid_expansion_clicked: new Set(["productId"])
+      paid_expansion_clicked: new Set(["productId", "offerManifest"])
     };
     assertExactKeys(input, keysByEvent[event], `${event} input`);
   }
@@ -511,8 +432,12 @@
       next.paid_expansion_click = false;
     } else if (event === "paid_expansion_clicked") {
       assertProductId(input.productId, "productId", false);
+      const offer = offerManifestApi.resolveOffer(input.offerManifest ?? DEFAULT_OFFER_MANIFEST);
+      if (!offer.purchase_available) {
+        throw new TypeError("A paid expansion click is unavailable while the storefront gate is closed.");
+      }
       if (next.recommended_product_id === null || input.productId !== next.recommended_product_id) {
-        throw new TypeError("The clicked product must match the one recommended public product.");
+        throw new TypeError("The clicked product must match the one recommended Gullwatch Aftermath product.");
       }
       if (!next.portable_export || !next.next_session_copy_or_print) {
         throw new TypeError("A paid expansion click requires current-session export and next-session preparation.");
@@ -623,7 +548,7 @@
   return Object.freeze({
     VERSION,
     STORAGE_KEY,
-    PRODUCT_MAP,
+    COMMERCIAL_OFFER,
     previewForProduct,
     createMilestone,
     recordMilestone,

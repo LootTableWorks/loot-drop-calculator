@@ -11,8 +11,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 14912,
-      "sha256": "4cbba5daf03c3492d950da2e4727d7244a61fac7a2797cb29ae7a28af84a4751"
+      "bytes": 14940,
+      "sha256": "446af9d0f093cd8710836130932643ea76eccbd2637794de41213f943a2c9f71"
     },
     {
       "path": "styles.css",
@@ -56,8 +56,8 @@
     },
     {
       "path": "assets/preview-03-workspace-v1.png",
-      "bytes": 95622,
-      "sha256": "a27d9dd53d13acccbd4fa49696c8d18d5cd48ca968b88a0d26173a2632dcd7d2"
+      "bytes": 90171,
+      "sha256": "05d4ca7849ba445226429a8f505ee512a227c2a45808efd72e0541d73d2e7ef4"
     }
   ]
 }

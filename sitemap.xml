@@ -2,7 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://loottableworks.github.io/loot-drop-calculator/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-29</lastmod>
+  </url>
+  <url>
+    <loc>https://loottableworks.github.io/loot-drop-calculator/loot-odds/</loc>
+    <lastmod>2026-07-29</lastmod>
   </url>
   <url>
     <loc>https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/</loc>

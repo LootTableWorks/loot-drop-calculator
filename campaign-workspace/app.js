@@ -632,22 +632,7 @@
   }
 
   function expansionForMilestone() {
-    const selected = returnLoop.selectExpansion({ targetKind: latestTargetKind(workspace) });
-    if (!returnMilestone?.recommended_product_id || selected.product_id === returnMilestone.recommended_product_id) {
-      return selected;
-    }
-    const product = Object.values(returnLoop.PRODUCT_MAP)
-      .find((entry) => entry.product_id === returnMilestone.recommended_product_id);
-    return product
-      ? {
-          target_kind: null,
-          product_id: product.product_id,
-          title: product.title,
-          price_usd: product.price_usd,
-          reason: "This is the one approved expansion recorded for the latest session closeout.",
-          url: product.url
-        }
-      : selected;
+    return returnLoop.selectExpansion({ targetKind: latestTargetKind(workspace) });
   }
 
   function canConfirmLaterReturn() {
@@ -741,21 +726,23 @@
         <aside class="closeout-recommendation" aria-labelledby="closeout-recommendation-title">
           <div class="recommendation-preview-body">
             <div class="recommendation-overview">
-              <p class="eyebrow">Optional / $${expansion.price_usd} standalone</p>
+              <p class="eyebrow">${expansion.purchase_available
+                ? `Optional / $${expansion.price_usd} standalone`
+                : "Optional continuation preview"}</p>
               <h3 id="closeout-recommendation-title">${esc(expansion.title)}</h3>
               <p class="recommendation-outcome">${esc(preview.immediate_outcome)}</p>
               <p class="compatibility-note"><strong>Compatibility:</strong> ${esc(preview.compatibility_note)}</p>
+              <p class="compatibility-note">${esc(expansion.status_note)}</p>
             </div>
             <section class="public-demo-excerpt" aria-labelledby="public-demo-excerpt-title">
-              <p class="eyebrow">Public demo excerpt</p>
+              <p class="eyebrow">Continuation preview</p>
               <h4 id="public-demo-excerpt-title">${esc(preview.excerpt_title)}</h4>
               <ul>${previewLines}</ul>
-              <p>${preview.demo_count} demo ${esc(preview.unit_label)} / ${preview.full_count} in the full kit</p>
             </section>
           </div>
           <div class="recommendation-action">
             ${recommendationAvailable
-              ? `<a href="${esc(expansion.url)}" target="_blank" rel="noopener" data-action="paid-expansion" data-product-id="${esc(expansion.product_id)}">${esc(preview.cta_label)}</a>`
+              ? `<a href="${esc(expansion.url)}" target="_blank" rel="noopener" data-action="${expansion.purchase_available ? "paid-expansion" : "aftermath-preview"}" data-product-id="${esc(expansion.product_id)}">${esc(expansion.cta_label)}</a>`
               : `<span class="recommendation-gate">Save + copy/print to unlock</span>`}
           </div>
         </aside>

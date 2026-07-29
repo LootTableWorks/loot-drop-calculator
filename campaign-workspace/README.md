@@ -16,8 +16,8 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 - Close a committed session with primary save, next-session Markdown, and scoped print actions.
 - Keep an optional content-free return receipt in separate local storage without changing campaign JSON or recovery.
 - Confirm a later return only from a separate page session on a later date and only after explicit user consent.
-- See one optional state-relevant `$3` encounter, quest, or enemy-loot expansion after saving the campaign and copying or printing the next-session brief.
-- Reach three attributed `$3` standalone modules from the complete free campaign outcome.
+- See exactly one optional Gullwatch Aftermath continuation after saving the campaign and copying or printing the next-session brief.
+- Open a non-purchase Aftermath preview while the storefront gate is closed; the same slot can become one attributed `Get Gullwatch Aftermath - $3` action only after a public storefront URL is supplied.
 - Run a voluntary first-pass GM field test with direct source-kit and one-shot-guide handoffs, a local progress rail, and a source-attributed report.
 
 The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, opens a prefilled email in their own mail application, or chooses the separately warned public GitHub report form. The default report excludes workspace IDs, campaign prose, player data, and save contents.
@@ -55,7 +55,11 @@ A return cannot be confirmed in the same page session or on the milestone's loca
 
 Both supported Campaign Start fixtures normalize Campaign Launchpad workflow data and One-Shot Forge opening-session data into the same validated v1 document. Because that document does not preserve which tool initiated the export, the receipt uses the truthful bounded producer class `campaign_launchpad` for either Campaign Start fixture rather than inventing a One-Shot-specific origin.
 
-The recommendation is intentionally secondary to preservation and preparation. It deterministically selects exactly one public `$3` standalone product from the encounter, quest, or enemy-loot allowlist using only the coarse recorded target kind, with the quest kit as the documented fallback. Its link remains withheld until the current closeout records both a portable campaign export and a next-session copy or print action. A later session commit resets those two prerequisites. It never links to a bundle or private offer.
+The recommendation is intentionally secondary to preservation and preparation. The GM closeout presents exactly one product, Gullwatch Aftermath, regardless of the recorded target kind. Generic encounter, quest, and enemy-loot data kits remain available in the separate source-kit/developer path but cannot appear in this GM recommendation slot.
+
+`campaign-workspace-offer-manifest.js` owns the commercial gate. Its default `closed` state contains no storefront URL and resolves the CTA to the owned public Aftermath preview with the existing Campaign Workspace UTM contract. A later release may set `storefront_gate` to `public` and supply one query-free HTTPS project URL on `loot-table-works.itch.io`; only that validated state resolves the exact `Get Gullwatch Aftermath - $3` CTA and permits a local paid-handoff milestone. Query-bearing, credential-bearing, fragment-bearing, non-Loot-Table-Works, and private/draft/secret-looking storefront paths are rejected. The release process must independently verify that the supplied project is public before changing the manifest.
+
+The CTA remains withheld until the current closeout records both a portable campaign export and a next-session copy or print action. A later session commit resets those two prerequisites. The closed state never exposes an itch.io URL, and neither state links to a bundle.
 
 ## Runtime Contract
 
