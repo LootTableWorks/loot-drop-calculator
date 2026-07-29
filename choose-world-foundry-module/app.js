@@ -129,6 +129,36 @@ const WORKFLOW_NOTES = {
   tabletop: "Use the offline browser, simulator, studio, or state board during preparation. The content is system-neutral, so adapt mechanics to your table."
 };
 
+function safeAttributionValue(value) {
+  return (value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 40);
+}
+
+function incomingAttributionTerm() {
+  const query = new URLSearchParams(window.location.search);
+  const source = safeAttributionValue(query.get("utm_source"));
+  const content = safeAttributionValue(query.get("utm_content"));
+
+  if (!source || source === "module_selector") {
+    return "";
+  }
+
+  return `origin_${[source, content].filter(Boolean).join("_")}`;
+}
+
+const attributionTerm = incomingAttributionTerm();
+
+function attributedPaidUrl(rawUrl) {
+  const url = new URL(rawUrl);
+  if (attributionTerm) {
+    url.searchParams.set("utm_term", attributionTerm);
+  }
+  return url.toString();
+}
+
 const elements = {
   code: document.querySelector("#result-code"),
   title: document.querySelector("#result-title"),
@@ -171,8 +201,11 @@ function renderRecommendation() {
   elements.dependency.innerHTML = module.dependency;
   elements.workflow.textContent = WORKFLOW_NOTES[workflow];
   elements.boundary.textContent = module.boundary;
-  elements.link.href = module.url;
+  elements.link.href = attributedPaidUrl(module.url);
 }
 
+document.querySelectorAll('#compare a[href*="loot-table-works.itch.io/"]').forEach((link) => {
+  link.href = attributedPaidUrl(link.href);
+});
 document.querySelector(".selector-controls").addEventListener("change", renderRecommendation);
 renderRecommendation();
