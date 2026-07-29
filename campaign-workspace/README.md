@@ -20,7 +20,7 @@ The dedicated Gullwatch browser workspace adds a complete local-first campaign s
 - Open a non-purchase Aftermath preview while the storefront gate is closed; the same slot can become one attributed `Get Gullwatch Aftermath - $3` action only after a public storefront URL is supplied.
 - Run a voluntary first-pass GM field test with direct source-kit and one-shot-guide handoffs, a local progress rail, and a source-attributed report.
 
-The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, opens a prefilled email in their own mail application, or chooses the separately warned public GitHub report form. The default report excludes workspace IDs, campaign prose, player data, and save contents.
+The browser package has no analytics, hosted AI, remote runtime dependency, paid infrastructure, or gated bundle destination. The field-test report and return receipt stay in the browser until the tester explicitly copies, downloads, or opens a prefilled email in their own mail application. The default report excludes workspace IDs, campaign prose, player data, and save contents.
 
 ## Field-Test Activation Rail
 
@@ -33,7 +33,7 @@ Campaign Start in Campaign Launchpad, or open portable campaign JSON. Existing
 local campaigns and source-coded field-test routes bypass the gate without
 changing their state.
 
-Source-kit opened, outcome committed, portable JSON saved, and campaign state reopened are rendered from the current page session and existing local milestone state. They are not transmitted or counted as demand. The report preserves the four inbound UTM values by default, omits `workspace_id`, and is never stored automatically. Copy failure leaves the report selected and available for browser copy or `.txt` download. Email remains a user-initiated `mailto:` draft. The optional GitHub route requires sign-in and creates a public report associated with the tester's public GitHub identity.
+Source-kit opened, outcome committed, portable JSON saved, and campaign state reopened are rendered from the current page session and existing local milestone state. They are not transmitted or counted as demand. The report preserves the four inbound UTM values by default, omits `workspace_id`, and is never stored automatically. Copy failure leaves the report selected and available for browser copy or `.txt` download. Email remains a user-initiated `mailto:` draft and is the verified external reporting route.
 
 ## Creation Disclosure
 

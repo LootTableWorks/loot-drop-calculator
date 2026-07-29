@@ -1049,7 +1049,7 @@
         </div>
         <div class="privacy-note">
           <strong>Private by default</strong>
-          <p>No analytics run here. Progress and report text stay on your device until you explicitly copy, download, email, or open the public GitHub form. No workspace ID is included.</p>
+          <p>No analytics run here. Progress and report text stay on your device until you explicitly copy, download, or open a prefilled email. No workspace ID is included.</p>
         </div>
       </section>
       <section class="activation-rail" aria-labelledby="activation-rail-title">
@@ -1095,10 +1095,7 @@
             <button type="button" data-action="download-field-report">Download .txt</button>
             <a class="primary-action" data-action="email-field-report" href="mailto:loottableworks@gmail.com?subject=${subject}&amp;body=${body}">Open email draft</a>
           </div>
-          <div class="public-report-option">
-            <a href="https://github.com/LootTableWorks/loot-drop-calculator/issues/new?template=campaign-workspace-field-test.yml" target="_blank" rel="noopener">Use the public GitHub report form</a>
-            <p>Requires GitHub sign-in. Your report, username, and profile will be public.</p>
-          </div>
+          <p class="delivery-note">Email is the verified external report path. The editable draft includes the source attribution needed to distinguish a real field test from owner or QA activity.</p>
         </div>
       </section>`;
   }
