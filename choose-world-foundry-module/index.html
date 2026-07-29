@@ -22,20 +22,140 @@
     <meta name="twitter:description" content="Compare six focused $3 fantasy game data modules by outcome, contents, tools, and dependencies.">
     <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/assets/world-foundry-selector-preview.png">
     <title>Choose Your World Foundry Module | Loot Table Works</title>
-    <link rel="stylesheet" href="styles.css?v=1.0.0">
+    <link rel="stylesheet" href="styles.css?v=1.1.0">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ItemList",
-        "name": "World Foundry standalone data modules",
-        "numberOfItems": 6,
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "World Foundry Item Catalog & Economy Kit"},
-          {"@type": "ListItem", "position": 2, "name": "World Foundry Merchant & Shop Kit"},
-          {"@type": "ListItem", "position": 3, "name": "World Foundry Crafting & Recipe Kit"},
-          {"@type": "ListItem", "position": 4, "name": "World Foundry Enemy Loot & Reward Kit"},
-          {"@type": "ListItem", "position": 5, "name": "World Foundry Quest, Contract & Reward Kit"},
-          {"@type": "ListItem", "position": 6, "name": "World Foundry Encounter & Threat Kit"}
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "@id": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/#application",
+            "name": "World Foundry Module Selector",
+            "url": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "A free local-first selector that matches an RPG production problem to one of six focused World Foundry data modules."
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/#catalog",
+            "name": "World Foundry standalone data modules",
+            "numberOfItems": 6,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Item Catalog & Economy Kit",
+                  "url": "https://loot-table-works.itch.io/original-fantasy-item-data-pack",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Merchant & Shop Kit",
+                  "url": "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Crafting & Recipe Kit",
+                  "url": "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Enemy Loot & Reward Kit",
+                  "url": "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 5,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Quest, Contract & Reward Kit",
+                  "url": "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 6,
+                "item": {
+                  "@type": "Product",
+                  "name": "World Foundry Encounter & Threat Kit",
+                  "url": "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit",
+                  "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Which World Foundry module should I buy first?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Start with the system blocking your current project. Choose Item Catalog for canonical objects and economy records, Merchant for shops, Crafting for recipes, Enemy Loot for rewards, Quest for connected contracts, or Encounter for phase-based threats."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need to buy all six modules?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Every module is a standalone $3 product. Add another module only when you need its connected records. No bundle is currently offered."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What files and tools are included?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Each module includes structured JSON and CSV, documented schemas, and offline workflow tools. Engine starters and specialized utilities vary by module, so the product page is the final authority for exact current files."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I connect the modules to my own RPG data?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. World Foundry uses stable IDs and documented references. Pair the matching modules for canonical records or map the external IDs to your own data."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are these art, map, token, audio, or rules packs?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. These are original system-neutral structured data and offline workflow products. They do not include battle maps, tokens, character art, audio, or rules-specific stat blocks."
+                }
+              }
+            ]
+          }
         ]
       }
     </script>
@@ -51,6 +171,7 @@
       <nav aria-label="Primary navigation">
         <a href="#selector">Choose</a>
         <a href="#compare">Compare all six</a>
+        <a href="#faq">FAQ</a>
         <a href="../world-foundry/">Free tools</a>
       </nav>
       <span class="price-lock">Standalone price <strong>$3</strong></span>
@@ -234,6 +355,39 @@
         <div class="comparison-footer">
           <p><strong>Shared format:</strong> original system-neutral fantasy content, structured JSON/CSV, documented schemas, stable IDs, commercial-use terms, and offline operation.</p>
           <p><strong>Shared boundary:</strong> these are production data and preparation tools, not visual asset, battle-map, token, audio, or rules-engine packs.</p>
+        </div>
+      </section>
+
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Before you choose</p>
+            <h2 id="faq-title">World Foundry module questions</h2>
+          </div>
+          <p>Use the selector for a recommendation. Use these answers to confirm the catalog boundary before opening a product page.</p>
+        </div>
+
+        <div class="faq-list">
+          <details>
+            <summary>Which World Foundry module should I buy first?</summary>
+            <p>Start with the system blocking your current project. Choose Item Catalog for canonical objects and economy records, Merchant for shops, Crafting for recipes, Enemy Loot for rewards, Quest for connected contracts, or Encounter for phase-based threats.</p>
+          </details>
+          <details>
+            <summary>Do I need to buy all six modules?</summary>
+            <p>No. Every module is a standalone $3 product. Add another module only when you need its connected records. No bundle is currently offered.</p>
+          </details>
+          <details>
+            <summary>What files and tools are included?</summary>
+            <p>Each module includes structured JSON and CSV, documented schemas, and offline workflow tools. Engine starters and specialized utilities vary by module, so the product page is the final authority for exact current files.</p>
+          </details>
+          <details>
+            <summary>Can I connect the modules to my own RPG data?</summary>
+            <p>Yes. World Foundry uses stable IDs and documented references. Pair the matching modules for canonical records or map the external IDs to your own data.</p>
+          </details>
+          <details>
+            <summary>Are these art, map, token, audio, or rules packs?</summary>
+            <p>No. These are original system-neutral structured data and offline workflow products. They do not include battle maps, tokens, character art, audio, or rules-specific stat blocks.</p>
+          </details>
         </div>
       </section>
 

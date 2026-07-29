@@ -146,6 +146,7 @@ main {
 
 .selector-shell,
 .comparison,
+.faq,
 .next-step {
   padding: 4.5rem max(4vw, calc((100vw - 1420px) / 2));
 }
@@ -638,6 +639,60 @@ tbody a {
   color: var(--white);
 }
 
+.faq {
+  background: #f5f3ee;
+  border-bottom: 1px solid var(--line);
+}
+
+.faq .section-heading > p {
+  color: var(--ink-soft);
+}
+
+.faq-list {
+  border-top: 1px solid var(--line-dark);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.faq summary {
+  position: relative;
+  min-height: 58px;
+  padding: 1rem 3rem 1rem 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  content: "+";
+  color: var(--signal);
+  font-size: 1.5rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.faq details[open] summary::after {
+  content: "-";
+}
+
+.faq details p {
+  max-width: 900px;
+  margin: 0;
+  padding: 0 3rem 1.3rem 0;
+  color: var(--ink-soft);
+}
+
 .next-step {
   display: flex;
   align-items: center;
@@ -735,6 +790,7 @@ footer a {
 
   .selector-shell,
   .comparison,
+  .faq,
   .next-step {
     padding: 3rem 1rem;
   }
