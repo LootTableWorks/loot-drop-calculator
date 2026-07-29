@@ -6,6 +6,8 @@ Original, system-neutral tabletop adventures, local-first campaign tools, and ga
 
 [Open the World Foundry hub](https://loottableworks.github.io/loot-drop-calculator/world-foundry/)
 
+[Choose the right $3 World Foundry module](https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=github&utm_medium=repository_readme&utm_campaign=module_selector_v1&utm_content=readme_choose_module)
+
 [Browse all free RPG tools by task](https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/)
 
 [Read the RPG data integration guides](https://loottableworks.github.io/loot-drop-calculator/integration-guides/)

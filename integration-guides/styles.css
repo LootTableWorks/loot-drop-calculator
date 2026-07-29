@@ -503,6 +503,7 @@ li code {
   color: var(--forest);
   font-size: .74rem;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .module-card strong,
@@ -519,6 +520,46 @@ li code {
   white-space: nowrap;
   font-size: .84rem;
   font-weight: 850;
+}
+
+.selector-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem 2rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.selector-cta > div > strong,
+.selector-cta > div > span {
+  display: block;
+}
+
+.selector-cta > div > span {
+  margin-top: .2rem;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.selector-cta > a {
+  min-width: 160px;
+  padding: .65rem .8rem;
+  border: 1px solid var(--forest);
+  color: #fff;
+  background: var(--forest);
+  font-size: .84rem;
+  font-weight: 850;
+  text-align: center;
+  text-decoration: none;
+}
+
+.selector-cta > a:hover {
+  border-color: var(--forest-dark);
+  color: #fff;
+  background: var(--forest-dark);
 }
 
 .related-guides {
@@ -634,12 +675,17 @@ li code {
   .guide-grid,
   .sequence,
   .tools-strip,
-  .related-guides {
+  .related-guides,
+  .selector-cta {
     grid-template-columns: 1fr;
   }
 
+  .selector-cta > a {
+    width: 100%;
+  }
+
   .module-card {
-    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
   }
 
   .module-card a {

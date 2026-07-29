@@ -97,7 +97,10 @@ th:last-child, td:last-child { border-right: 0; }
 .production-copy { align-self: start; }
 .production-copy .section-index { color: #e0ba61; }
 .production-copy > p:not(.section-index) { margin: 19px 0; color: #c6d0d1; font-size: 13px; line-height: 1.65; }
-.production-copy > a { color: #fff; font-size: 12px; font-weight: 900; text-underline-offset: 3px; }
+.production-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.production-actions a { color: #fff; font-size: 12px; font-weight: 900; text-underline-offset: 3px; }
+.production-actions a:first-child { padding: 10px 12px; border: 1px solid #e0ba61; color: #fff; background: #314146; text-decoration: none; }
+.production-actions a:first-child:hover { background: #3b4d52; }
 .module-list { border-top: 1px solid #657477; }
 .module-list a { min-height: 58px; display: grid; grid-template-columns: 54px minmax(0, 1fr) 58px; align-items: center; gap: 10px; padding: 10px 12px; border-right: 1px solid #657477; border-bottom: 1px solid #657477; border-left: 1px solid #657477; color: #fff; text-decoration: none; }
 .module-list a:hover { background: #2e3d40; }
