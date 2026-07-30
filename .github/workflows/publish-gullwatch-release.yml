@@ -1,0 +1,45 @@
+name: Publish Gullwatch Beacon release
+
+on:
+  push:
+    tags:
+      - "gullwatch-beacon-v1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch the tagged release files
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          git init .
+          git fetch --depth=1 "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "refs/tags/$TAG_NAME"
+          git checkout FETCH_HEAD -- \
+            downloads/gullwatch-beacon-play-tonight-kit-v1.zip \
+            releases/gullwatch-beacon-v1.0.0.md
+
+      - name: Verify the validated archive
+        run: |
+          test "$(stat -c%s downloads/gullwatch-beacon-play-tonight-kit-v1.zip)" = "16231801"
+          echo "f4a364fc9c3f181844c46dc746aa1f6cda47cca92db3c92c087c064c2f21ebba  downloads/gullwatch-beacon-play-tonight-kit-v1.zip" | sha256sum --check --strict
+
+      - name: Publish the official release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::A release already exists for $TAG_NAME. Refusing to overwrite or duplicate it."
+            exit 1
+          fi
+
+          gh release create "$TAG_NAME" \
+            "downloads/gullwatch-beacon-play-tonight-kit-v1.zip#Gullwatch Beacon Play Tonight Kit v1.0.0" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Gullwatch Beacon: Free Play Tonight Kit v1.0.0" \
+            --notes-file "releases/gullwatch-beacon-v1.0.0.md" \
+            --verify-tag
