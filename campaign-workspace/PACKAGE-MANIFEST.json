@@ -2,7 +2,7 @@
   "product": "Gullwatch Campaign Workspace",
   "release": "campaign-workspace-static-site-v1-3-0",
   "status": "internal_release_candidate",
-  "generated_at": "2026-07-29T17:40:53.767Z",
+  "generated_at": "2026-07-30T09:47:20.886Z",
   "file_count": 13,
   "files": [
     {
@@ -52,8 +52,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 7385,
-      "sha256": "f86f6e7ae5a589002ffdcf6eb7c38fb422e9e21701125e9a7898e51cdecbf6b4"
+      "bytes": 8118,
+      "sha256": "7c7937924e53c90ea571164d7c67683b059fbc832bfc428102a18c13a0cfefd6"
     },
     {
       "path": "README.md",

@@ -1,6 +1,6 @@
 {
   "product_id": "world-foundry-hub",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -18,13 +18,13 @@
     },
     {
       "path": "assets/campaign-workspace-preview-v1.png",
-      "bytes": 153820,
-      "sha256": "d2bfc697710df948eef2bd8105c4364358376c47e62cc0f9fa3319eff003ccde"
+      "bytes": 952785,
+      "sha256": "f53965450dd4d45059c061bf30a2e6e01df316dee047eb98e8f590f4f0ecb15c"
     },
     {
       "path": "index.html",
-      "bytes": 35942,
-      "sha256": "bb4db90553cface891986c80204fc7f45517b8bb77cbc6df6b4d2b9b32bb76aa"
+      "bytes": 36950,
+      "sha256": "49a049f88106271c308aa654e52f631b3ab33cae4757ff6bb60508e9f867d114"
     },
     {
       "path": "robots.txt",
