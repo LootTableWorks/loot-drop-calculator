@@ -19,7 +19,7 @@ The release is plain HTML and CSS. It has no external runtime dependency, networ
 
 ## Quality and release authority
 
-Release authority is `delegated_internal_aaa_qa`. Routine owner review is not required after the complete automated and browser QA gate passes. Version `1.1.0` records the cluster's current public state and adds privacy-bounded attribution for the approved Owlcat learning route. Unknown source values and referrer hosts are discarded; no path, user identifier, or browsing history is preserved.
+Release authority is `delegated_internal_aaa_qa`. Routine owner review is not required after the complete automated and browser QA gate passes. Version `1.1.1` records the cluster's current public state and adds privacy-bounded attribution for the approved Owlcat learning route. Unknown source values and referrer hosts are discarded; no path, user identifier, or browsing history is preserved. Every page sets `strict-origin` so outbound requests do not disclose the guide path or query.
 
 Every public article includes canonical and indexable metadata, TechArticle JSON-LD, responsive navigation, schema and code examples, contextual free-tool links, exactly six public standalone offers, internal related-guide links, and an AI-assisted content disclosure.
 
@@ -33,7 +33,7 @@ node scripts\validate.js
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build.ps1
 ```
 
-The build writes only to `dist/` inside this project. It creates `dist/site/`, a hashed `MANIFEST.json`, and `dist/loot-table-works-integration-guides-v1-1-0.zip` with sorted entries and a fixed UTC timestamp. It validates the archive after creation; deployment remains a separate reviewed operation.
+The build writes only to `dist/` inside this project. It creates `dist/site/`, a hashed `MANIFEST.json`, and `dist/loot-table-works-integration-guides-v1-1-1.zip` with sorted entries and a fixed UTC timestamp. It validates the archive after creation; deployment remains a separate reviewed operation.
 
 ## Intended public path
 

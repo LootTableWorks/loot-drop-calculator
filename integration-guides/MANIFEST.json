@@ -1,6 +1,6 @@
 {
   "product_id": "loot-table-works-integration-guides",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "status": "approved_public_release",
   "quality_expectation": "AAA",
   "release_authority": "delegated_internal_aaa_qa",
@@ -25,8 +25,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 2271,
-      "sha256": "340cb93122c2a599ef02f5bbe40d82caf104b5f569bb0762acf793b1cc24f3f3"
+      "bytes": 2365,
+      "sha256": "3220415c1cce602e261e62543ba48a873efed0716276134419590bd51c97472a"
     },
     {
       "path": "assets/loot-table-works-profile-banner-1920x550.png",
@@ -45,28 +45,28 @@
     },
     {
       "path": "game-economy-shop-data-integration/index.html",
-      "bytes": 18620,
-      "sha256": "de9668cbef24427bb39aad46846fceb4cc4ee80ed2449451712531d187d5f372"
+      "bytes": 18669,
+      "sha256": "ebb59d1e8d90f3fd562a2ac60b0a71c52c371cfb0e0b59dd307cde96c842b936"
     },
     {
       "path": "godot-4-resource-data-import/index.html",
-      "bytes": 17976,
-      "sha256": "c79ebbb7c0d1f8f653c35e52dd36545a9a4cad3affeccbb6f38c26ff8eb76a87"
+      "bytes": 18025,
+      "sha256": "23e548666d7db97f77b9a133f181b415708f37687dc80b16fd61b1086e27556a"
     },
     {
       "path": "index.html",
-      "bytes": 14775,
-      "sha256": "17f3181605a274fbd7fc6e7f221cb3c147ab9fbdd8d25a6e08e955dd102b97d9"
+      "bytes": 14824,
+      "sha256": "8ef4eb96f4a51491c7f04b9ae510cc2fe0de0415b2fbec4a786ae5bbf69ddf57"
     },
     {
       "path": "loot-table-validation/index.html",
-      "bytes": 18112,
-      "sha256": "fb0bbc999c805c11f2e758575fc278e58a1d9f750412c968fda61ffbbf32bc07"
+      "bytes": 18161,
+      "sha256": "d39f2b1721e1fa96704b642b4adc349ac996b9b49a72020ffc748b09886e3f04"
     },
     {
       "path": "release.json",
-      "bytes": 1068,
-      "sha256": "a0ad9814db447e9082af33e2a78fb5af967bce00a944e12827fb0310588aa013"
+      "bytes": 1096,
+      "sha256": "f58fe647eee7fc9463401a2978a30e3e3edd1e2e816823bbeb320198c90c7b91"
     },
     {
       "path": "robots.txt",
@@ -75,8 +75,8 @@
     },
     {
       "path": "rpg-json-schema-design/index.html",
-      "bytes": 16800,
-      "sha256": "6a608825b44fe0f67478e4f75108613bf2f247fb8c3fb5fd7d424ed310888504"
+      "bytes": 16849,
+      "sha256": "5e78aecfd31e63ed2c320f23c144fb4457c62a53968838e5cc7b17ec8a8b395b"
     },
     {
       "path": "sitemap.xml",
@@ -90,13 +90,13 @@
     },
     {
       "path": "typescript-rpg-data-models/index.html",
-      "bytes": 17395,
-      "sha256": "3c8b0c0e69b74ba37da1839d8be8c73bff8f4aca7c6bc84c52450f5085aa4be3"
+      "bytes": 17444,
+      "sha256": "23a89c666fddab5311b70e5b2f03487aa6935db1fb39ef5cb2b359a000454ef4"
     },
     {
       "path": "unity-jsonutility-stable-id-import/index.html",
-      "bytes": 18574,
-      "sha256": "25f89a7594ad7e0397f03ad4d140bf277cd1b2b111d358e6d243285715044300"
+      "bytes": 18623,
+      "sha256": "d24905118d5519b4789d81881e3fd09e1f8d8cb715e709c0a0a6e915aad38eeb"
     }
   ]
 }
