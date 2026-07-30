@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "one-shot-continuation-guide-v1",
+  "status": "APPROVED_PUBLIC_OWNED_GUIDE",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/",
+  "publication_allowed": true,
+  "paid_checkout_present": false,
+  "background_analytics": false,
+  "local_storage": false,
+  "file_count": 3,
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 18185,
+      "sha256": "6511aae523ffafb2831ce4fd6ed3d5c29c00779e065bfd92888182d1859f3fe2"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 2679,
+      "sha256": "32b0a7168f6cf7e8d617f01c10fd15a4f4ec72cfb8c66616f8ce701e57775c48"
+    },
+    {
+      "path": "app.js",
+      "bytes": 3984,
+      "sha256": "0309cedef4274f64eb1bf7ff52f07898764a40aea0203e62af3c93f75b5bd850"
+    }
+  ]
+}

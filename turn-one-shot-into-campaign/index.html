@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Turn any TTRPG one-shot ending into a campaign with five portable facts, a free local planner, and a focused next-session planning brief.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#163f3c">
+  <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Loot Table Works">
+  <meta property="og:title" content="How to Turn a One-Shot into a Campaign">
+  <meta property="og:description" content="Capture five facts from the ending and build the next session from consequences instead of writing a new campaign from scratch.">
+  <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/">
+  <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/world-foundry/assets/campaign-workspace-preview-v1.png">
+  <meta property="og:image:width" content="1425">
+  <meta property="og:image:height" content="891">
+  <meta property="og:image:alt" content="Loot Table Works Campaign Workspace showing campaign state, active pressures, and a next-session brief">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Turn a One-Shot into a Campaign">
+  <meta name="twitter:description" content="Use five facts from the ending to build a coherent next session with the free local Continuation Planner.">
+  <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/world-foundry/assets/campaign-workspace-preview-v1.png">
+  <meta name="twitter:image:alt" content="Loot Table Works Campaign Workspace showing campaign state, active pressures, and a next-session brief">
+  <title>How to Turn a One-Shot into a Campaign | Free TTRPG Planner</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to turn a TTRPG one-shot into a campaign",
+      "description": "A system-neutral five-fact method for carrying a one-shot ending into a coherent next session.",
+      "step": [
+        {"@type": "HowToStep", "name": "Write the ending truth", "text": "Record the irreversible fact established by the final scene."},
+        {"@type": "HowToStep", "name": "Name the changed relationship", "text": "Record who now trusts, fears, owes, or opposes the party."},
+        {"@type": "HowToStep", "name": "Advance one pressure", "text": "Choose the threat, clock, or scarcity that worsened while the party acted."},
+        {"@type": "HowToStep", "name": "Keep one promise unresolved", "text": "Preserve a player-facing question, obligation, or opportunity that still matters."},
+        {"@type": "HowToStep", "name": "Ask what the players intend next", "text": "Use the party's stated intention to choose the opening situation for the next session."}
+      ],
+      "author": {"@type": "Organization", "name": "Loot Table Works"},
+      "url": "https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/"
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "One-Shot Continuation Planner",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any modern browser",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "featureList": [
+        "Five-fact one-shot closeout",
+        "Deterministic next-session brief",
+        "Copyable plain text",
+        "Markdown download",
+        "No account or background upload"
+      ],
+      "creator": {"@type": "Organization", "name": "Loot Table Works"},
+      "url": "https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/#planner"
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the one-shot need an unresolved ending to become a campaign?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No. A complete victory still changes relationships, advances pressures elsewhere, and creates obligations or opportunities that can open the next session."}
+        },
+        {
+          "@type": "Question",
+          "name": "How many facts should I keep after a one-shot?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Keep five: the ending truth, one changed relationship, one advanced pressure, one unresolved promise, and the players' next intention."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does the Continuation Planner store or upload campaign notes?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No. The planner runs in the current browser page, does not use an account, and only copies or downloads a brief when you explicitly choose that action."}
+        }
+      ]
+    }
+  </script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#method">Skip to the method</a>
+
+  <header class="hero">
+    <div class="hero-shade"></div>
+    <div class="hero-inner">
+      <a class="brand" href="../" aria-label="Loot Table Works home">Loot Table Works</a>
+      <p class="eyebrow">System-neutral campaign continuation guide</p>
+      <h1>Turn one ending into the next session</h1>
+      <p class="hero-lead">A one-shot becomes a campaign when its consequences survive. Capture five facts, build one opening situation, and stop before continuity turns into homework.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#planner">Build the next-session brief</a>
+        <a class="button secondary" href="../gullwatch-beacon/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_guide&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=hero_free_one_shot">Start with Gullwatch free</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="proof-band" aria-label="Continuation Planner facts">
+      <div class="inner proof-grid">
+        <div><strong>5 facts</strong><span>from the ending</span></div>
+        <div><strong>5 beats</strong><span>for next session</span></div>
+        <div><strong>Local</strong><span>no note upload</span></div>
+        <div><strong>Free</strong><span>no account</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="method">
+      <div class="inner">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">The continuation method</p>
+            <h2>Keep consequences, not a transcript</h2>
+          </div>
+          <p>The next session does not need every name, roll, or room from the one-shot. It needs the few facts that changed what the players can do and what the world will do in response.</p>
+        </div>
+
+        <ol class="workflow">
+          <li>
+            <span class="step-number">01</span>
+            <div><h3>Write the ending truth</h3><p>State one fact that cannot be reset without denying the final scene: the beacon was relit, the heir escaped, or the town chose a side.</p></div>
+            <strong class="output">The world changed</strong>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <div><h3>Name the changed relationship</h3><p>Choose the person or faction most affected by the party. Record the new posture as trust, fear, debt, suspicion, or open opposition.</p></div>
+            <strong class="output">Someone responds</strong>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <div><h3>Advance one pressure</h3><p>Move a clock the party could not fully stop. A rival acts, supplies run short, evidence spreads, or the weather closes a route.</p></div>
+            <strong class="output">Delay has a cost</strong>
+          </li>
+          <li>
+            <span class="step-number">04</span>
+            <div><h3>Keep one promise unresolved</h3><p>Preserve a question the players already care about. It can be an obligation, a mystery, a threatened place, or an opportunity with a deadline.</p></div>
+            <strong class="output">The next choice matters</strong>
+          </li>
+          <li>
+            <span class="step-number">05</span>
+            <div><h3>Ask what the players intend next</h3><p>Use their stated intention to frame the opening. Do not plan a route they have not chosen; prepare the pressure that meets the route they did.</p></div>
+            <strong class="output">Open on agency</strong>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section planner-band" id="planner">
+      <div class="inner">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">Free local tool</p>
+            <h2>One-Shot Continuation Planner</h2>
+          </div>
+          <p>Fill in the five facts from your final scene. The planner builds a bounded five-beat brief in this page. Nothing is stored or transmitted in the background.</p>
+        </div>
+
+        <div class="planner-shell">
+          <form id="continuation-form">
+            <div class="field-grid">
+              <label>
+                <span>Ending truth</span>
+                <textarea id="ending-truth" name="ending-truth" rows="3" required maxlength="240" placeholder="The beacon broadcasts the true harbor code again."></textarea>
+              </label>
+              <label>
+                <span>Changed relationship</span>
+                <textarea id="changed-relationship" name="changed-relationship" rows="3" required maxlength="240" placeholder="Harbormaster Vale now trusts the party but owes the council an explanation."></textarea>
+              </label>
+              <label>
+                <span>Advanced pressure</span>
+                <textarea id="advanced-pressure" name="advanced-pressure" rows="3" required maxlength="240" placeholder="Flood damage isolates the northern villages before relief can arrive."></textarea>
+              </label>
+              <label>
+                <span>Unresolved promise</span>
+                <textarea id="unresolved-promise" name="unresolved-promise" rows="3" required maxlength="240" placeholder="The stolen relief ledger still names a hidden buyer."></textarea>
+              </label>
+              <label class="field-wide">
+                <span>Players' next intention</span>
+                <textarea id="next-intention" name="next-intention" rows="3" required maxlength="240" placeholder="Travel north with the first relief convoy and identify who diverted the supplies."></textarea>
+              </label>
+            </div>
+            <div class="planner-actions">
+              <button class="button primary" type="submit">Build next-session brief</button>
+              <button class="button reset-button" type="reset">Clear</button>
+            </div>
+          </form>
+
+          <section class="brief-output" id="brief-output" aria-live="polite" hidden>
+            <div class="brief-heading">
+              <div>
+                <p class="kicker">Generated locally</p>
+                <h3 id="brief-title">Next-session brief</h3>
+              </div>
+              <p id="brief-status" role="status">Brief ready.</p>
+            </div>
+            <pre id="brief-text" tabindex="0" aria-labelledby="brief-title"></pre>
+            <div class="planner-actions">
+              <button class="button primary" id="copy-brief" type="button">Copy brief</button>
+              <button class="button download-button" id="download-brief" type="button">Download Markdown</button>
+              <a class="text-link" href="../campaign-workspace/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_tool&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=planner_workspace_handoff">Continue in Campaign Workspace</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section media-band">
+      <div class="inner media-layout">
+        <figure>
+          <img src="../world-foundry/assets/campaign-workspace-preview-v1.png" alt="Campaign Workspace showing campaign canon, active pressures, and a generated next-session brief" width="1425" height="891" loading="lazy">
+          <figcaption>Campaign Workspace preserves the same five-fact consequence loop across later sessions.</figcaption>
+        </figure>
+        <div>
+          <p class="kicker">When one brief becomes a campaign</p>
+          <h2>Preserve the state you will need next week</h2>
+          <p>Campaign Workspace records committed outcomes, active pressures, faction posture, and a deterministic next-session brief in the browser. Portable JSON and Markdown keep the campaign recoverable without requiring an account.</p>
+          <ul class="check-list">
+            <li>Local campaign state with backup recovery</li>
+            <li>Atomic outcome and pressure updates</li>
+            <li>Five-beat next-session preparation</li>
+            <li>Portable JSON, Markdown, and print closeout</li>
+          </ul>
+          <a class="button continuation-button" href="../campaign-workspace/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_guide&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=workspace_primary_handoff">Open the free campaign tracker</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section continuation-band">
+      <div class="inner media-layout reverse">
+        <div>
+          <p class="kicker">Worked continuation</p>
+          <h2>See four endings become one coherent arc</h2>
+          <p>Gullwatch Aftermath carries each Beacon ending into three linked sessions without pretending every table made the same choice. Preview the branch logic, relief ledger, drowned relay, and final warning-network decision for free.</p>
+          <div class="workspace-actions">
+            <a class="button dark" href="../gullwatch-aftermath/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_guide&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=aftermath_preview_handoff">Preview Gullwatch Aftermath</a>
+            <a class="text-link" href="../run-one-shot-tonight/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_guide&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=run_tonight_companion">Need the first-session workflow?</a>
+          </div>
+        </div>
+        <figure>
+          <img src="../gullwatch-aftermath/assets/gullwatch-aftermath-cover-v1.png" alt="Gullwatch Aftermath campaign continuation cover showing a storm-flooded harbor and beacon" width="1400" height="1120" loading="lazy">
+          <figcaption>A complete example of consequence-first campaign continuation.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section faq-band" aria-labelledby="faq-title">
+      <div class="inner">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">Continuation questions</p>
+            <h2 id="faq-title">Keep only what changes play</h2>
+          </div>
+          <p>The method is intentionally small: enough continuity to make the next session matter, without converting the one-shot into a transcript.</p>
+        </div>
+        <div class="faq-grid">
+          <article>
+            <h3>Does the one-shot need an unresolved ending to become a campaign?</h3>
+            <p>No. A complete victory still changes relationships, advances pressures elsewhere, and creates obligations or opportunities that can open the next session.</p>
+          </article>
+          <article>
+            <h3>How many facts should I keep after a one-shot?</h3>
+            <p>Keep five: the ending truth, one changed relationship, one advanced pressure, one unresolved promise, and the players' next intention.</p>
+          </article>
+          <article>
+            <h3>Does the Continuation Planner store or upload campaign notes?</h3>
+            <p>No. The planner runs in the current browser page, does not use an account, and only copies or downloads a brief when you explicitly choose that action.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section route-section">
+      <div class="inner">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">After the free workflow</p>
+            <h2>Add only the material the campaign now needs</h2>
+          </div>
+          <p>The World Foundry selector recommends one relevant standalone module from your current problem. Each paid module is a separate $3 offline toolkit; bundles remain unavailable.</p>
+        </div>
+        <div class="route-grid single-route">
+          <article>
+            <span>Optional $3 toolkits</span>
+            <h3>Choose the next World Foundry module</h3>
+            <p>Start from the gap in the campaign: a quest contract, an encounter, a merchant, crafting data, item records, or an enemy loot profile.</p>
+            <a href="../choose-world-foundry-module/?utm_source=one_shot_to_campaign_guide&amp;utm_medium=seo_guide&amp;utm_campaign=ltw_search_acquisition_v2&amp;utm_content=post_value_paid_selector">Open the module selector</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="inner footer-inner">
+      <div>
+        <strong>Loot Table Works</strong>
+        <p>Original, system-neutral campaign tools for consequences that survive the session.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../">Home</a>
+        <a href="../free-rpg-tools/">Free tools</a>
+        <a href="../press-kit/">Press kit</a>
+        <a href="mailto:loottableworks@gmail.com">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
