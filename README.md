@@ -46,6 +46,10 @@ No account is required. Imported campaign data stays in your browser. Campaign W
 
 All tools run in the browser without an account. Data is not uploaded or analyzed remotely. Tools that offer an explicit local-save feature may write that save to browser storage on your device.
 
+## Privacy and Measurement
+
+Seven public acquisition pages use privacy-focused aggregate measurement to distinguish reach from fixed funnel actions. The measurement boundary excludes the core generators, Campaign Workspace field-test route, imported files, campaign text, generated content, saved state, seeds, and exports. It uses no cookies or persistent user identifiers, honors Do Not Track, reduces unknown sources to a generic label, and offers a browser-level opt-out. See the public [privacy and measurement page](https://loottableworks.github.io/loot-drop-calculator/privacy/) for the exact boundary.
+
 ## Integration Guides
 
 The public guide cluster covers RPG JSON schema design, Unity JsonUtility imports, Godot 4 Resource imports, TypeScript data models, loot-table validation, and game-economy integration. Each article includes original examples, relevant free-tool workflows, and links only to the six verified public standalone modules.

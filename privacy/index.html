@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="How Loot Table Works measures aggregate acquisition and fixed funnel actions without cookies, user profiles, or campaign-content collection.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1718">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/privacy/">
+    <title>Privacy and Measurement | Loot Table Works</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header>
+      <a class="wordmark" href="../">Loot Table Works</a>
+      <span>Privacy and measurement</span>
+    </header>
+
+    <main id="main">
+      <section class="intro">
+        <p class="eyebrow">A narrow measurement boundary</p>
+        <h1>Aggregate counts, not player profiles.</h1>
+        <p>Loot Table Works measures a small set of public acquisition pages so we can tell whether people reach a useful tool, download the free kit, or inspect a paid module. The generators and campaign data remain local to your browser.</p>
+      </section>
+
+      <section aria-labelledby="collect-title">
+        <h2 id="collect-title">What is counted</h2>
+        <ul>
+          <li>Aggregate views of seven public acquisition pages.</li>
+          <li>A fixed source label such as Pinterest, Mastodon, YouTube, GitHub, or direct.</li>
+          <li>Fixed events for the Gullwatch download, a workflow handoff, or one of six paid-module links.</li>
+          <li>Coarse browser, system, country, language, and screen-width totals supplied by GoatCounter.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="exclude-title">
+        <h2 id="exclude-title">What is not collected</h2>
+        <ul>
+          <li>No cookies, advertising pixels, cross-site profiles, email addresses, account IDs, or user-entered names.</li>
+          <li>No campaign text, imported JSON or CSV, generated adventure, saved state, search term, seed, or exported file.</li>
+          <li>No raw query string or free-form campaign label. Unknown sources are reduced to a generic external label.</li>
+          <li>No analytics on the Campaign Workspace field-test route or inside the core generators.</li>
+          <li>No individual-pageview storage in GoatCounter; that optional setting must remain disabled.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="control-title">
+        <h2 id="control-title">Control on this device</h2>
+        <p>Do Not Track is honored. You can also exclude this browser from Loot Table Works measurement. This preference is stored only in this browser.</p>
+        <div class="controls">
+          <button type="button" id="disable-metrics">Exclude this browser</button>
+          <button type="button" id="enable-metrics" class="secondary">Allow aggregate counts</button>
+        </div>
+        <p id="metrics-status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="provider-title">
+        <h2 id="provider-title">Measurement provider</h2>
+        <p>We use GoatCounter, a privacy-focused, open-source analytics service. It does not use cookies or persistent user identifiers. Its standard aggregate mode stores computed totals rather than raw IP addresses or user-agent strings.</p>
+        <p><a href="https://www.goatcounter.com/help/privacy" rel="noopener">Read GoatCounter's privacy details</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Loot Table Works</span>
+      <a href="../">Return to the main site</a>
+    </footer>
+    <script src="controls.js"></script>
+  </body>
+</html>
