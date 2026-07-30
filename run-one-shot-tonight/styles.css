@@ -82,7 +82,7 @@ button:focus-visible {
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  background: var(--night) url("../gullwatch-beacon/assets/gullwatch-beacon-cover-v1.png") center 42% / cover no-repeat;
+  background: var(--night) url("../one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg") center 48% / cover no-repeat;
   color: #fff;
 }
 
@@ -207,6 +207,84 @@ h2 {
 .proof-grid span {
   color: var(--muted);
   font-size: .78rem;
+}
+
+.ideas-section {
+  background: var(--surface);
+}
+
+.idea-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+
+.idea-grid article {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.5rem 0;
+  border-top: 4px solid var(--sea);
+  border-bottom: 1px solid var(--line);
+}
+
+.idea-grid article:nth-child(4n + 2),
+.idea-grid article:nth-child(4n + 3) {
+  border-top-color: var(--brass);
+}
+
+.idea-grid article:nth-child(4n) {
+  border-top-color: var(--signal);
+}
+
+.idea-grid article > span {
+  color: var(--muted);
+  font-size: .74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.idea-grid h3 {
+  margin: .35rem 0 .5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.idea-grid p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.idea-grid dl {
+  margin: 1rem 0;
+}
+
+.idea-grid dl div {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: .65rem;
+  padding: .45rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.idea-grid dt {
+  color: var(--sea-dark);
+  font-size: .76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.idea-grid dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: .86rem;
+}
+
+.idea-grid article > a {
+  margin-top: auto;
+  font-weight: 850;
 }
 
 .section {
@@ -565,6 +643,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .idea-grid {
+    grid-template-columns: 1fr;
+  }
+
   .five-facts {
     grid-template-columns: 1fr;
   }
@@ -597,7 +679,7 @@ footer {
 
   .hero {
     min-height: 76vh;
-    background-position: 58% 42%;
+    background-position: 58% 48%;
   }
 
   .hero-shade {

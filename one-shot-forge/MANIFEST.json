@@ -1,6 +1,6 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -20,8 +20,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 3046,
-      "sha256": "4c66ae7dfb4039038100e51264891ad57aaa80a2c9f7496525613db4284bebfa"
+      "bytes": 3084,
+      "sha256": "3a59784d806c41dafdd07d4c6691c5b7452c6e0c4b2de10706007bc9c07b601b"
     },
     {
       "path": "USAGE-TERMS.md",
@@ -30,8 +30,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 19401,
-      "sha256": "0fee7d1935fc723ec488eac05a0c8fcd2528b80fb8880c6d9b612417f6e686f9"
+      "bytes": 19427,
+      "sha256": "8d29046a6012363d8a265710411825e61ba7aecfd00c99222a983e6f3bcd94c3"
     },
     {
       "path": "assets/one-shot-forge-six-region-atlas-v1.jpg",

@@ -1,17 +1,21 @@
 {
-  "version": "1.0.0",
-  "release_id": "run-one-shot-tonight-v1",
-  "approved_at": "2026-07-28T15:09:41-07:00",
+  "version": "2.0.0",
+  "release_id": "run-one-shot-tonight-v2",
+  "approved_at": "2026-07-30T11:53:28.2192061-07:00",
   "authority": "delegated_internal_aaa_qa",
   "publication_allowed": true,
-  "scope": "Search-focused system-neutral GM field guide for the verified Gullwatch Beacon to Campaign Workspace workflow.",
+  "scope": "Search-focused system-neutral GM guide with twelve original one-shot premises across six regions, direct preconfigured generator routes, a verified five-step play workflow, and contextual paid-module handoffs.",
   "qa": {
-    "functional_tests_passed": 9,
-    "desktop_render": "passed_1280x720_aftermath_handoff",
-    "mobile_render": "passed_390x844_aftermath_handoff",
+    "functional_tests_passed": 10,
+    "desktop_render": "passed_1440x900_twelve_ideas",
+    "mobile_render": "passed_390x844_twelve_ideas",
     "horizontal_overflow_count": 0,
     "broken_image_count": 0,
-    "source_coded_acquisition_links": 12,
+    "runtime_errors": 0,
+    "original_one_shot_ideas": 12,
+    "regions_covered": 6,
+    "source_coded_acquisition_links": 23,
+    "preconfigured_generator_routes": 13,
     "public_paid_standalone_destinations": 3,
     "bundle_destinations": 0,
     "background_analytics": false,
@@ -20,38 +24,27 @@
   },
   "evidence": [
     {
-      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-hero.png",
-      "sha256": "25733902fb38fa062e975adbf55eb672302c34414e10a87a740187bda9eefc9b"
+      "path": "quality/evidence/run-one-shot-tonight-v2/desktop-hero-1440x900.png",
+      "sha256": "1cfc1631feeac00601271f7c5359af028b3c31af420b065bc7a6e5bdab7d65dc"
     },
     {
-      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-workflow.png",
-      "sha256": "6310e589c6b95e87cc5e01b7f7de5120c933dfc44b36f46b25dd7fac0535ebce"
+      "path": "quality/evidence/run-one-shot-tonight-v2/desktop-ideas-1440x900.png",
+      "sha256": "77a9a25ba9de059fc14f3168159bfe561b5b80fa8ce0d06e3febb9d3dec98554"
     },
     {
-      "path": "quality/evidence/run-one-shot-tonight-v1/desktop-1440x1000-continuity.png",
-      "sha256": "5b22e085c53735351b896bd1d3695e1d92e5e137680ab0e19683e943adfef228"
+      "path": "quality/evidence/run-one-shot-tonight-v2/mobile-hero-390x844.png",
+      "sha256": "fe68343831dea4990f99b9be13362d3211923f4c58cb72f9a5d0699933f788c3"
     },
     {
-      "path": "quality/evidence/run-one-shot-tonight-v1/mobile-390x844-hero.png",
-      "sha256": "a2962e987c5ab14edd8380869850aeddad21e61381f4fc899466c648241b45c0"
-    },
-    {
-      "path": "quality/evidence/run-one-shot-tonight-v1/mobile-390x844-continuity.png",
-      "sha256": "a53df8052c9d23a974f672dc965f97c34f6179430ca8f0d9ef037d0e84f4911d"
-    },
-    {
-      "path": "quality/evidence/gullwatch-aftermath-owned-preview-v1/guide-handoff-desktop-1280x720.png",
-      "sha256": "833eac6a32a7a22e18917b37f800fa6f5036e759f7e30cdfabed583a42c2deed"
-    },
-    {
-      "path": "quality/evidence/gullwatch-aftermath-owned-preview-v1/guide-handoff-mobile-390x844-frame.png",
-      "sha256": "fd725ea1a5d85e2158e9a8a5d29c6364ba2e31e7a6ef944dc5eeae373680ddd0"
+      "path": "quality/evidence/run-one-shot-tonight-v2/mobile-ideas-390x844.png",
+      "sha256": "8e5ea983e73270f2082a0b535cca6c7412a24387aaba634fdbb9d58a1ad47ab5"
     }
   ],
   "stop_conditions": [
     "Any source or staged hash drift",
     "Any broken public destination",
     "Any desktop or mobile overflow",
+    "Any loss of owned-guide attribution at the paid handoff",
     "Any changed price, license, AI disclosure, or product-content claim",
     "Any unreviewed bundle or private offer link"
   ]

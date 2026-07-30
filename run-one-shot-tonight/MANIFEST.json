@@ -1,35 +1,35 @@
 {
-  "release_id": "run-one-shot-tonight-v1",
-  "prepared_at": "2026-07-28T22:11:01.881Z",
+  "release_id": "run-one-shot-tonight-v2",
+  "prepared_at": "2026-07-30T18:54:22.733Z",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/",
-  "promise": "Choose one urgent promise, run it tonight, record the ending, and prepare the next session from consequences.",
+  "promise": "Choose one of twelve original premises, generate the complete one-shot, run it tonight, and preserve the ending.",
   "free_destinations": 3,
   "paid_standalone_destinations": 3,
   "bundle_destinations": 0,
   "background_analytics": false,
   "publication_allowed": true,
   "release_authority": "delegated_internal_aaa_qa",
-  "approved_at": "2026-07-28T15:09:41-07:00",
+  "approved_at": "2026-07-30T11:53:28.2192061-07:00",
   "files": [
     {
       "path": "index.html",
-      "bytes": 18112,
-      "sha256": "3f781a7b5929c363658e3e045a0c7566dd9e73bdc9d4e5c158db057541f306cb"
+      "bytes": 30118,
+      "sha256": "fbdb34fbfbeb47f54e4cc5174e98d4d124a0e50f9ed94eae8e099a80f8ddbc3b"
     },
     {
       "path": "styles.css",
-      "bytes": 10537,
-      "sha256": "d1d9e77478d51a4ab13e9b46a14f120e0ce0704b37fb8e60e6acd271c1b47e45"
+      "bytes": 11900,
+      "sha256": "a0fbdb708b7798bb819d0ccb2ee8a9b420e4c790d484c603a2789cd65fdb00d0"
     },
     {
       "path": "README.md",
-      "bytes": 945,
-      "sha256": "dd28cd2924df9ccb11f1c97094a99966b37ea1b820076cf80a36bbb2b41b94fe"
+      "bytes": 1095,
+      "sha256": "1c90e71e92f64abc914587c133ee7082f490033f7b8b3d3ce1e5542d99f2cd2a"
     },
     {
       "path": "release-approval.json",
-      "bytes": 2393,
-      "sha256": "7bf0a9a980f3e41e7d63d7f5e33c1138c8273f2f8b785008254b1acfc629441d"
+      "bytes": 2077,
+      "sha256": "7669b6861d9688ffd03154f637ff690b8cdeea1c741e3229914763d9c0bb3219"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Run a One-Shot Tonight
 
-Search-focused, system-neutral GM field guide for the verified Loot Table Works flagship workflow:
+Search-focused, system-neutral GM field guide with twelve original premises across six regions and the verified Loot Table Works flagship workflow:
 
 1. choose one urgent promise;
 2. prepare only reachable material;
@@ -8,7 +8,7 @@ Search-focused, system-neutral GM field guide for the verified Loot Table Works 
 4. record the ending as facts; and
 5. prepare the next session from consequences.
 
-The page routes readers to the complete free Gullwatch Beacon kit, One-Shot Forge, Campaign Workspace, and three already-public $3 contextual modules. It contains no background analytics, hosted runtime dependency, bundle link, or third-party compatibility claim.
+The page routes each premise into One-Shot Forge with fixed region, tone, threat, duration, party, and tier controls. It also routes readers to the complete free Gullwatch Beacon kit, Campaign Workspace, and three already-public $3 contextual modules. It contains no background analytics, hosted runtime dependency, bundle link, or third-party compatibility claim.
 
 ## Validate
 

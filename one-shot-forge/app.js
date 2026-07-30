@@ -16,6 +16,7 @@
     "owned_site",
     "pinterest",
     "press_kit",
+    "run_one_shot_guide",
     "the_compendium",
     "tiktok",
     "tribality",
