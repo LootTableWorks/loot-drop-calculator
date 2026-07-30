@@ -1,6 +1,6 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -18,8 +18,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 1681,
-      "sha256": "fd8ade35b3e6e99f44e0b207b53b20eba4a0ff5980ac66299ad4002e86d8d52c"
+      "bytes": 1767,
+      "sha256": "ebb8ced3e58e651c3d7a24fd33e89e418ded226c7b7a440aeab58566b3b1fa19"
     },
     {
       "path": "USAGE-TERMS.md",
@@ -28,8 +28,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 18710,
-      "sha256": "ba9731de5011e21096a8e29757321bf31826440fb5605bd2876c44985e0b635b"
+      "bytes": 18776,
+      "sha256": "d53a81274267cc7b9ba2e0bc6ceba8dd9320bcafd088fed1536be30fa4325d9d"
     },
     {
       "path": "assets/one-shot-forge-coastal-map-v1.jpg",
@@ -53,8 +53,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 10327,
-      "sha256": "67b7c59c96547a28b433540ab914822a49d84942a640f13ade9a01079095d154"
+      "bytes": 10670,
+      "sha256": "5f809b9aa059713fd3d7be30b45d1f12418709a441e84686d09d0a948518342e"
     },
     {
       "path": "one-shot-core.js",

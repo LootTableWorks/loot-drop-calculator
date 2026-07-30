@@ -13,7 +13,7 @@ Each seed generates:
 
 Campaign Start export preserves an incoming Campaign Launchpad scope. Direct three-hour Standard adventures use the Full evening scope. Other direct adventures must use one of the contract-compatible duration and threat pairs: Forgiving / 2 hours, Standard / 3 hours, or Dangerous / 4 hours.
 
-The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. Downstream product links preserve only fixed, approved campaign labels or approved referring-host labels. Unknown source values and hostnames are discarded; no path, user identifier, or browsing history is preserved. No bundle or private-offer destination is exposed.
+The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. Downstream product links preserve only fixed, approved campaign labels or approved referring-host labels, including the public `the_compendium` campaign label and `compendium.tools` referrer. Unknown source values and hostnames are discarded; no path, user identifier, or browsing history is preserved. No bundle or private-offer destination is exposed.
 
 ## Public release boundary
 

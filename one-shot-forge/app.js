@@ -16,12 +16,14 @@
     "owned_site",
     "pinterest",
     "press_kit",
+    "the_compendium",
     "tiktok",
     "tribality",
     "youtube"
   ]);
   const allowedReferrerOrigins = new Map([
     ["bsky.app", "bluesky"],
+    ["compendium.tools", "the_compendium"],
     ["github.com", "github"],
     ["instagram.com", "instagram"],
     ["itch.io", "itch_io"],
