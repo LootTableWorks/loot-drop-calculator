@@ -24,6 +24,7 @@
     survival: Object.freeze({ label: "Survival", tone: "peril", products: ["encounters", "loot", "recipes"] })
   });
   const THREAT_SEGMENTS = Object.freeze({ forgiving: 4, standard: 5, dangerous: 6 });
+  const ONE_SHOT_REGIONS = Object.freeze(["any", "coastal", "desert", "marsh", "ruins", "tundra", "urban"]);
 
   function isObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -117,14 +118,18 @@
   }
 
   function expectedAdventureId(oneShot) {
-    return `osf-${hexHash([
+    const controls = [
       oneShot.seed,
       oneShot.tone,
-      oneShot.threat,
+      oneShot.threat
+    ];
+    if (isNonEmptyString(oneShot.region_filter)) controls.push(oneShot.region_filter);
+    controls.push(
       oneShot.duration_minutes,
       oneShot.party_size,
       oneShot.maximum_tier
-    ].join("|"))}`;
+    );
+    return `osf-${hexHash(controls.join("|"))}`;
   }
 
   function validateLaunchpad(plan) {
@@ -298,6 +303,8 @@
     requireString(oneShot.logline, "oneShot.logline", errors);
     if (!["heroic", "mystery", "peril"].includes(oneShot.tone)) addError(errors, "oneShot.tone", `unsupported tone "${oneShot.tone}".`);
     if (!Object.hasOwn(THREAT_SEGMENTS, oneShot.threat)) addError(errors, "oneShot.threat", `unsupported threat "${oneShot.threat}".`);
+    if (oneShot.region_filter !== undefined && !ONE_SHOT_REGIONS.includes(oneShot.region_filter)) addError(errors, "oneShot.region_filter", `unsupported region filter "${oneShot.region_filter}".`);
+    if (oneShot.region !== undefined && !ONE_SHOT_REGIONS.slice(1).includes(oneShot.region)) addError(errors, "oneShot.region", `unsupported generated region "${oneShot.region}".`);
     if (![120, 180, 240].includes(oneShot.duration_minutes)) addError(errors, "oneShot.duration_minutes", "must be 120, 180, or 240.");
     if (!Number.isInteger(oneShot.party_size) || oneShot.party_size < 3 || oneShot.party_size > 6) {
       addError(errors, "oneShot.party_size", "must be an integer from 3 through 6.");
@@ -308,6 +315,7 @@
     if (isNonEmptyString(oneShot.seed)
       && ["heroic", "mystery", "peril"].includes(oneShot.tone)
       && Object.hasOwn(THREAT_SEGMENTS, oneShot.threat)
+      && (oneShot.region_filter === undefined || ONE_SHOT_REGIONS.includes(oneShot.region_filter))
       && [120, 180, 240].includes(oneShot.duration_minutes)
       && Number.isInteger(oneShot.party_size)
       && Number.isInteger(oneShot.maximum_tier)) {

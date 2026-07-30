@@ -1,14 +1,16 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
   "public_release_requires_review": false,
   "release_authority": "delegated_internal_aaa_qa",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/",
-  "source_entities": 74,
-  "source_relationships": 199,
+  "source_regions": 6,
+  "runtime_entities": 203,
+  "runtime_references": 291,
+  "encounter_foundations": 29,
   "scenes_per_packet": 5,
   "pregenerated_characters_min": 3,
   "pregenerated_characters_max": 6,
@@ -18,8 +20,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 2678,
-      "sha256": "96f96b93a3bf056e651965b8cfa83c0df47b47956833577210e1e7e81681fe53"
+      "bytes": 3046,
+      "sha256": "4c66ae7dfb4039038100e51264891ad57aaa80a2c9f7496525613db4284bebfa"
     },
     {
       "path": "USAGE-TERMS.md",
@@ -28,13 +30,13 @@
     },
     {
       "path": "app.js",
-      "bytes": 18786,
-      "sha256": "ad88fcecc9ff7f8abaca3dd352ba539e3642349d9468438f56737f2968605557"
+      "bytes": 19401,
+      "sha256": "0fee7d1935fc723ec488eac05a0c8fcd2528b80fb8880c6d9b612417f6e686f9"
     },
     {
-      "path": "assets/one-shot-forge-coastal-map-v1.jpg",
-      "bytes": 508741,
-      "sha256": "9d3f5ed81f918b5e5fbf5d3b6316ddf522465e2422d05f1cc0b9e5179bef1b7c"
+      "path": "assets/one-shot-forge-six-region-atlas-v1.jpg",
+      "bytes": 676008,
+      "sha256": "5db90cf64cdb4169c0d4a9f5cf5e58862722e4534a47c1ea94d9c00fc163380e"
     },
     {
       "path": "campaign-start-adapter.js",
@@ -43,8 +45,8 @@
     },
     {
       "path": "campaign-start-contract.js",
-      "bytes": 29613,
-      "sha256": "ccea108344deebf80529b530eff663a1836523d2ea8851fdad8c82efc9f84cbf"
+      "bytes": 30344,
+      "sha256": "03e4e52ffdbee7cdddb36f56498f85af66f3856343f0fecae779dcbaef8687e6"
     },
     {
       "path": "campaign-start-launchpad-core.js",
@@ -53,23 +55,23 @@
     },
     {
       "path": "index.html",
-      "bytes": 12379,
-      "sha256": "22de982b49651f743605f59d50f136846ad913b068b8426580eb1d944f684a45"
+      "bytes": 13216,
+      "sha256": "5cfbb51f2259cd826fb66a48aeca540c3a929423f37da0506520c7ff18c0be0e"
     },
     {
       "path": "one-shot-core.js",
-      "bytes": 21443,
-      "sha256": "9090dd7fac0353861cdf775ab6e971afc26dd112486bbf844c7bce81f9272c41"
+      "bytes": 26109,
+      "sha256": "6c5c3ae18af0891032813d91c4216f8d94eab5ee63c9a69c5888eb1b8c3c4b4c"
     },
     {
       "path": "one-shot-data.js",
-      "bytes": 218292,
-      "sha256": "047e0272d1e222de22af36be524dec6729bdb8f5e1e0b73db1f3fced217089a4"
+      "bytes": 145384,
+      "sha256": "d823791ed44d805488752d04993a15ceb600d67e76803865de941ffbec08f394"
     },
     {
       "path": "styles.css",
-      "bytes": 17316,
-      "sha256": "55f14ce77cd7f60d91f46ef95d9066218dcc2f01b55952022de2ec9c82b0122d"
+      "bytes": 17517,
+      "sha256": "683b223fe24d4207c9e696bd2856ae256591ff5cf73bd3e58c4777e9698c4af4"
     }
   ]
 }

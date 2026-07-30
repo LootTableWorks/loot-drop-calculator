@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Generate a complete, deterministic fantasy one-shot with a five-scene run sheet, clues, countdown, scaled opposition, pregenerated characters, and Markdown or JSON export.">
+    <meta name="description" content="Generate a complete system-neutral fantasy one-shot across six original regions, with a five-scene run sheet, clues, scaled opposition, pregenerated characters, and Markdown or JSON export.">
     <meta name="author" content="Loot Table Works">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="theme-color" content="#20272a">
@@ -11,21 +11,21 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Loot Table Works">
     <meta property="og:title" content="One-Shot Forge | Free Fantasy Adventure Generator">
-    <meta property="og:description" content="A complete system-neutral one-shot, timed run sheet, fail-forward clues, and ready-to-play party from one reproducible seed.">
+    <meta property="og:description" content="A complete system-neutral one-shot across six original regions, with a timed run sheet, fail-forward clues, and ready-to-play party.">
     <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/">
-    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-coastal-map-v1.jpg">
-    <meta property="og:image:width" content="1731">
-    <meta property="og:image:height" content="909">
-    <meta property="og:image:alt" content="One-Shot Forge coastal adventure map showing a beacon island, harbor route, marsh, encounter points, and four party markers.">
+    <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg">
+    <meta property="og:image:width" content="1727">
+    <meta property="og:image:height" content="911">
+    <meta property="og:image:alt" content="Original fantasy atlas connecting a coastal beacon, archive ruins, brass city, desert well, marsh pump house, and tundra survey camp.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="One-Shot Forge | Free Fantasy Adventure Generator">
-    <meta name="twitter:description" content="Generate a complete system-neutral one-shot, timed run sheet, fail-forward clues, and ready-to-play party from one reproducible seed.">
-    <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-coastal-map-v1.jpg">
-    <meta name="twitter:image:alt" content="One-Shot Forge coastal adventure map showing a beacon island, harbor route, marsh, encounter points, and four party markers.">
-    <link rel="icon" href="assets/one-shot-forge-coastal-map-v1.jpg" type="image/jpeg">
-    <title>Free One-Shot Campaign Generator | Loot Table Works</title>
+    <meta name="twitter:description" content="Generate a complete system-neutral one-shot across six original regions, with a timed run sheet, fail-forward clues, and ready-to-play party.">
+    <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg">
+    <meta name="twitter:image:alt" content="Original fantasy atlas connecting a coastal beacon, archive ruins, brass city, desert well, marsh pump house, and tundra survey camp.">
+    <link rel="icon" href="assets/one-shot-forge-six-region-atlas-v1.jpg" type="image/jpeg">
+    <title>Free TTRPG One-Shot Generator | Loot Table Works</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"One-Shot Forge","url":"https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/","description":"Free, deterministic fantasy one-shot generator with a five-scene run sheet, fail-forward clues, scaled opposition, pregenerated characters, and Markdown or JSON export.","applicationCategory":"GameApplication","applicationSubCategory":"Tabletop role-playing game tool","operatingSystem":"Any","browserRequirements":"Requires JavaScript; runs locally in a modern web browser.","inLanguage":"en","isAccessibleForFree":true,"featureList":["Reproducible adventure seeds","Two-, three-, or four-hour run sheets","Three to six pregenerated characters","Fail-forward clues and pressure clocks","Markdown and JSON export","Voluntary four-question GM field report"],"screenshot":"https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-coastal-map-v1.jpg","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},"creator":{"@type":"Organization","name":"Loot Table Works","url":"https://loottableworks.github.io/loot-drop-calculator/"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"One-Shot Forge","url":"https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/","description":"Free, deterministic system-neutral fantasy one-shot generator with six original regions, 29 encounter foundations, a five-scene run sheet, fail-forward clues, scaled opposition, pregenerated characters, and Markdown or JSON export.","applicationCategory":"GameApplication","applicationSubCategory":"Tabletop role-playing game tool","operatingSystem":"Any","browserRequirements":"Requires JavaScript; runs locally in a modern web browser.","inLanguage":"en","isAccessibleForFree":true,"featureList":["Six original fantasy regions","29 encounter foundations","Reproducible adventure seeds","Two-, three-, or four-hour run sheets","Three to six pregenerated characters","Fail-forward clues and pressure clocks","Markdown and JSON export","Voluntary four-question GM field report"],"screenshot":"https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},"creator":{"@type":"Organization","name":"Loot Table Works","url":"https://loottableworks.github.io/loot-drop-calculator/"}}</script>
   </head>
   <body>
     <header class="app-header">
@@ -60,6 +60,19 @@
             <button class="icon-button" id="random-seed" type="button" title="Create a new seed">New</button>
           </div>
         </div>
+
+        <label class="field" for="region">
+          <span>Region</span>
+          <select id="region" name="region">
+            <option value="any">Any region</option>
+            <option value="coastal">Saltglass Coast</option>
+            <option value="desert">Emberroad Expanse</option>
+            <option value="marsh">Reedlight Marsh</option>
+            <option value="ruins">Ashen Index Ruins</option>
+            <option value="tundra">Whiteglass Frontier</option>
+            <option value="urban">Brass Bell City</option>
+          </select>
+        </label>
 
         <fieldset class="segmented-field">
           <legend>Tone</legend>
@@ -101,7 +114,8 @@
         <button class="generate-button" id="generate" type="button">Forge one-shot</button>
         <dl class="integrity-ledger">
           <div><dt>Runtime</dt><dd>Local</dd></div>
-          <div><dt>Source graph</dt><dd>74 / 199</dd></div>
+          <div><dt>Regions</dt><dd>6</dd></div>
+          <div><dt>Runtime model</dt><dd>203 / 291 refs</dd></div>
           <div><dt>Unresolved</dt><dd id="rail-missing">0</dd></div>
         </dl>
       </aside>
@@ -133,8 +147,8 @@
 
         <section class="adventure-overview">
           <figure class="adventure-map">
-            <img src="assets/one-shot-forge-coastal-map-v1.jpg" alt="Illustrated coastal adventure map showing a beacon island, harbor route, marsh, encounter points, and four party markers.">
-            <figcaption><span id="map-label">Gullwatch route</span><strong id="map-proof">0 missing references</strong></figcaption>
+            <img src="assets/one-shot-forge-six-region-atlas-v1.jpg" alt="Original fantasy atlas connecting a coastal beacon, archive ruins, brass city, desert well, marsh pump house, and tundra survey camp.">
+            <figcaption><span id="map-label">Six-region atlas</span><strong id="map-proof">0 missing references</strong></figcaption>
           </figure>
           <div class="mission-brief">
             <p class="section-label">Mission brief</p>

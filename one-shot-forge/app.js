@@ -39,6 +39,7 @@
   const state = {
     tone: "heroic",
     threat: "standard",
+    region: "any",
     durationMinutes: 180,
     activeTab: "run-sheet",
     campaignScope: null,
@@ -55,6 +56,7 @@
   };
   const elements = {
     seed: document.querySelector("#seed"),
+    region: document.querySelector("#region"),
     partySize: document.querySelector("#party-size"),
     partySizeOutput: document.querySelector("#party-size-output"),
     maximumTier: document.querySelector("#maximum-tier"),
@@ -156,6 +158,7 @@
       seed: elements.seed.value.trim(),
       tone: state.tone,
       threat: state.threat,
+      region: state.region,
       duration: String(state.durationMinutes),
       party: elements.partySize.value,
       tier: elements.maximumTier.value
@@ -179,6 +182,8 @@
     if (params.get("seed")) elements.seed.value = params.get("seed").slice(0, 64);
     if (core.TONES[params.get("tone")]) state.tone = params.get("tone");
     if (core.THREATS[params.get("threat")]) state.threat = params.get("threat");
+    if (core.REGIONS[params.get("region")]) state.region = params.get("region");
+    elements.region.value = state.region;
     const duration = Number(params.get("duration"));
     if ([120, 180, 240].includes(duration)) state.durationMinutes = duration;
     const party = Number(params.get("party"));
@@ -287,8 +292,9 @@
   function render() {
     const oneShot = state.oneShot;
     const location = oneShot.source_records.location;
+    const objective = oneShot.source_records.quest.objective;
     elements.title.textContent = oneShot.title;
-    elements.meta.textContent = `${oneShot.adventure_id} | ${core.TONES[oneShot.tone].label} | ${core.THREATS[oneShot.threat].label}`;
+    elements.meta.textContent = `${oneShot.adventure_id} | ${core.REGIONS[oneShot.region].label} | ${core.TONES[oneShot.tone].label} | ${core.THREATS[oneShot.threat].label}`;
     elements.validity.textContent = oneShot.validation.valid ? "Validated packet" : "Validation failed";
     elements.validityDot.classList.toggle("invalid", !oneShot.validation.valid);
     elements.railMissing.textContent = oneShot.validation.missing_reference_count;
@@ -297,9 +303,9 @@
     elements.statCharacters.textContent = oneShot.validation.character_count;
     elements.statClues.textContent = oneShot.clues.length;
     elements.statReferences.textContent = oneShot.reference_ledger.length;
-    elements.mapLabel.textContent = `${location.name} route`;
+    elements.mapLabel.textContent = `${core.REGIONS[oneShot.region].label} | ${location.name}`;
     elements.mapProof.textContent = `${oneShot.validation.missing_reference_count} missing references`;
-    elements.loglineTitle.textContent = oneShot.source_records.quest.objective.description;
+    elements.loglineTitle.textContent = `${objective.action || "Complete"}${Number(objective.quantity || 1) > 1 ? ` ${objective.quantity}` : ""} ${objective.target_item_name || "documented objective"}`;
     elements.logline.textContent = oneShot.logline;
     elements.countdownLabel.textContent = `${oneShot.countdown.segments} segments - ${oneShot.countdown.label}`;
     elements.countdownFinal.textContent = oneShot.countdown.final_state;
@@ -318,6 +324,7 @@
         seed: elements.seed.value,
         tone: state.tone,
         threat: state.threat,
+        region: state.region,
         durationMinutes: state.durationMinutes,
         partySize: Number(elements.partySize.value),
         maximumTier: Number(elements.maximumTier.value)
@@ -341,7 +348,11 @@
 
   document.querySelector("#generate").addEventListener("click", generate);
   document.querySelector("#random-seed").addEventListener("click", () => {
-    elements.seed.value = `coast-${Math.random().toString(36).slice(2, 9)}`;
+    elements.seed.value = `adventure-${Math.random().toString(36).slice(2, 9)}`;
+    generate();
+  });
+  elements.region.addEventListener("change", () => {
+    state.region = elements.region.value;
     generate();
   });
   document.querySelectorAll("#tone-control button").forEach((button) => button.addEventListener("click", () => {

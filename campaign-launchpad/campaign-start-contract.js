@@ -9,6 +9,7 @@
   const DOCUMENT_TYPE = "loot-table-works.campaign-start";
   const LAUNCHPAD_GENERATOR = "Loot Table Works Campaign Launchpad";
   const ONE_SHOT_GENERATOR = "Loot Table Works One-Shot Forge";
+  const PRODUCER_ORIGINS = Object.freeze(["campaign_launchpad", "one_shot_forge"]);
   const TOOL_IDS = Object.freeze(["world", "party", "session", "arc", "chronicle"]);
   const PRODUCT_IDS = Object.freeze(["items", "merchants", "recipes", "loot", "quests", "encounters"]);
   const SCOPE_PRESETS = Object.freeze({
@@ -23,6 +24,7 @@
     survival: Object.freeze({ label: "Survival", tone: "peril", products: ["encounters", "loot", "recipes"] })
   });
   const THREAT_SEGMENTS = Object.freeze({ forgiving: 4, standard: 5, dangerous: 6 });
+  const ONE_SHOT_REGIONS = Object.freeze(["any", "coastal", "desert", "marsh", "ruins", "tundra", "urban"]);
 
   function isObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -116,14 +118,18 @@
   }
 
   function expectedAdventureId(oneShot) {
-    return `osf-${hexHash([
+    const controls = [
       oneShot.seed,
       oneShot.tone,
-      oneShot.threat,
+      oneShot.threat
+    ];
+    if (isNonEmptyString(oneShot.region_filter)) controls.push(oneShot.region_filter);
+    controls.push(
       oneShot.duration_minutes,
       oneShot.party_size,
       oneShot.maximum_tier
-    ].join("|"))}`;
+    );
+    return `osf-${hexHash(controls.join("|"))}`;
   }
 
   function validateLaunchpad(plan) {
@@ -297,6 +303,8 @@
     requireString(oneShot.logline, "oneShot.logline", errors);
     if (!["heroic", "mystery", "peril"].includes(oneShot.tone)) addError(errors, "oneShot.tone", `unsupported tone "${oneShot.tone}".`);
     if (!Object.hasOwn(THREAT_SEGMENTS, oneShot.threat)) addError(errors, "oneShot.threat", `unsupported threat "${oneShot.threat}".`);
+    if (oneShot.region_filter !== undefined && !ONE_SHOT_REGIONS.includes(oneShot.region_filter)) addError(errors, "oneShot.region_filter", `unsupported region filter "${oneShot.region_filter}".`);
+    if (oneShot.region !== undefined && !ONE_SHOT_REGIONS.slice(1).includes(oneShot.region)) addError(errors, "oneShot.region", `unsupported generated region "${oneShot.region}".`);
     if (![120, 180, 240].includes(oneShot.duration_minutes)) addError(errors, "oneShot.duration_minutes", "must be 120, 180, or 240.");
     if (!Number.isInteger(oneShot.party_size) || oneShot.party_size < 3 || oneShot.party_size > 6) {
       addError(errors, "oneShot.party_size", "must be an integer from 3 through 6.");
@@ -307,6 +315,7 @@
     if (isNonEmptyString(oneShot.seed)
       && ["heroic", "mystery", "peril"].includes(oneShot.tone)
       && Object.hasOwn(THREAT_SEGMENTS, oneShot.threat)
+      && (oneShot.region_filter === undefined || ONE_SHOT_REGIONS.includes(oneShot.region_filter))
       && [120, 180, 240].includes(oneShot.duration_minutes)
       && Number.isInteger(oneShot.party_size)
       && Number.isInteger(oneShot.maximum_tier)) {
@@ -455,14 +464,16 @@
   }
 
   function campaignStartFingerprint(start) {
-    return stableStringify({
+    const fingerprint = {
       schema_version: start.schema_version,
       document_type: start.document_type,
       campaign: start.campaign,
       workflow: start.workflow,
       opening_session: start.opening_session,
       source_ledger: start.source_ledger
-    });
+    };
+    if (start.producer_origin !== undefined) fingerprint.producer_origin = start.producer_origin;
+    return stableStringify(fingerprint);
   }
 
   function validateCampaignStart(start) {
@@ -470,6 +481,9 @@
     if (!isObject(start)) return { valid: false, errors: ["campaignStart: must be an object."] };
     if (start.schema_version !== VERSION) addError(errors, "campaignStart.schema_version", `must equal ${VERSION}.`);
     if (start.document_type !== DOCUMENT_TYPE) addError(errors, "campaignStart.document_type", `must equal "${DOCUMENT_TYPE}".`);
+    if (start.producer_origin !== undefined && !PRODUCER_ORIGINS.includes(start.producer_origin)) {
+      addError(errors, "campaignStart.producer_origin", "must identify Campaign Launchpad or One-Shot Forge.");
+    }
     if (!isObject(start.campaign)) addError(errors, "campaignStart.campaign", "must be an object.");
     if (!isObject(start.workflow)) addError(errors, "campaignStart.workflow", "must be a Campaign Launchpad document.");
     if (!isObject(start.opening_session)) addError(errors, "campaignStart.opening_session", "must be a One-Shot Forge document.");
@@ -530,11 +544,16 @@
     if (!pairValidation.valid) throw new Error(pairValidation.errors.join("\n"));
     const launchpad = deepClone(input.launchpad);
     const oneShot = deepClone(input.oneShot);
+    const producerOrigin = input.producerOrigin ?? "campaign_launchpad";
+    if (!PRODUCER_ORIGINS.includes(producerOrigin)) {
+      throw new Error("Campaign Start producerOrigin must identify Campaign Launchpad or One-Shot Forge.");
+    }
     const scope = SCOPE_PRESETS[launchpad.options.scope];
     const spotlight = SPOTLIGHT_PRESETS[launchpad.options.spotlight];
     const start = {
       schema_version: VERSION,
       document_type: DOCUMENT_TYPE,
+      producer_origin: producerOrigin,
       start_id: "",
       campaign: {
         seed: launchpad.options.seed,
@@ -566,6 +585,7 @@
   return {
     VERSION,
     DOCUMENT_TYPE,
+    PRODUCER_ORIGINS,
     SCOPE_PRESETS,
     SPOTLIGHT_PRESETS,
     hash,

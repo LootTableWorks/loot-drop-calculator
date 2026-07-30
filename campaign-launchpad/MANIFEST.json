@@ -44,18 +44,18 @@
     },
     {
       "path": "campaign-start-contract.js",
-      "bytes": 28874,
-      "sha256": "adb257ff08f401b61567a7099d9aa8157ebaa07057056447aeaee0b5cbc2a23d"
+      "bytes": 30344,
+      "sha256": "03e4e52ffdbee7cdddb36f56498f85af66f3856343f0fecae779dcbaef8687e6"
     },
     {
       "path": "campaign-start-one-shot-core.js",
-      "bytes": 21443,
-      "sha256": "9090dd7fac0353861cdf775ab6e971afc26dd112486bbf844c7bce81f9272c41"
+      "bytes": 26109,
+      "sha256": "6c5c3ae18af0891032813d91c4216f8d94eab5ee63c9a69c5888eb1b8c3c4b4c"
     },
     {
       "path": "campaign-start-one-shot-data.js",
-      "bytes": 218292,
-      "sha256": "047e0272d1e222de22af36be524dec6729bdb8f5e1e0b73db1f3fced217089a4"
+      "bytes": 145384,
+      "sha256": "d823791ed44d805488752d04993a15ceb600d67e76803865de941ffbec08f394"
     },
     {
       "path": "index.html",

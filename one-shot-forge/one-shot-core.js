@@ -26,24 +26,34 @@
     dangerous: Object.freeze({ label: "Dangerous", countDelta: 1, clockSegments: 6, guidance: "Advance the clock when the party ignores a telegraphed cost." })
   });
 
+  const REGIONS = Object.freeze({
+    any: Object.freeze({ label: "Any region", biome: null }),
+    coastal: Object.freeze({ label: "Saltglass Coast", biome: "coastal" }),
+    desert: Object.freeze({ label: "Emberroad Expanse", biome: "desert" }),
+    marsh: Object.freeze({ label: "Reedlight Marsh", biome: "marsh" }),
+    ruins: Object.freeze({ label: "Ashen Index Ruins", biome: "ruins" }),
+    tundra: Object.freeze({ label: "Whiteglass Frontier", biome: "tundra" }),
+    urban: Object.freeze({ label: "Brass Bell City", biome: "urban" })
+  });
+
   const CHARACTER_ROLES = Object.freeze([
     Object.freeze({ id: "trail-reader", label: "Trail Reader", edge: "Reads routes, weather, and unsafe ground before anyone commits.", burden: "Will take a worse path to keep another traveler out of danger." }),
     Object.freeze({ id: "warden", label: "Warden", edge: "Holds a threatened position and creates room for others to act.", burden: "Treats every abandoned post as a personal failure." }),
     Object.freeze({ id: "broker", label: "Broker", edge: "Finds the promise, debt, or price that changes a negotiation.", burden: "Owes a favor to someone connected to the disputed cargo." }),
     Object.freeze({ id: "scholar", label: "Field Scholar", edge: "Connects physical evidence to provenance, craft, and local history.", burden: "Cannot leave a useful record undocumented." }),
     Object.freeze({ id: "scoundrel", label: "Scoundrel", edge: "Gets through guarded spaces and spots the shortcut others miss.", burden: "A former associate recognizes their methods." }),
-    Object.freeze({ id: "adept", label: "Weather Adept", edge: "Turns wind, surf, flame, and pressure into a temporary advantage.", burden: "Their strongest technique always leaves visible evidence." })
+    Object.freeze({ id: "adept", label: "Elemental Adept", edge: "Turns wind, water, flame, and pressure into a temporary advantage.", burden: "Their strongest technique always leaves visible evidence." })
   ]);
 
   const GIVEN_NAMES = Object.freeze(["Alder", "Brin", "Caro", "Dessa", "Eris", "Fenn", "Gale", "Hollis", "Iven", "Jori", "Kest", "Lio", "Mara", "Neris", "Orin", "Perrin", "Quill", "Rhea", "Sable", "Tamsin", "Vale", "Wren"]);
   const BYNAMES = Object.freeze(["Ashwake", "Bell", "Cairn", "Dovetail", "Farrow", "Glass", "Hale", "Knot", "Morrow", "North", "Reed", "Shore", "Venn", "West"]);
   const DRIVES = Object.freeze([
     "Prove that careful preparation beats inherited authority.",
-    "Return something that was taken from the coast without consent.",
+    "Return something that was taken from the region without consent.",
     "Make sure the contract protects workers as well as property.",
     "Expose the person profiting from the route failure.",
     "Earn a place in the guild without accepting its worst customs.",
-    "Keep a promise made to someone who never returned from the beacon."
+    "Keep a promise made to someone who never returned from the site."
   ]);
   const BONDS = Object.freeze([
     "I trust {name} with evidence I would hide from anyone else.",
@@ -84,15 +94,73 @@
     const seed = String(input.seed || "beacon-47").trim().slice(0, 64) || "beacon-47";
     const tone = input.tone || "heroic";
     const threat = input.threat || "standard";
+    const region = input.region || "any";
     const durationMinutes = Number(input.durationMinutes || 180);
     const partySize = Number(input.partySize || 4);
     const maximumTier = Number(input.maximumTier || 3);
     if (!TONES[tone]) throw new Error(`Unsupported tone: ${tone}`);
     if (!THREATS[threat]) throw new Error(`Unsupported threat: ${threat}`);
+    if (!REGIONS[region]) throw new Error(`Unsupported region: ${region}`);
     if (![120, 180, 240].includes(durationMinutes)) throw new Error("durationMinutes must be 120, 180, or 240");
     if (!Number.isInteger(partySize) || partySize < 3 || partySize > 6) throw new Error("partySize must be an integer from 3 through 6");
     if (!Number.isInteger(maximumTier) || maximumTier < 1 || maximumTier > 5) throw new Error("maximumTier must be an integer from 1 through 5");
-    return { seed, tone, threat, durationMinutes, partySize, maximumTier };
+    return { seed, tone, threat, region, durationMinutes, partySize, maximumTier };
+  }
+
+  function sentenceFragment(value) {
+    const text = String(value || "").trim().replace(/[.!?]+$/, "");
+    return text ? `${text.charAt(0).toLowerCase()}${text.slice(1)}` : "complete the documented objective";
+  }
+
+  function capitalizeSentence(value) {
+    const text = String(value || "").trim().replace(/[.!?]+$/, "");
+    return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : "";
+  }
+
+  function asSentence(value) {
+    const text = capitalizeSentence(value);
+    return text ? `${text}.` : "";
+  }
+
+  function displayEnemyName(value) {
+    const words = String(value || "Opposition").trim().split(/\s+/);
+    if (words.length < 2) return words.join(" ");
+    const last = words.at(-1).toLowerCase();
+    const prior = words.at(-2).toLowerCase().replace(/s$/, "");
+    if (last === prior || last.startsWith(prior)) words.splice(-2, 1);
+    return words.join(" ");
+  }
+
+  function objectiveSummary(quest, location) {
+    const action = sentenceFragment(quest.objective.action || "Complete");
+    const quantity = Number(quest.objective.quantity || 1);
+    const target = quest.objective.target_item_name || "the documented objective";
+    return `${action} ${quantity > 1 ? `${quantity} ` : ""}${target} at ${location.name}`;
+  }
+
+  function evidenceSceneTitle(quest) {
+    const titles = {
+      crafting: "The materials fail inspection",
+      delivery: "The route terms change",
+      escort: "Custody of the objective is challenged",
+      procurement: "The agreed price no longer holds",
+      recovery: "Two claims, one objective",
+      secure: "Control of the site is disputed",
+      survey: "The records contradict the site"
+    };
+    return titles[quest.quest_type] || "The contract changes under pressure";
+  }
+
+  function encounterHeading(encounter, location) {
+    if (/^Protection\s+/i.test(encounter.encounter_name)) {
+      const room = String(encounter.room_type || "site");
+      return `Guarded ${room.charAt(0).toUpperCase()}${room.slice(1)} at ${location.name}`;
+    }
+    const prefix = `${location.name}: `;
+    const room = encounter.encounter_name.startsWith(prefix)
+      ? encounter.encounter_name.slice(prefix.length)
+      : encounter.room_name || encounter.encounter_name;
+    return `${room} at ${location.name}`;
   }
 
   function buildIndex(source) {
@@ -120,6 +188,7 @@
     const partyDelta = options.partySize <= 3 ? -1 : options.partySize >= 5 ? 1 : 0;
     return encounter.enemy_groups.map((group) => ({
       ...group,
+      enemy_name: displayEnemyName(group.enemy_name),
       base_count: group.count,
       count: Math.max(1, group.count + partyDelta + THREATS[options.threat].countDelta)
     }));
@@ -137,8 +206,8 @@
         order: 1,
         minutes: budgets[0],
         title: "The contract arrives under pressure",
-        purpose: `Put ${quest.objective.target_item_name || encounter.reward_connection_item_name} and the disputed route in front of the party immediately.`,
-        read_aloud: `${merchant?.proprietor || quest.giver_name} sets a salt-marked record on the table. The route to ${location.name} is failing, and someone else has already moved to claim what the contract names.`,
+        purpose: `Put ${quest.objective.target_item_name || encounter.reward_connection_item_name} and the route to ${location.name} in front of the party immediately.`,
+        read_aloud: `${merchant?.proprietor || quest.giver_name} sets a weather-marked contract on the table. The route to ${location.name} is failing, and the first deadline has already passed.`,
         gm_moves: [tone.framing, `State the verified reward: ${quest.reward_currency} currency${quest.reward_item_name ? ` and ${quest.reward_item_name}` : ""}.`, "Ask each character why this contract cannot wait until morning."],
         exit: "The party names its approach and one precaution."
       },
@@ -146,9 +215,9 @@
         id: "evidence-and-claimants",
         order: 2,
         minutes: budgets[1],
-        title: "Evidence points in two directions",
-        purpose: "Give the party enough truth to choose a position without resolving the dispute for them.",
-        read_aloud: quest.complication,
+        title: evidenceSceneTitle(quest),
+        purpose: "Make the contract's complication actionable without deciding the party's response for them.",
+        read_aloud: asSentence(quest.complication),
         gm_moves: [quest.alternate_resolution, `Surface the location pressure: ${location.local_hazard}.`, "On a weak result, reveal the clue but attach a social or time cost."],
         exit: "The party chooses which evidence to preserve and whose account to challenge."
       },
@@ -158,7 +227,7 @@
         minutes: budgets[2],
         title: `Reach ${location.name}`,
         purpose: "Make preparation matter before the confrontation begins.",
-        read_aloud: `${location.description} ${encounter.hazard.telegraph}.`,
+        read_aloud: `${asSentence(location.description)} ${asSentence(encounter.hazard.telegraph)}`,
         gm_moves: [location.access_condition, encounter.hazard.mitigation, "If the party spends gear or accepts delay, carry that choice forward as a concrete advantage."],
         exit: "The party reaches the objective zone and the clock has not filled."
       },
@@ -168,7 +237,7 @@
         minutes: budgets[3],
         title: encounter.encounter_name,
         purpose: encounter.tactical_purpose,
-        read_aloud: encounter.setup,
+        read_aloud: `${asSentence(encounter.hazard.telegraph)} ${primaryEnemy?.enemy_name || "The opposition"} controls the ${String(encounter.room_name || encounter.room_type || "objective zone").toLowerCase()}, and the objective cannot be completed while the route remains contested.`,
         gm_moves: [
           `${primaryEnemy?.count || 1} ${primaryEnemy?.enemy_name || "opponents"} pressure the objective${secondaryEnemy ? ` while ${secondaryEnemy.count} ${secondaryEnemy.enemy_name} threaten the alternate route` : ""}.`,
           encounter.hazard.encounter_hazard,
@@ -196,13 +265,22 @@
       { id: "clue-provenance", clue: quest.objective.description, reveals: "What must remain intact for the contract to be honored.", fail_forward: "The party learns the requirement, but the rival claimant learns their route." },
       { id: "clue-hazard", clue: encounter.hazard.telegraph, reveals: encounter.hazard.mitigation, fail_forward: "The hazard is understood only after consuming time or equipment." },
       { id: "clue-opposition", clue: rewardProfile?.behavior || encounter.escalation, reveals: rewardProfile ? `The opposition values ${rewardProfile.reward_identity}.` : "The opposition is protecting an exit, not the site itself.", fail_forward: "The clue is recovered, but the encounter begins with the route already pressured." },
-      { id: "clue-access", clue: location.access_condition, reveals: `A quieter route exists around ${location.name}.`, fail_forward: "The route works, but it fills one countdown segment." }
+      { id: "clue-access", clue: location.access_condition, reveals: `How to approach ${location.name} without letting the local hazard dictate the party's position.`, fail_forward: "The approach works, but it fills one countdown segment." }
     ];
   }
 
   function buildCharacters(context, options, source) {
     const { quest, location } = context;
-    const itemRows = ordered(source.data.items.filter((item) => item.tier <= options.maximumTier), `${options.seed}|party-items`, (item) => item.id);
+    const regionalItems = source.data.items.filter((item) =>
+      item.tier <= options.maximumTier && item.biome === location.biome
+    );
+    const itemRows = ordered(
+      regionalItems.length
+        ? regionalItems
+        : source.data.items.filter((item) => item.tier <= options.maximumTier),
+      `${options.seed}|${location.biome}|party-items`,
+      (item) => item.id
+    );
     const roles = ordered(CHARACTER_ROLES, `${options.seed}|roles`, (role) => role.id).slice(0, options.partySize);
     const names = ordered(GIVEN_NAMES, `${options.seed}|given`, (name) => name);
     const bynames = ordered(BYNAMES, `${options.seed}|byname`, (name) => name);
@@ -219,7 +297,7 @@
         bond: BONDS[index % BONDS.length].replace("{name}", nextName),
         signature_item_id: signatureItem?.id || null,
         signature_item_name: signatureItem?.name || "Weatherproof field kit",
-        adventure_tie: index % 2 === 0 ? `You have handled records from ${location.name} before, and one detail in this contract is wrong.` : `You know why ${quest.giver_name} cannot ask the harbor guilds to solve this openly.`,
+        adventure_tie: index % 2 === 0 ? `You have handled records from ${location.name} before, and one detail in this contract is wrong.` : `You know why ${quest.giver_name} cannot ask the local authorities to solve this openly.`,
         spotlight_prompt: index % 3 === 0 ? "What evidence do you notice first?" : index % 3 === 1 ? "What cost are you willing to absorb for the group?" : "Whose version of the contract do you distrust?"
       };
     });
@@ -245,8 +323,19 @@
   function generate(rawOptions, source) {
     const options = normalizeOptions(rawOptions);
     const index = buildIndex(source);
-    const candidates = source.data.encounters.filter((encounter) => encounter.tier <= options.maximumTier);
-    const encounter = ordered(candidates.length ? candidates : source.data.encounters, `${options.seed}|encounter`, (row) => row.encounter_id)[0];
+    const regionalEncounters = source.data.encounters.filter((encounter) =>
+      options.region === "any" || encounter.biome === REGIONS[options.region].biome
+    );
+    const tierCandidates = regionalEncounters.filter((encounter) =>
+      encounter.tier <= options.maximumTier
+    );
+    const candidates = tierCandidates.length ? tierCandidates : regionalEncounters;
+    if (!candidates.length) throw new Error(`No encounters available for region: ${options.region}`);
+    const encounter = ordered(
+      candidates,
+      `${options.seed}|${options.region}|encounter`,
+      (row) => row.encounter_id
+    )[0];
     const quest = index.maps.quests.get(encounter.quest_hook_id) || ordered(source.data.quests, `${options.seed}|quest`, (row) => row.quest_id)[0];
     const location = index.maps.locations.get(encounter.location_id) || index.maps.locations.get(quest.location_id) || source.data.locations[0];
     const merchant = index.maps.merchants.get(quest.giver_merchant_id) || null;
@@ -259,22 +348,28 @@
     const references = validateReferences(context, index);
     const tone = TONES[options.tone];
     const threat = THREATS[options.threat];
+    const patron = merchant?.proprietor || quest.giver_name;
+    const primaryEnemyName = enemyGroups[0]?.enemy_name || "Contested Ground";
+    const secondaryEnemyName = enemyGroups[1]?.enemy_name || null;
+    const adventureTitle = encounterHeading(encounter, location);
     const oneShot = {
       schema_version: "1.0.0",
       generator: "Loot Table Works One-Shot Forge",
-      adventure_id: `osf-${hexHash([options.seed, options.tone, options.threat, options.durationMinutes, options.partySize, options.maximumTier].join("|"))}`,
+      adventure_id: `osf-${hexHash([options.seed, options.tone, options.threat, options.region, options.durationMinutes, options.partySize, options.maximumTier].join("|"))}`,
       seed: options.seed,
-      title: `${quest.title}: ${tone.label} Cut`,
-      logline: `${quest.giver_name} needs a party to ${quest.objective.description.charAt(0).toLowerCase()}${quest.objective.description.slice(1)} The route through ${location.name} is already contested.`,
+      title: adventureTitle,
+      logline: `${patron} offers ${quest.reward_currency} currency to ${objectiveSummary(quest, location)}. ${primaryEnemyName} controls the approach${secondaryEnemyName ? ` while ${secondaryEnemyName} closes the alternate route` : ""}.`,
       tone: options.tone,
       threat: options.threat,
+      region: encounter.biome,
+      region_filter: options.region,
       duration_minutes: options.durationMinutes,
       party_size: options.partySize,
       maximum_tier: options.maximumTier,
       content_notes: tone.contentNotes,
       countdown: {
         segments: threat.clockSegments,
-        label: "Beacon route failure",
+        label: `${location.name} crisis`,
         advances_when: ["the party abandons preserved evidence", "a telegraphed hazard is ignored", "the opposition controls the objective at a scene exit"],
         final_state: tone.pressure
       },
@@ -298,9 +393,11 @@
       },
       reference_ledger: references.ids,
       validation: {
-        valid: references.missing.length === 0 && scenes.reduce((total, scene) => total + scene.minutes, 0) === options.durationMinutes && new Set(characters.map((character) => character.character_id)).size === characters.length,
+        valid: references.missing.length === 0 && encounter.biome === location.biome && (options.region === "any" || encounter.biome === REGIONS[options.region].biome) && scenes.reduce((total, scene) => total + scene.minutes, 0) === options.durationMinutes && new Set(characters.map((character) => character.character_id)).size === characters.length,
         missing_reference_count: references.missing.length,
         missing_references: references.missing,
+        region_filter_honored: options.region === "any" || encounter.biome === REGIONS[options.region].biome,
+        tier_fallback_used: tierCandidates.length === 0,
         scheduled_minutes: scenes.reduce((total, scene) => total + scene.minutes, 0),
         scene_count: scenes.length,
         character_count: characters.length
@@ -318,6 +415,7 @@
       `**Seed:** ${oneShot.seed}  `,
       `**Run time:** ${oneShot.duration_minutes} minutes  `,
       `**Party:** ${oneShot.party_size} pregenerated characters  `,
+      `**Region:** ${REGIONS[oneShot.region].label}  `,
       `**Tone / threat:** ${TONES[oneShot.tone].label} / ${THREATS[oneShot.threat].label}`,
       "",
       oneShot.logline,
@@ -348,5 +446,5 @@
     return priority.slice(0, Math.max(0, Number(limit) || 0)).map((id) => PRODUCTS.find((product) => product.id === id));
   }
 
-  return { PRODUCTS, TONES, THREATS, CHARACTER_ROLES, hash, normalizeOptions, generate, toMarkdown, recommendProducts };
+  return { PRODUCTS, TONES, THREATS, REGIONS, CHARACTER_ROLES, hash, displayEnemyName, normalizeOptions, generate, toMarkdown, recommendProducts };
 });

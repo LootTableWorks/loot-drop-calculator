@@ -1,6 +1,11 @@
 # One-Shot Forge
 
-One-Shot Forge is a local-first, system-neutral fantasy adventure generator built on the validated World Foundry coastal sample graph.
+One-Shot Forge is a local-first, system-neutral fantasy adventure generator
+built on six dependency-closed World Foundry free-demo regions. The combined
+runtime projection contains 203 minimal records, 291 validated references, 28
+quest contracts, and 29 encounter foundations. Raw demo archives, premium
+provenance fields, catalog entries, merchant stock, and drop tables are not
+embedded.
 
 Each seed generates:
 
@@ -9,6 +14,7 @@ Each seed generates:
 - opposition scaled for three to six players;
 - three to six linked pregenerated character dossiers;
 - a stable reference ledger with zero unresolved source IDs;
+- a fixed regional choice or deterministic selection across six original settings;
 - shareable URL state, printable output, Markdown copy, source JSON download, and validated Campaign Start JSON export.
 
 The public footer links to a structured GitHub field-test template. A visitor
@@ -18,9 +24,10 @@ player or campaign information.
 
 The public page exposes a canonical WebApplication search contract with the
 free-access state, browser requirements, supported exports, session-length
-options, pregenerated-character range, screenshot, and voluntary field-report
-capability. This metadata describes the visible tool and does not add tracking,
-remote dependencies, reviews, ratings, or unsupported product claims.
+options, six-region source inventory, pregenerated-character range, screenshot,
+and voluntary field-report capability. This metadata describes the visible tool
+and does not add tracking, remote dependencies, reviews, ratings, or unsupported
+product claims.
 
 Campaign Start export preserves an incoming Campaign Launchpad scope. Direct three-hour Standard adventures use the Full evening scope. Other direct adventures must use one of the contract-compatible duration and threat pairs: Forgiving / 2 hours, Standard / 3 hours, or Dangerous / 4 hours.
 
