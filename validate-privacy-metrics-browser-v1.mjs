@@ -112,7 +112,9 @@ try {
         }
       });
 
-      const response = await page.goto(`${baseUrl}${route}`, {
+      const qaUrl =
+        route === "/privacy/" ? `${baseUrl}${route}` : `${baseUrl}${route}?ltw_qa=1`;
+      const response = await page.goto(qaUrl, {
         waitUntil: "networkidle"
       });
       assert(response && response.status() === 200, `${viewportName} ${route} did not return HTTP 200`);
@@ -141,7 +143,7 @@ try {
       );
       assert(
         externalMeasurementRequests.length === 0,
-        `${viewportName} ${route} contacted analytics while the endpoint was locked`
+        `${viewportName} ${route} contacted analytics during the QA exclusion`
       );
 
       if (route !== "/privacy/") {

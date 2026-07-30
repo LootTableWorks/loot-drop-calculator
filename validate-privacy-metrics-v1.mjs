@@ -7,6 +7,8 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const loaderPath = path.join(root, "assets", "privacy-metrics-v1.js");
 const loaderSource = fs.readFileSync(loaderPath, "utf8");
 const placeholder = "__LTW_GOATCOUNTER_ENDPOINT__";
+const expectedEndpoint =
+  process.env.LTW_GOATCOUNTER_ENDPOINT || placeholder;
 const expectedIntegrity =
   "sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ";
 
@@ -143,8 +145,8 @@ for (const relativePath of measuredPages) {
     `${relativePath} must load the measurement candidate exactly once`
   );
   assert(
-    html.includes(`data-goatcounter-endpoint="${placeholder}"`),
-    `${relativePath} must retain the non-deployable endpoint placeholder`
+    html.includes(`data-goatcounter-endpoint="${expectedEndpoint}"`),
+    `${relativePath} must contain the expected measurement endpoint`
   );
   assert(
     /href="(?:\.\.\/)?privacy\/"/.test(html),

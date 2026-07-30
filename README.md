@@ -50,6 +50,15 @@ All tools run in the browser without an account. Data is not uploaded or analyze
 
 Seven public acquisition pages use privacy-focused aggregate measurement to distinguish reach from fixed funnel actions. The measurement boundary excludes the core generators, Campaign Workspace field-test route, imported files, campaign text, generated content, saved state, seeds, and exports. It uses no cookies or persistent user identifiers, honors Do Not Track, reduces unknown sources to a generic label, and offers a browser-level opt-out. See the public [privacy and measurement page](https://loottableworks.github.io/loot-drop-calculator/privacy/) for the exact boundary.
 
+The measurement endpoint remains fail-closed until a human creates the GoatCounter account. After that manual gate, activate only the exact returned endpoint with:
+
+```powershell
+node .\activate-privacy-metrics-v1.mjs https://<account>.goatcounter.com/count --dry-run
+node .\activate-privacy-metrics-v1.mjs https://<account>.goatcounter.com/count
+```
+
+The activation command preflights all seven pages before writing, rejects conflicting endpoints, and is idempotent. Run `validate-privacy-metrics-v1.mjs`, `validate-privacy-metrics-activation-v1.mjs`, and `validate-privacy-metrics-browser-v1.mjs` before deployment. Individual-pageview storage must remain disabled in GoatCounter.
+
 ## Integration Guides
 
 The public guide cluster covers RPG JSON schema design, Unity JsonUtility imports, Godot 4 Resource imports, TypeScript data models, loot-table validation, and game-economy integration. Each article includes original examples, relevant free-tool workflows, and links only to the six verified public standalone modules.
