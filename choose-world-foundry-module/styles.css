@@ -2,6 +2,7 @@
   color-scheme: light;
   --ink: #171a1d;
   --ink-soft: #343a40;
+  --muted: #5d6668;
   --paper: #f5f3ee;
   --white: #ffffff;
   --line: #cbc7be;
@@ -9,6 +10,7 @@
   --signal: #c13b2a;
   --signal-dark: #8f291d;
   --teal: #117b73;
+  --teal-dark: #0d5b55;
   --gold: #c29432;
   --focus: #006db0;
   --shadow: 0 14px 36px rgb(23 26 29 / 10%);
@@ -420,6 +422,53 @@ legend {
   display: block;
   color: var(--ink);
   font-size: 1.05rem;
+}
+
+.proof-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin: 0 1.35rem 1.1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.proof-callout strong,
+.proof-callout span {
+  display: block;
+}
+
+.proof-callout strong {
+  font-size: 0.78rem;
+}
+
+.proof-callout > div > span {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.proof-callout a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  color: #fff;
+  background: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.proof-callout a:hover {
+  border-color: var(--teal-dark);
+  background: var(--teal-dark);
 }
 
 .recommendation-details {
@@ -850,9 +899,15 @@ footer a {
   }
 
   .result-actions,
+  .proof-callout,
   .next-step {
     align-items: stretch;
+    grid-template-columns: 1fr;
     flex-direction: column;
+  }
+
+  .proof-callout a {
+    width: 100%;
   }
 
   .secondary-action {
