@@ -13,8 +13,8 @@ Each seed generates:
 
 Campaign Start export preserves an incoming Campaign Launchpad scope. Direct three-hour Standard adventures use the Full evening scope. Other direct adventures must use one of the contract-compatible duration and threat pairs: Forgiving / 2 hours, Standard / 3 hours, or Dangerous / 4 hours.
 
-The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. No bundle or private-offer destination is exposed.
+The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. When a visitor arrives through a named campaign or another website, downstream product links preserve only a bounded source token or referrer hostname; no path, user identifier, or browsing history is collected. No bundle or private-offer destination is exposed.
 
-## Build
+## Public release boundary
 
-Run `powershell -ExecutionPolicy Bypass -File scripts/build.ps1` from this directory. The build writes only inside `machines/machine-005/dist/` and creates `one-shot-forge-static-site-v1.zip`. It does not deploy or publish.
+This repository directory is the generated static release, not the authoritative build workspace. `MANIFEST.json` records the exact release files, sizes, and SHA-256 hashes. The page links the current custom usage terms and public source. Do not treat source availability as an open-source license.

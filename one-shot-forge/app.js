@@ -5,6 +5,7 @@
   const source = window.OneShotSource;
   const startAdapter = window.OneShotCampaignStartAdapter;
   if (!startAdapter) throw new Error("Campaign Start adapter is missing");
+  const acquisitionOrigin = readAcquisitionOrigin();
   const state = {
     tone: "heroic",
     threat: "standard",
@@ -62,6 +63,37 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function attributionToken(value) {
+    return String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .slice(0, 64);
+  }
+
+  function readAcquisitionOrigin() {
+    const querySource = attributionToken(
+      new URLSearchParams(window.location.search).get("utm_source")
+    );
+    if (querySource) return querySource;
+
+    try {
+      const currentHost = window.location.hostname
+        .replace(/^www\./, "")
+        .toLowerCase();
+      const referrerHost = new URL(document.referrer).hostname
+        .replace(/^www\./, "")
+        .toLowerCase();
+      if (referrerHost && referrerHost !== currentHost) {
+        return attributionToken(referrerHost);
+      }
+    } catch {
+      // Missing and malformed referrers are intentionally ignored.
+    }
+    return "";
   }
 
   function showToast(message) {
@@ -133,6 +165,9 @@
     url.searchParams.set("utm_medium", "free_tool");
     url.searchParams.set("utm_campaign", "one_shot_value_launch");
     url.searchParams.set("utm_content", `${product.id}_${placement}`);
+    if (acquisitionOrigin) {
+      url.searchParams.set("utm_term", `origin_${acquisitionOrigin}`);
+    }
     return url.toString();
   }
 
