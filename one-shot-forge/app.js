@@ -5,6 +5,33 @@
   const source = window.OneShotSource;
   const startAdapter = window.OneShotCampaignStartAdapter;
   if (!startAdapter) throw new Error("Campaign Start adapter is missing");
+  const allowedCampaignOrigins = new Set([
+    "awesome_dnd",
+    "bluesky",
+    "gamingtrend",
+    "github",
+    "instagram",
+    "itch_io",
+    "mastodon",
+    "owned_site",
+    "pinterest",
+    "press_kit",
+    "tiktok",
+    "tribality",
+    "youtube"
+  ]);
+  const allowedReferrerOrigins = new Map([
+    ["bsky.app", "bluesky"],
+    ["github.com", "github"],
+    ["instagram.com", "instagram"],
+    ["itch.io", "itch_io"],
+    ["mastodon.social", "mastodon"],
+    ["pinterest.com", "pinterest"],
+    ["rpggen.dev", "rpggen_dev"],
+    ["tiktok.com", "tiktok"],
+    ["youtube.com", "youtube"],
+    ["youtu.be", "youtube"]
+  ]);
   const acquisitionOrigin = readAcquisitionOrigin();
   const state = {
     tone: "heroic",
@@ -78,7 +105,7 @@
     const querySource = attributionToken(
       new URLSearchParams(window.location.search).get("utm_source")
     );
-    if (querySource) return querySource;
+    if (allowedCampaignOrigins.has(querySource)) return querySource;
 
     try {
       const currentHost = window.location.hostname
@@ -88,7 +115,7 @@
         .replace(/^www\./, "")
         .toLowerCase();
       if (referrerHost && referrerHost !== currentHost) {
-        return attributionToken(referrerHost);
+        return allowedReferrerOrigins.get(referrerHost) || "";
       }
     } catch {
       // Missing and malformed referrers are intentionally ignored.
