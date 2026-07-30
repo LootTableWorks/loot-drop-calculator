@@ -1,0 +1,23 @@
+{
+  "product_id": "loot-table-works-integration-guides",
+  "version": "1.0.1",
+  "status": "approved_public_release",
+  "quality_expectation": "AAA",
+  "release_authority": "delegated_internal_aaa_qa",
+  "public_release_requires_owner_review": false,
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "published": true,
+  "canonical_root": "https://loottableworks.github.io/loot-drop-calculator/integration-guides/",
+  "guide_count": 6,
+  "index_page_count": 1,
+  "public_standalone_destinations": 6,
+  "bundle_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "analytics_used": false,
+  "persistent_storage_used": false,
+  "network_runtime_used": false,
+  "ai_assisted_content_disclosed": true,
+  "deterministic_archive_timestamp_utc": "2020-01-01T00:00:00Z",
+  "publication_note": "The guide cluster is publicly deployed at the canonical root. This metadata correction aligns the release contract with that public state."
+}

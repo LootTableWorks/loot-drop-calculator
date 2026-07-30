@@ -1,0 +1,93 @@
+{
+  "product_id": "loot-table-works-integration-guides",
+  "version": "1.0.1",
+  "status": "approved_public_release",
+  "quality_expectation": "AAA",
+  "release_authority": "delegated_internal_aaa_qa",
+  "public_release_requires_owner_review": false,
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "published": true,
+  "canonical_root": "https://loottableworks.github.io/loot-drop-calculator/integration-guides/",
+  "guide_count": 6,
+  "index_page_count": 1,
+  "public_standalone_destinations": 6,
+  "attributed_paid_placements": 42,
+  "bundle_destinations": 0,
+  "external_runtime_dependencies": 0,
+  "analytics_used": false,
+  "persistent_storage_used": false,
+  "deterministic_archive_timestamp_utc": "2020-01-01T00:00:00Z",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2202,
+      "sha256": "50db23e3bdbc96a9c26ab59f1b2f316ecd778cef0a0f82c9e919d9940e84c942"
+    },
+    {
+      "path": "assets/loot-table-works-profile-banner-1920x550.png",
+      "bytes": 1581070,
+      "sha256": "c02f619bf455c0a930a19ec9be4fcd822ff3af4d9ad49dc741cbb7b27aa1bdfb"
+    },
+    {
+      "path": "assets/loot-table-works-wordmark-dark.png",
+      "bytes": 19985,
+      "sha256": "352cbfaf050e932f9be0c048a88f0d1731750e65069a4c6d0d2bffe3cbd4f140"
+    },
+    {
+      "path": "game-economy-shop-data-integration/index.html",
+      "bytes": 18702,
+      "sha256": "1aa1ac920b90428b558e933ea6b6f0e77f6c1f6cca24dc40ecc598bf4d6dc2e7"
+    },
+    {
+      "path": "godot-4-resource-data-import/index.html",
+      "bytes": 18100,
+      "sha256": "f043e19d88866c7f6d8ec14e5d75b972e944419a712d941ab11aed9ea13688dd"
+    },
+    {
+      "path": "index.html",
+      "bytes": 14858,
+      "sha256": "6a198c3d072f35034738299bb77adff920797dd836cd4b98f1d8e6b1f01f3f5d"
+    },
+    {
+      "path": "loot-table-validation/index.html",
+      "bytes": 18201,
+      "sha256": "3c99690353163ca970cafecd1104cc5cf8ab6391836d3621576b3cf1704c4300"
+    },
+    {
+      "path": "release.json",
+      "bytes": 947,
+      "sha256": "fdb2c1272bf90dc316f5445fae20ba7221395c29d344c5d319d75ba252a88dd4"
+    },
+    {
+      "path": "robots.txt",
+      "bytes": 122,
+      "sha256": "9816e71f942ef24878c90ca66c7335c5acfa6e69ca5fe0e3210537ea035c8312"
+    },
+    {
+      "path": "rpg-json-schema-design/index.html",
+      "bytes": 16900,
+      "sha256": "b2b5820851f1c9474880b4f19703c6a045440c86c55f3c63de866dd9e9352da2"
+    },
+    {
+      "path": "sitemap.xml",
+      "bytes": 1571,
+      "sha256": "b88c4c9952d5bc0a2eb848ab8a3f1c2972ba318d7830865ad941d4abf74ec846"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 11974,
+      "sha256": "3f29d7a238ed69b3ca6db985262e41405d4bf3675a4db0b0bead6a294e4a709e"
+    },
+    {
+      "path": "typescript-rpg-data-models/index.html",
+      "bytes": 17525,
+      "sha256": "97fdffc38b22344eb163be1b94eec783d8f2de0260051a5f3450f18bc06a4140"
+    },
+    {
+      "path": "unity-jsonutility-stable-id-import/index.html",
+      "bytes": 18708,
+      "sha256": "01ca55e6ae98f3d83daf4814f961a26c759867af390b663a51b140725365d5e6"
+    }
+  ]
+}
