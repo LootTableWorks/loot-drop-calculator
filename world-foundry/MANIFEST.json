@@ -1,6 +1,6 @@
 {
   "product_id": "world-foundry-hub",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -9,12 +9,22 @@
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/world-foundry/",
   "free_tool_destinations": 10,
   "paid_standalone_destinations": 6,
+  "storefront_registry_version": "1.0.0",
+  "public_storefronts": [
+    "itch"
+  ],
+  "pending_storefronts": [
+    "gumroad",
+    "kofi",
+    "payhip"
+  ],
+  "draft_storefront_urls_exposed": 0,
   "external_runtime_dependencies": 0,
   "files": [
     {
       "path": "README.md",
-      "bytes": 1467,
-      "sha256": "625df16c0654db9ba65cb072490ecc91a4ccb0fee0ffe8b103b2db7c41c43ec2"
+      "bytes": 1497,
+      "sha256": "410053ff6e327c8caf9c1c03063de066593c56af5f00eaf561f501e52471813d"
     },
     {
       "path": "assets/campaign-workspace-preview-v1.png",
@@ -23,8 +33,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 36501,
-      "sha256": "1ce8646a3b9ab27f54d0a187912b01c3deff4bb3f3537bd8cfa3f2e3a36880f3"
+      "bytes": 36953,
+      "sha256": "373a2e3081d4b48688ed38ddb51d6bfc24fc56b9221127afdb0253bb26cfe5f7"
     },
     {
       "path": "robots.txt",
@@ -37,9 +47,19 @@
       "sha256": "65111f8a277b1a1be3f890198fd6cf1805b3990fa08452e42dcc577c639f195c"
     },
     {
+      "path": "storefront-registry.js",
+      "bytes": 8505,
+      "sha256": "79b3027ec2809be7b2ec78c059e5a5ec692ffcde55858b18b2756942d7eeddfe"
+    },
+    {
+      "path": "storefront-router.js",
+      "bytes": 4876,
+      "sha256": "e43c1562d9e09573beabf5524f08f1184533abe475cd239fdc0716e07ee30e87"
+    },
+    {
       "path": "styles.css",
-      "bytes": 18593,
-      "sha256": "b72090bed9cb31ea4945bc18a27d126ae6f4afd9f32fe4406f4b832b748d436f"
+      "bytes": 20536,
+      "sha256": "62d57894e646459d6bc8f91cfd098653cf4c5378293d582084e6405d90952a78"
     }
   ]
 }

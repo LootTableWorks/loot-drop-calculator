@@ -3,3 +3,13 @@
 *.png binary
 *.jpg binary
 *.jpeg binary
+
+.gitattributes text eol=lf
+world-foundry/*.css text eol=lf
+world-foundry/*.html text eol=lf
+world-foundry/*.js text eol=lf
+world-foundry/*.json text eol=lf
+world-foundry/*.md text eol=lf
+world-foundry/*.txt text eol=lf
+world-foundry/*.xml text eol=lf
+validate-multi-store-funnel-v1.mjs text eol=lf

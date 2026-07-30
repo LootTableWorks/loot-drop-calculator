@@ -388,6 +388,77 @@ h1, h2, h3, h4, h5, p { letter-spacing: 0; }
 .module-action b { color: var(--rust); font-size: 14px; }
 .module-action:hover { color: #fff; background: var(--rust-dark); border-color: var(--rust-dark); }
 .module-action:hover b { color: #fff; }
+.module-action-disabled,
+.module-action-disabled:hover,
+.module-action[aria-disabled="true"],
+.module-action[aria-disabled="true"]:hover {
+  color: var(--muted);
+  background: #eef1ef;
+  border-color: var(--line);
+  cursor: not-allowed;
+}
+
+.storefront-picker {
+  position: relative;
+  min-width: 155px;
+}
+
+.storefront-picker summary {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border: 1px solid var(--rust);
+  border-radius: 5px;
+  color: var(--rust-dark);
+  background: #fff;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12px;
+}
+
+.storefront-picker summary::-webkit-details-marker { display: none; }
+.storefront-picker summary::after { content: "\25be"; color: var(--rust); font-size: 12px; }
+.storefront-picker[open] summary::after { transform: rotate(180deg); }
+.storefront-picker summary > span {
+  padding: 2px 5px;
+  color: #fff;
+  background: var(--rust);
+  border-radius: 3px;
+  font-weight: 800;
+}
+.storefront-picker summary > strong { font-size: 12px; }
+.storefront-picker summary > small { display: none; }
+
+.storefront-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 5px);
+  right: 0;
+  width: max(100%, 210px);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rust);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(29, 42, 45, 0.18);
+}
+
+.storefront-menu a {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 9px 11px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.storefront-menu a + a { border-top: 1px solid var(--line); }
+.storefront-menu a:hover { color: #fff; background: var(--rust-dark); }
+.storefront-menu a span { color: inherit; font-weight: 800; }
 
 .catalog-note {
   margin: 14px 0 0;
@@ -622,6 +693,8 @@ a:focus-visible,
   .module-id { display: flex; align-items: center; gap: 8px; }
   .module-id strong { margin: 0; }
   .module-action { width: 100%; margin-top: 4px; }
+  .storefront-picker { width: 100%; margin-top: 4px; }
+  .storefront-menu { position: static; width: 100%; margin-top: 5px; box-shadow: none; }
   .guide { padding: 48px 0; }
   .guide-body > h3 { font-size: 32px; }
   .guide-lead { font-size: 15px; }

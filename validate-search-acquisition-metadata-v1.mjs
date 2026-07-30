@@ -235,8 +235,8 @@ for (const relativePath of [
   );
 }
 assert(
-  JSON.parse(read("world-foundry/MANIFEST.json")).version === "1.7.1",
-  "World Foundry metadata repair version drifted"
+  JSON.parse(read("world-foundry/MANIFEST.json")).version === "1.8.0",
+  "World Foundry multi-store funnel version drifted"
 );
 
 const sitemap = read("sitemap.xml");
