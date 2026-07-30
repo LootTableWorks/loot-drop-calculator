@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -67,16 +68,37 @@ function sha256(relativePath) {
     .digest("hex");
 }
 
+function committedBlob(relativePath) {
+  return execFileSync("git", ["show", `HEAD:${relativePath}`], {
+    cwd: root,
+    encoding: null,
+    maxBuffer: 20 * 1024 * 1024
+  });
+}
+
 function verifyManifestFile(manifestPath, relativeRoot, relativePath) {
   const manifest = JSON.parse(read(manifestPath));
   const record = manifest.files.find((entry) => entry.path === relativePath);
   assert(record, `${manifestPath} is missing ${relativePath}`);
   const fullRelativePath = path.posix.join(relativeRoot, relativePath);
-  const stat = fs.statSync(path.join(root, fullRelativePath));
-  assert(record.bytes === stat.size, `${fullRelativePath} byte count drifted`);
+  const blob = committedBlob(fullRelativePath);
   assert(
-    record.sha256 === sha256(fullRelativePath),
-    `${fullRelativePath} hash drifted`
+    record.bytes === blob.length,
+    `${fullRelativePath} committed byte count drifted`
+  );
+  assert(
+    record.sha256 ===
+      crypto.createHash("sha256").update(blob).digest("hex"),
+    `${fullRelativePath} committed hash drifted`
+  );
+
+  const local = fs.readFileSync(path.join(root, fullRelativePath));
+  const normalizedLocal = fullRelativePath.endsWith(".png")
+    ? local
+    : Buffer.from(local.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+  assert(
+    normalizedLocal.equals(blob),
+    `${fullRelativePath} working content differs from the committed blob`
   );
 }
 
