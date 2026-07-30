@@ -1,6 +1,6 @@
 {
   "product_id": "loot-table-works-integration-guides",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "status": "approved_public_release",
   "quality_expectation": "AAA",
   "release_authority": "delegated_internal_aaa_qa",
@@ -18,6 +18,8 @@
   "persistent_storage_used": false,
   "network_runtime_used": false,
   "ai_assisted_content_disclosed": true,
+  "approved_acquisition_origins": ["owlcat_learning"],
+  "unknown_acquisition_origins_discarded": true,
   "deterministic_archive_timestamp_utc": "2020-01-01T00:00:00Z",
-  "publication_note": "The guide cluster is publicly deployed at the canonical root. This metadata correction aligns the release contract with that public state."
+  "publication_note": "The guide cluster is publicly deployed at the canonical root. Version 1.1.0 adds privacy-bounded source propagation for the approved Owlcat learning route."
 }
