@@ -26,9 +26,9 @@ const requiredPreviews = [
   },
   {
     page: "one-shot-forge/index.html",
-    image: "one-shot-forge/assets/one-shot-forge-coastal-map-v1.jpg",
-    width: 1731,
-    height: 909,
+    image: "one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg",
+    width: 1727,
+    height: 911,
   },
 ];
 

@@ -21,6 +21,18 @@ includes("No account is required.", "No-account boundary is missing");
 includes("nothing is transmitted to Loot Table Works", "Data-transmission boundary is missing");
 includes("may write that save to browser storage", "Optional local-storage disclosure is missing");
 includes("[Choose the right $3 World Foundry module]", "Paid selector handoff is missing");
+includes(
+  "[Choose from 12 original one-shot ideas](https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/?utm_source=github&utm_medium=repository_readme&utm_campaign=one_shot_ideas_v1&utm_content=readme_ideas)",
+  "Primary one-shot ideas handoff is missing or untracked",
+);
+includes(
+  "utm_campaign=one_shot_ideas_v1&utm_content=workflow_choose_idea",
+  "One-shot ideas workflow handoff is missing or untracked",
+);
+includes(
+  "utm_campaign=one_shot_ideas_v1&utm_content=workflow_generate",
+  "One-Shot Forge workflow handoff is missing or untracked",
+);
 
 const imageMatch = readme.match(/!\[[^\]]+\]\(([^)]+)\)/);
 assert.ok(imageMatch, "README preview image is missing");
@@ -110,4 +122,4 @@ assert.equal(
 );
 checks += 1;
 
-console.log(`PASS validate-readme-discovery-v1.mjs (${checks} checks): canonical 12-tool catalog, valid preview, accurate storage disclosure, and attributed free and paid routes.`);
+console.log(`PASS validate-readme-discovery-v1.mjs (${checks} checks): canonical 12-tool catalog, one-shot idea acquisition path, valid preview, accurate storage disclosure, and attributed free and paid routes.`);

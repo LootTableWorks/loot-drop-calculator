@@ -4,6 +4,8 @@
 
 Loot Table Works makes original, system-neutral tabletop adventures, local-first campaign tools, and structured game-data utilities.
 
+[Choose from 12 original one-shot ideas](https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/?utm_source=github&utm_medium=repository_readme&utm_campaign=one_shot_ideas_v1&utm_content=readme_ideas)
+
 [Start with the free Gullwatch Beacon one-shot](https://loottableworks.github.io/loot-drop-calculator/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=start_gullwatch)
 
 [Choose the right $3 World Foundry module](https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=github&utm_medium=repository_readme&utm_campaign=module_selector_v1&utm_content=readme_choose_module)
@@ -16,9 +18,10 @@ Loot Table Works makes original, system-neutral tabletop adventures, local-first
 
 ## Game Master Workflow
 
-1. [Run Gullwatch Beacon tonight](https://loottableworks.github.io/loot-drop-calculator/gullwatch-beacon/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=gullwatch_free_kit) with a complete free, system-neutral session kit.
-2. [Keep campaign truth in Campaign Workspace](https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=campaign_workspace) using a local save and event ledger.
-3. [Turn the ending into the next session](https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=continuation_planner) with a five-fact consequence method and exportable planning brief.
+1. [Choose one of 12 original premises](https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/?utm_source=github&utm_medium=repository_readme&utm_campaign=one_shot_ideas_v1&utm_content=workflow_choose_idea) across six system-neutral fantasy regions.
+2. [Open the premise in One-Shot Forge](https://loottableworks.github.io/loot-drop-calculator/one-shot-forge/?utm_source=github&utm_medium=repository_readme&utm_campaign=one_shot_ideas_v1&utm_content=workflow_generate) for a five-scene run sheet, clues, pressure clock, opposition, and pregenerated party.
+3. [Keep campaign truth in Campaign Workspace](https://loottableworks.github.io/loot-drop-calculator/campaign-workspace/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=campaign_workspace) using a local save and event ledger.
+4. [Turn the ending into the next session](https://loottableworks.github.io/loot-drop-calculator/turn-one-shot-into-campaign/?utm_source=github&utm_medium=repository_readme&utm_campaign=run_continue_v1&utm_content=continuation_planner) with a five-fact consequence method and exportable planning brief.
 
 No account is required. Imported campaign data stays in your browser. Campaign Workspace can store local saves on that device; nothing is transmitted to Loot Table Works.
 

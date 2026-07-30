@@ -17,10 +17,11 @@ Each seed generates:
 - a fixed regional choice or deterministic selection across six original settings;
 - shareable URL state, printable output, Markdown copy, source JSON download, and validated Campaign Start JSON export.
 
-The public footer links to a structured GitHub field-test template. A visitor
-can deliberately submit four outcome-focused answers after using the tool; no
-report is created automatically, and the template warns against sharing private
-player or campaign information.
+The public footer opens a structured email field-report prompt addressed to the
+Loot Table Works brand mailbox. A visitor can deliberately submit four
+outcome-focused answers after using the tool; no report is created
+automatically, and the prompt warns against sharing private player or campaign
+information.
 
 The public page exposes a canonical WebApplication search contract with the
 free-access state, browser requirements, supported exports, session-length

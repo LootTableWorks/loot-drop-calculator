@@ -547,6 +547,17 @@ figcaption {
   font-weight: 850;
 }
 
+.route-followup {
+  margin: 1.35rem 0 0;
+  color: var(--muted);
+}
+
+.route-followup a {
+  color: var(--ink);
+  font-weight: 850;
+  text-underline-offset: .2em;
+}
+
 .paid-band {
   background: #eef1ef;
 }

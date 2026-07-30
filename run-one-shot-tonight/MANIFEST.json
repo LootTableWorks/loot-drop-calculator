@@ -3,7 +3,7 @@
   "prepared_at": "2026-07-30T19:00:09.235Z",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/",
   "promise": "Choose one of twelve original premises, generate the complete one-shot, run it tonight, and preserve the ending.",
-  "free_destinations": 3,
+  "free_destinations": 4,
   "paid_standalone_destinations": 3,
   "bundle_destinations": 0,
   "background_analytics": false,
@@ -13,13 +13,13 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 30227,
-      "sha256": "bbb5dd346089e6e1fd5af4c45574a0f89c1c7b473508af9a4173e25e994c513b"
+      "bytes": 30519,
+      "sha256": "44ba5f586ae1cb2c11b5d946e70924c70308582bde50b5837b15305c796c41ce"
     },
     {
       "path": "styles.css",
-      "bytes": 11900,
-      "sha256": "a0fbdb708b7798bb819d0ccb2ee8a9b420e4c790d484c603a2789cd65fdb00d0"
+      "bytes": 12062,
+      "sha256": "940b5917ed1a07323a6ec44a5bf94fb67f3d2b3cce26a192f77a815ab41ce4f7"
     },
     {
       "path": "README.md",
@@ -28,8 +28,8 @@
     },
     {
       "path": "release-approval.json",
-      "bytes": 2077,
-      "sha256": "7669b6861d9688ffd03154f637ff690b8cdeea1c741e3229914763d9c0bb3219"
+      "bytes": 2140,
+      "sha256": "de23b20d66f041fcc5092c36b110259927ade04f9e1e28e2d499ec35571a854b"
     }
   ]
 }

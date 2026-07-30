@@ -20,8 +20,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 3084,
-      "sha256": "3a59784d806c41dafdd07d4c6691c5b7452c6e0c4b2de10706007bc9c07b601b"
+      "bytes": 3126,
+      "sha256": "17140ea2ffeb0e36a8bed42bb7306f9f9b61d8093addcc13b026910aada6ebba"
     },
     {
       "path": "USAGE-TERMS.md",
@@ -55,8 +55,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 13216,
-      "sha256": "5cfbb51f2259cd826fb66a48aeca540c3a929423f37da0506520c7ff18c0be0e"
+      "bytes": 13507,
+      "sha256": "afd58492b3bc3bece5c7d5db471032a4ef96a63c39a8cb48a681f04a0c336754"
     },
     {
       "path": "one-shot-core.js",

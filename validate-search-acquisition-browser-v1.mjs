@@ -9,6 +9,12 @@ const { chromium } = require("playwright");
 const root = path.dirname(fileURLToPath(import.meta.url));
 const routes = [
   {
+    path: "/",
+    title: "Run Tonight. Continue Next Week. | Loot Table Works",
+    h1: "Run tonight. Continue next week.",
+    oneShotIdeasLink: true
+  },
+  {
     path: "/campaign-workspace/",
     title: "Free TTRPG Campaign Tracker | Gullwatch Workspace",
     h1: "Run tonight. Continue next week."
@@ -166,6 +172,31 @@ try {
         `${viewportName} ${route.path} screenshot is unexpectedly small`
       );
 
+      if (route.oneShotIdeasLink) {
+        const ideasLinks = page.locator(
+          'a[href*="run-one-shot-tonight/"][href*="utm_campaign=one_shot_ideas_v1"]'
+        );
+        assert(
+          (await ideasLinks.count()) === 2,
+          `${viewportName} homepage must expose exactly two attributed one-shot idea links`
+        );
+        const ideaImage = page.locator(
+          'img[src="one-shot-forge/assets/one-shot-forge-six-region-atlas-v1.jpg"]'
+        );
+        assert(
+          (await ideaImage.count()) === 1,
+          `${viewportName} homepage one-shot atlas count drifted`
+        );
+        const dimensions = await ideaImage.evaluate((image) => ({
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight
+        }));
+        assert(
+          dimensions.naturalWidth > 1000 && dimensions.naturalHeight > 600,
+          `${viewportName} homepage one-shot atlas did not decode at production resolution`
+        );
+      }
+
       if (route.path === "/world-foundry/") {
         const preview = page.locator(
           'img[src="assets/campaign-workspace-preview-v1.png"]'
@@ -195,5 +226,5 @@ try {
 }
 
 console.log(
-  `Search acquisition browser QA passed ${checks} checks across six desktop/mobile renders with exact titles, H1s, decoded images, runtime stability, and layout bounds.`
+  `Search acquisition browser QA passed ${checks} checks across eight desktop/mobile renders with exact titles, H1s, decoded images, runtime stability, and layout bounds.`
 );
