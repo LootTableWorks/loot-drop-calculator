@@ -36,10 +36,10 @@ function check(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-function meta(html, property) {
-  const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function meta(html, key) {
+  const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = html.match(
-    new RegExp(`<meta\\s+property="${escaped}"\\s+content="([^"]+)"`, "i"),
+    new RegExp(`<meta\\s+(?:property|name)="${escaped}"\\s+content="([^"]+)"`, "i"),
   );
   return match?.[1] ?? null;
 }
@@ -107,6 +107,32 @@ for (const preview of requiredPreviews) {
   check(meta(html, "og:image:width") === String(preview.width), `${preview.page} width drift.`);
   check(meta(html, "og:image:height") === String(preview.height), `${preview.page} height drift.`);
   check((meta(html, "og:image:alt") ?? "").length >= 50, `${preview.page} alt text is too weak.`);
+  if (preview.page === "one-shot-forge/index.html") {
+    check(
+      meta(html, "robots")?.includes("max-image-preview:large"),
+      `${preview.page} does not permit a large search preview.`,
+    );
+    check(
+      meta(html, "twitter:card") === "summary_large_image",
+      `${preview.page} Twitter card type drift.`,
+    );
+    check(
+      meta(html, "twitter:title") === meta(html, "og:title"),
+      `${preview.page} Twitter title drift.`,
+    );
+    check(
+      (meta(html, "twitter:description") ?? "").length >= 80,
+      `${preview.page} Twitter description is too weak.`,
+    );
+    check(
+      meta(html, "twitter:image") === expectedUrl,
+      `${preview.page} Twitter image URL drift.`,
+    );
+    check(
+      (meta(html, "twitter:image:alt") ?? "").length >= 50,
+      `${preview.page} Twitter image alt text is too weak.`,
+    );
+  }
 
   const bytes = await readFile(path.join(root, preview.image));
   const dimensions = imageDimensions(bytes);
