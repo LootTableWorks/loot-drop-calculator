@@ -16,6 +16,12 @@ can deliberately submit four outcome-focused answers after using the tool; no
 report is created automatically, and the template warns against sharing private
 player or campaign information.
 
+The public page exposes a canonical WebApplication search contract with the
+free-access state, browser requirements, supported exports, session-length
+options, pregenerated-character range, screenshot, and voluntary field-report
+capability. This metadata describes the visible tool and does not add tracking,
+remote dependencies, reviews, ratings, or unsupported product claims.
+
 Campaign Start export preserves an incoming Campaign Launchpad scope. Direct three-hour Standard adventures use the Full evening scope. Other direct adventures must use one of the contract-compatible duration and threat pairs: Forgiving / 2 hours, Standard / 3 hours, or Dangerous / 4 hours.
 
 The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. Downstream product links preserve only fixed, approved campaign labels or approved referring-host labels, including the public `the_compendium` campaign label, the `compendium.tools` referrer, and the fixed `user_share` label used when a visitor deliberately shares a generated adventure. Both share controls preserve the reproducible seed and settings while adding only fixed campaign labels; the generated adventure ID is not used as tracking content. Unknown source values and hostnames are discarded; no path, user identifier, or browsing history is preserved. No bundle or private-offer destination is exposed.
