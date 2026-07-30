@@ -24,7 +24,7 @@ const contracts = [
   {
     path: "turn-one-shot-into-campaign/app.js",
     url: `${origin}/turn-one-shot-into-campaign/app.js`,
-    contentType: "text/javascript"
+    contentType: "application/javascript"
   },
   {
     path: "turn-one-shot-into-campaign/MANIFEST.json",
