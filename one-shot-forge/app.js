@@ -19,6 +19,7 @@
     "the_compendium",
     "tiktok",
     "tribality",
+    "user_share",
     "youtube"
   ]);
   const allowedReferrerOrigins = new Map([
@@ -169,7 +170,7 @@
     url.searchParams.set("utm_source", "user_share");
     url.searchParams.set("utm_medium", "social");
     url.searchParams.set("utm_campaign", "one_shot_forge_share");
-    url.searchParams.set("utm_content", state.oneShot.adventure_id);
+    url.searchParams.set("utm_content", "generated_one_shot");
     return url.toString();
   }
 
@@ -371,7 +372,7 @@
     document.querySelectorAll(".result-panel").forEach((panel) => { panel.hidden = panel.id !== `${state.activeTab}-panel`; });
   }));
   document.querySelector("#copy-link").addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(window.location.href); showToast("Share link copied"); }
+    try { await navigator.clipboard.writeText(shareUrl()); showToast("Tracked share link copied"); }
     catch { showToast("Copy unavailable in this browser"); }
   });
   document.querySelector("#share-adventure").addEventListener("click", async () => {
