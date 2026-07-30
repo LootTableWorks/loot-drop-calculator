@@ -1,0 +1,73 @@
+LOOT TABLE WORKS - PRESS & CREATOR FACT SHEET
+Updated: July 29, 2026
+
+STUDIO
+Loot Table Works publishes original, system-neutral fantasy adventures,
+offline GM tools, and structured RPG data for tabletop play and game development.
+
+CONTACT
+loottableworks@gmail.com
+
+PUBLIC PRESS KIT
+https://loottableworks.github.io/loot-drop-calculator/press-kit/
+
+GULLWATCH BEACON: PLAY TONIGHT KIT
+- Complete free, system-neutral digital one-shot
+- 10-minute preparation
+- 3-6 players
+- 3-4 hour session
+- Four scenes and three approaches
+- Five PDFs
+- Two maps: gridless player map and numbered GM map
+- Six individual transparent VTT tokens
+- Three player handouts
+- Offline start page
+- Complete archive size: 16,231,801 bytes
+
+Public release:
+https://loottableworks.github.io/loot-drop-calculator/gullwatch-beacon/
+
+Direct download:
+https://loottableworks.github.io/loot-drop-calculator/downloads/gullwatch-beacon-play-tonight-kit-v1.zip
+
+WORLD FOUNDRY
+- Six standalone structured-data modules
+- Items, merchants, crafting, enemy loot, quests, and encounters
+- Each standalone module is $3
+- Product pages state exact files, record counts, dependencies, and limitations
+- No public bundle is currently offered
+- Structured data and offline workflow tools
+- Not maps, tokens, character art, audio, a rules engine, or rules-specific stat blocks
+
+Module selector:
+https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/
+
+Connected-record proof:
+https://loottableworks.github.io/loot-drop-calculator/connected-record-proof/
+
+PRODUCTION DISCLOSURE
+Loot Table Works products contain original AI-assisted or AI-generated text,
+code, structured data, and artwork. Human-directed editorial, visual,
+packaging, and technical review is applied before release. Product pages and
+included usage terms state the relevant creation disclosure and adaptation
+boundaries.
+
+No copyrighted characters, branded settings, or third-party rules-system
+compatibility is claimed. Loot Table Works is not affiliated with or endorsed
+by another tabletop publisher or virtual tabletop platform.
+
+APPROVED MEDIA
+Hero:
+https://loottableworks.github.io/loot-drop-calculator/assets/gullwatch-beacon-hero-v2.png
+
+Product artwork:
+https://loottableworks.github.io/loot-drop-calculator/assets/gullwatch-beacon-play-kit-v1.png
+
+These two files are provided by Loot Table Works for editorial coverage of
+Loot Table Works products. Credit requested: Loot Table Works. Do not remove
+embedded product text or present the images as another publisher's work.
+
+BOUNDARIES
+- No verified sales, audience-size, ranking, or review claims are included.
+- Coverage is independent.
+- No favorable review, backlink, repost, or guaranteed placement is requested.
