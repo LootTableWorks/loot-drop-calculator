@@ -11,6 +11,11 @@ Each seed generates:
 - a stable reference ledger with zero unresolved source IDs;
 - shareable URL state, printable output, Markdown copy, source JSON download, and validated Campaign Start JSON export.
 
+The public footer links to a structured GitHub field-test template. A visitor
+can deliberately submit four outcome-focused answers after using the tool; no
+report is created automatically, and the template warns against sharing private
+player or campaign information.
+
 Campaign Start export preserves an incoming Campaign Launchpad scope. Direct three-hour Standard adventures use the Full evening scope. Other direct adventures must use one of the contract-compatible duration and threat pairs: Forgiving / 2 hours, Standard / 3 hours, or Dangerous / 4 hours.
 
 The runtime uses no login, analytics, remote API, external library, or persistent storage. Product links point only to the six public $3 standalone modules and include campaign attribution. Downstream product links preserve only fixed, approved campaign labels or approved referring-host labels, including the public `the_compendium` campaign label, the `compendium.tools` referrer, and the fixed `user_share` label used when a visitor deliberately shares a generated adventure. Both share controls preserve the reproducible seed and settings while adding only fixed campaign labels; the generated adventure ID is not used as tracking content. Unknown source values and hostnames are discarded; no path, user identifier, or browsing history is preserved. No bundle or private-offer destination is exposed.
