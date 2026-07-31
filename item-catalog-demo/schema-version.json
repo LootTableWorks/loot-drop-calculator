@@ -1,0 +1,9 @@
+{
+  "product": "world-foundry-item-catalog",
+  "product_version": "2.0.0-rc1",
+  "schema_version": "2.0.0",
+  "worldgraph_schema_version": "1.0.0",
+  "id_stability": "All pitm-0001 through pitm-0500 IDs are preserved and stable within the 2.x line.",
+  "family_id_stability": "All itm-fam-001 through itm-fam-050 IDs are stable within the 2.x line.",
+  "dependent_modules": ["merchants", "recipes", "quests", "loot_profiles", "encounters"]
+}

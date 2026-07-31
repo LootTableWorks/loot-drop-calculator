@@ -169,7 +169,8 @@ const elements = {
   dependency: document.querySelector("#result-dependency"),
   workflow: document.querySelector("#result-workflow"),
   boundary: document.querySelector("#result-boundary"),
-  link: document.querySelector("#result-link")
+  link: document.querySelector("#result-link"),
+  itemDemo: document.querySelector("#item-demo-callout")
 };
 
 function selectedValue(name) {
@@ -202,6 +203,7 @@ function renderRecommendation() {
   elements.workflow.textContent = WORKFLOW_NOTES[workflow];
   elements.boundary.textContent = module.boundary;
   elements.link.href = attributedPaidUrl(module.url);
+  elements.itemDemo.hidden = selectedValue("problem") !== "items";
 }
 
 document.querySelectorAll('#compare a[href*="loot-table-works.itch.io/"]').forEach((link) => {

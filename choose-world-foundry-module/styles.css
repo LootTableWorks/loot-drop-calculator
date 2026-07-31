@@ -471,6 +471,63 @@ legend {
   background: var(--teal-dark);
 }
 
+.item-demo-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin: 0 1.35rem 1.1rem;
+  padding: 1rem;
+  border: 1px solid #9bc9c5;
+  background: #edf7f5;
+}
+
+.item-demo-callout strong,
+.item-demo-callout span {
+  display: block;
+}
+
+.item-demo-callout strong {
+  font-size: 0.82rem;
+}
+
+.item-demo-callout span {
+  margin-top: 0.25rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.demo-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.demo-links a {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  color: var(--teal-dark);
+  background: #fff;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-align: center;
+  text-decoration: none;
+}
+
+.demo-links a:first-child {
+  color: #fff;
+  background: var(--teal);
+}
+
+.demo-links a:hover {
+  border-color: var(--teal-dark);
+}
+
 .recommendation-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -899,6 +956,7 @@ footer a {
   }
 
   .result-actions,
+  .item-demo-callout,
   .proof-callout,
   .next-step {
     align-items: stretch;
@@ -907,6 +965,15 @@ footer a {
   }
 
   .proof-callout a {
+    width: 100%;
+  }
+
+  .demo-links {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .demo-links a {
     width: 100%;
   }
 

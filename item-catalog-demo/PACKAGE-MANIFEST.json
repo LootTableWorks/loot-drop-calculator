@@ -1,0 +1,100 @@
+{
+    "package_id":  "world-foundry-item-catalog-demo-v2-rc3",
+    "publication_allowed":  false,
+    "price_usd":  0,
+    "schema_version":  "2.0.0",
+    "item_count":  100,
+    "source_boundary":  "balanced 100-item public demo: ten items per biome and category",
+    "files":  [
+                  {
+                      "path":  "CHANGELOG.md",
+                      "bytes":  1352,
+                      "sha256":  "f05355131e0d2f7a906916ef59b668286a347d791ebe78fec3d3df11a6817e8c"
+                  },
+                  {
+                      "path":  "examples.md",
+                      "bytes":  844,
+                      "sha256":  "3b56eddca9dd51db9399a162819e8072a518d5bce8df48c5499bfbed521a3a21"
+                  },
+                  {
+                      "path":  "FIELD-GUIDE.pdf",
+                      "bytes":  1512820,
+                      "sha256":  "769ff5bf09153cd49908554342bc26645faef45f88bfe6b6e919c45979202bc6"
+                  },
+                  {
+                      "path":  "INTEGRATION-GUIDE.md",
+                      "bytes":  1683,
+                      "sha256":  "c4c179c06a93a97f464b0558d8315f4df448638999e9b1a897befc8c28014c4a"
+                  },
+                  {
+                      "path":  "integrations/GodotItemDatabase.gd",
+                      "bytes":  1420,
+                      "sha256":  "d79272763a7c509e4392397166b4a879ae33efe32703b43b09a794137d28dde3"
+                  },
+                  {
+                      "path":  "integrations/items.ts",
+                      "bytes":  1520,
+                      "sha256":  "52e27d791885eefb5bf81696678bb01b8459abbe6cbd538985e4a2e83a922544"
+                  },
+                  {
+                      "path":  "integrations/JavaScriptItemLoader.js",
+                      "bytes":  1400,
+                      "sha256":  "7f8518925405a61efc76d704a1419607ae14f17bef7fb49f63286d6846958362"
+                  },
+                  {
+                      "path":  "integrations/UnityItemDatabase.cs",
+                      "bytes":  2882,
+                      "sha256":  "5d28b519a139ca7f87a578454ad4ae8ccf9a8c5b13a76195327b1bc57c569f53"
+                  },
+                  {
+                      "path":  "item-collection-builder.html",
+                      "bytes":  222004,
+                      "sha256":  "1861f29f12492583c0fe2df86aeb8c3dc54bf72b87bfacc1af066dfa75390347"
+                  },
+                  {
+                      "path":  "item-explorer.html",
+                      "bytes":  230985,
+                      "sha256":  "4d3b08eacdd6eed5b89ae838156c5194f4485d7ff0d918b78b377c5e235f1fe9"
+                  },
+                  {
+                      "path":  "items.csv",
+                      "bytes":  163991,
+                      "sha256":  "1367b098ac6bc06d403df362c30e7d153c436fead948e699a4907f39ca92d221"
+                  },
+                  {
+                      "path":  "items.json",
+                      "bytes":  249250,
+                      "sha256":  "e2197e8b3e456eef2d434a844c473a27cdd2ece4cf345e988299d91824773bc9"
+                  },
+                  {
+                      "path":  "QUICKSTART.md",
+                      "bytes":  770,
+                      "sha256":  "40229caefde450b9215d4456e34fb7914867bb7e6908e6abcc3162d30b61a21e"
+                  },
+                  {
+                      "path":  "README.md",
+                      "bytes":  666,
+                      "sha256":  "61ae82c5a802ef8c877d3249ea7cd5cfe6dff39dfacf745cbdc369885ee0f285"
+                  },
+                  {
+                      "path":  "schema.json",
+                      "bytes":  5406,
+                      "sha256":  "f34e8b266d766708199cbb58d08330b674f3f13597727694e2f2227b9855da52"
+                  },
+                  {
+                      "path":  "schema-version.json",
+                      "bytes":  442,
+                      "sha256":  "a352f7c7b1d599dc56bec997700131b7a0a2bf1b9dba70457dd1a43b2e6d1788"
+                  },
+                  {
+                      "path":  "START-HERE.html",
+                      "bytes":  8256,
+                      "sha256":  "eab88a0753dca19cdd8fa268fe6b47d1a658bfdc25bd9743f6d4f9259a55ef57"
+                  },
+                  {
+                      "path":  "USAGE-TERMS.md",
+                      "bytes":  2826,
+                      "sha256":  "2b06b29c2a502cb89ecccc9a96da179e29ebcb70b971c290342c7e687c0c4464"
+                  }
+              ]
+}

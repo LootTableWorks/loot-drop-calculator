@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Loot Table Works World Foundry Item Catalog V2 Demo",
+  "type": "array",
+  "minItems": 100,
+  "maxItems": 100,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema_version",
+      "id",
+      "family_id",
+      "name",
+      "category",
+      "object_type",
+      "rarity",
+      "tier",
+      "biome",
+      "faction_affinity",
+      "state",
+      "composition",
+      "material_class",
+      "crafting_roles",
+      "compatible_disciplines",
+      "durability_class",
+      "weight_class",
+      "function",
+      "mechanical_hook",
+      "trade_use",
+      "quest_use",
+      "visual_identity",
+      "drawback",
+      "salvage_outputs",
+      "tags",
+      "base_value",
+      "scarcity_multiplier",
+      "suggested_value",
+      "stack_limit",
+      "tone",
+      "short_description",
+      "table_description",
+      "effect",
+      "value",
+      "weight",
+      "source_table"
+    ],
+    "properties": {
+      "schema_version": {
+        "enum": [
+          "2.0.0"
+        ]
+      },
+      "id": {
+        "type": "string",
+        "pattern": "^pitm-[0-9]{4}$"
+      },
+      "family_id": {
+        "type": "string",
+        "pattern": "^itm-fam-[0-9]{3}$"
+      },
+      "name": {
+        "type": "string",
+        "minLength": 5
+      },
+      "category": {
+        "enum": [
+          "weapon",
+          "tool",
+          "wearable",
+          "consumable",
+          "relic",
+          "material",
+          "trinket",
+          "quest",
+          "crafting",
+          "trade"
+        ]
+      },
+      "object_type": {
+        "type": "string",
+        "minLength": 3
+      },
+      "rarity": {
+        "enum": [
+          "common",
+          "uncommon",
+          "rare",
+          "epic"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "biome": {
+        "enum": [
+          "coastal",
+          "forest",
+          "highland",
+          "marsh",
+          "desert",
+          "tundra",
+          "ruins",
+          "urban",
+          "river",
+          "underground"
+        ]
+      },
+      "faction_affinity": {
+        "type": "string",
+        "minLength": 5
+      },
+      "state": {
+        "enum": [
+          "raw",
+          "refined",
+          "component",
+          "finished",
+          "consumable",
+          "key-item"
+        ]
+      },
+      "composition": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 2
+        }
+      },
+      "material_class": {
+        "type": "string",
+        "minLength": 2
+      },
+      "crafting_roles": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "enum": [
+            "base",
+            "active",
+            "catalyst",
+            "binder",
+            "conductor",
+            "structure",
+            "finish",
+            "focus",
+            "mechanism",
+            "treatment",
+            "none"
+          ]
+        }
+      },
+      "compatible_disciplines": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 3
+        }
+      },
+      "durability_class": {
+        "enum": [
+          "fragile",
+          "delicate",
+          "working",
+          "stable",
+          "heavy"
+        ]
+      },
+      "weight_class": {
+        "enum": [
+          "tiny",
+          "light",
+          "medium",
+          "heavy"
+        ]
+      },
+      "function": {
+        "type": "string",
+        "minLength": 45
+      },
+      "mechanical_hook": {
+        "type": "string",
+        "minLength": 45
+      },
+      "trade_use": {
+        "type": "string",
+        "minLength": 45
+      },
+      "quest_use": {
+        "type": "string",
+        "minLength": 35
+      },
+      "visual_identity": {
+        "type": "string",
+        "minLength": 35
+      },
+      "drawback": {
+        "type": "string",
+        "minLength": 35
+      },
+      "salvage_outputs": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 2
+        }
+      },
+      "tags": {
+        "type": "array",
+        "minItems": 7,
+        "items": {
+          "type": "string",
+          "minLength": 2
+        }
+      },
+      "base_value": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "scarcity_multiplier": {
+        "type": "number",
+        "minimum": 1
+      },
+      "suggested_value": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "stack_limit": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "tone": {
+        "enum": [
+          "practical",
+          "strange",
+          "ominous",
+          "ceremonial",
+          "weathered",
+          "ornate",
+          "ancient"
+        ]
+      },
+      "short_description": {
+        "type": "string",
+        "minLength": 40
+      },
+      "table_description": {
+        "type": "string",
+        "minLength": 70
+      },
+      "effect": {
+        "type": "string",
+        "minLength": 45
+      },
+      "value": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "weight": {
+        "type": "number",
+        "minimum": 0
+      },
+      "source_table": {
+        "type": "string",
+        "pattern": "^premium-table-(0[1-9]|10)$"
+      }
+    }
+  }
+}
