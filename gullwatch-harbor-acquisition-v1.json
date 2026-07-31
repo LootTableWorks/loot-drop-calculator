@@ -62,8 +62,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 10044,
-      "sha256": "c742002aaabd391b37f2c1f97565852d401eaae170e9c5a617dde885c0c9a97c"
+      "bytes": 10347,
+      "sha256": "4799b27517eb214d3bfcab2f03ae4336a9693e5294b4e6295d8255abf742ac9a"
     },
     {
       "path": "gullwatch-beacon/index.html",
@@ -87,8 +87,8 @@
     },
     {
       "path": "free-rpg-tools/index.html",
-      "bytes": 26484,
-      "sha256": "b7618a826ebd9422454249d948cd177ff6e3b691ea832abdc133ef44433be613"
+      "bytes": 26711,
+      "sha256": "91b6219404a9659d3bbecff2672b2de1905ae1c73520014a1f056647945c2d86"
     },
     {
       "path": "free-rpg-tools/README.md",
@@ -97,8 +97,8 @@
     },
     {
       "path": "free-rpg-tools/MANIFEST.json",
-      "bytes": 1354,
-      "sha256": "55c46be7af96a31d80507dd1b7945cb0702706cba6613084aa98450778e10d3a"
+      "bytes": 1393,
+      "sha256": "b111994acf54196447fdb37ddfccd7915f40325fb6dabd9dcc28fb7d991d50d2"
     },
     {
       "path": "feed.xml",

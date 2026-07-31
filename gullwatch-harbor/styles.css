@@ -113,7 +113,7 @@ nav a {
 
 .hero-image {
   object-fit: cover;
-  object-position: 50% 69%;
+  object-position: 50% 50%;
 }
 
 .hero-shade {
@@ -481,6 +481,7 @@ footer a { align-self: center; font-weight: 800; }
   .brand > span:last-child { display: none; }
   .hero-shade { background: rgba(3, 14, 18, 0.79); }
   .hero { min-height: 720px; }
+  .hero-image { object-position: 66% 50%; }
   .hero-content { width: calc(100% - 32px); padding: 60px 0 78px; }
   h1 { font-size: 54px; }
   .hero-actions { flex-direction: column; }

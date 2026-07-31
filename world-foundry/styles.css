@@ -771,7 +771,7 @@ a:focus-visible,
 
 @media (max-width: 680px) {
   .site-header { min-height: 68px; padding: 10px 14px; }
-  .header-action { padding: 8px 10px; font-size: 11px; }
+  .header-action { min-height: 44px; padding: 8px 10px; font-size: 11px; }
   .hero { gap: 18px; padding: 22px 14px 28px; }
   .hero h1 { font-size: 32px; }
   .hero-intro { display: none; }
@@ -820,7 +820,11 @@ a:focus-visible,
 @media (max-width: 420px) {
   .brand-mark { width: 38px; height: 38px; flex-basis: 38px; }
   .brand strong { font-size: 13px; }
-  .header-action { max-width: 125px; text-align: center; }
+  .header-action {
+    gap: 6px;
+    padding: 8px;
+    white-space: nowrap;
+  }
   .hero h1 { font-size: 30px; overflow-wrap: anywhere; }
   .tool-link { grid-template-columns: 28px minmax(0, 1fr) 20px; }
   .tool-link small { font-size: 10px; }
