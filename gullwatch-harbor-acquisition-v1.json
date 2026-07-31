@@ -62,43 +62,43 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 10158,
-      "sha256": "b003c9e061d5b0938a6d49f3cb7495d1143b36c28b807944af8f17f7fe1e1117"
+      "bytes": 10044,
+      "sha256": "c742002aaabd391b37f2c1f97565852d401eaae170e9c5a617dde885c0c9a97c"
     },
     {
       "path": "gullwatch-beacon/index.html",
-      "bytes": 12890,
-      "sha256": "cd7f1864636e1cd30567c6d6b844034551a7d3b72852c8e9a46ac3565365896a"
+      "bytes": 12826,
+      "sha256": "49394bb463e16199bc2a97b6d63e620dac8c1142222b87ed1d620e069dab0868"
     },
     {
       "path": "gullwatch-aftermath/index.html",
-      "bytes": 15786,
-      "sha256": "691c26495da0bac942fbfe8eb83de9d42bbe02eccceb72c739c86b6498496048"
+      "bytes": 15548,
+      "sha256": "8b303a60dd69f5e473930dca6803de854fd92aaeb0b9087a08cf37a1c6be7594"
     },
     {
       "path": "gullwatch-aftermath/README.md",
-      "bytes": 990,
-      "sha256": "8b85a6c0f87c3a8cf7c35cb802fa5ef3a2f598cf4b82d39e7b9058ed39032d77"
+      "bytes": 971,
+      "sha256": "953cf7769db176b0206396a10ff4b14a0c6c2ef7284a974cd126bc4863be76c9"
     },
     {
       "path": "gullwatch-aftermath/MANIFEST.json",
-      "bytes": 2144,
-      "sha256": "a442580ac4dbc2657bfb79ea35566975c2b3a825826adcb91f96e35f8753c131"
+      "bytes": 2091,
+      "sha256": "c981119f1db447e5743ee364667a7c9ea39932a47a9e928847c3c044f53c9416"
     },
     {
       "path": "free-rpg-tools/index.html",
-      "bytes": 26733,
-      "sha256": "4cb9b6d91ce517b89596f99a04aadf117f4ff18599f7579b75d6fcc8c46f49ef"
+      "bytes": 26484,
+      "sha256": "b7618a826ebd9422454249d948cd177ff6e3b691ea832abdc133ef44433be613"
     },
     {
       "path": "free-rpg-tools/README.md",
-      "bytes": 1017,
-      "sha256": "cd5861609d71d5ab1927e67de67fdb8321513985b49347edd1d605a72377b01b"
+      "bytes": 1002,
+      "sha256": "fc625aa852ba00f854f743fa488a1b33f537ead8411db744857b85dbaf3edaf8"
     },
     {
       "path": "free-rpg-tools/MANIFEST.json",
-      "bytes": 1389,
-      "sha256": "b59a9c9e2aae9be239c214167a89ba8dd563a6951e35c0e10426fba22c1757a2"
+      "bytes": 1354,
+      "sha256": "55c46be7af96a31d80507dd1b7945cb0702706cba6613084aa98450778e10d3a"
     },
     {
       "path": "feed.xml",

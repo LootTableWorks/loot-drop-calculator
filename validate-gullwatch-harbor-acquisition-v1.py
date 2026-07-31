@@ -41,12 +41,12 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def committed_bytes(path: Path) -> bytes:
+    return path.read_bytes().replace(b"\r\n", b"\n")
+
+
+def sha256(content: bytes) -> str:
+    return hashlib.sha256(content).hexdigest()
 
 
 def page_url(relative_path: str) -> str:
@@ -156,15 +156,37 @@ checkout_fragments = (
 for fragment in checkout_fragments:
     require(fragment not in all_page_text, f"Unverified checkout found: {fragment}.")
 
+for manifest_path, expected_paths in (
+    ("gullwatch-aftermath/MANIFEST.json", ("index.html", "README.md")),
+    ("free-rpg-tools/MANIFEST.json", ("index.html", "README.md")),
+):
+    manifest_file = ROOT / manifest_path
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    manifest_entries = {entry["path"]: entry for entry in manifest["files"]}
+    for relative_path in expected_paths:
+        content_path = manifest_file.parent / relative_path
+        content = committed_bytes(content_path)
+        require(relative_path in manifest_entries,
+                f"Manifest entry missing: {manifest_path} -> {relative_path}.")
+        require(
+            len(content) == manifest_entries[relative_path]["bytes"],
+            f"Manifest byte drift: {manifest_path} -> {relative_path}.",
+        )
+        require(
+            sha256(content) == manifest_entries[relative_path]["sha256"],
+            f"Manifest hash drift: {manifest_path} -> {relative_path}.",
+        )
+
 for entry_contract in packet["files"]:
     path = ROOT / entry_contract["path"]
     require(path.exists(), f"Contract file missing: {entry_contract['path']}.")
+    content = committed_bytes(path)
     require(
-        path.stat().st_size == entry_contract["bytes"],
+        len(content) == entry_contract["bytes"],
         f"Byte drift: {entry_contract['path']}.",
     )
     require(
-        sha256(path) == entry_contract["sha256"],
+        sha256(content) == entry_contract["sha256"],
         f"Hash drift: {entry_contract['path']}.",
     )
 

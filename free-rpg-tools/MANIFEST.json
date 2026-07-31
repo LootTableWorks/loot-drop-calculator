@@ -17,8 +17,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 1017,
-      "sha256": "cd5861609d71d5ab1927e67de67fdb8321513985b49347edd1d605a72377b01b"
+      "bytes": 1002,
+      "sha256": "fc625aa852ba00f854f743fa488a1b33f537ead8411db744857b85dbaf3edaf8"
     },
     {
       "path": "assets/character-foundry-party-v1.jpg",
@@ -27,8 +27,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 26733,
-      "sha256": "4cb9b6d91ce517b89596f99a04aadf117f4ff18599f7579b75d6fcc8c46f49ef"
+      "bytes": 26484,
+      "sha256": "b7618a826ebd9422454249d948cd177ff6e3b691ea832abdc133ef44433be613"
     },
     {
       "path": "sitemap.xml",

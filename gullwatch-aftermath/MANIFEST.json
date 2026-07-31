@@ -13,8 +13,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 15786,
-      "sha256": "691c26495da0bac942fbfe8eb83de9d42bbe02eccceb72c739c86b6498496048"
+      "bytes": 15548,
+      "sha256": "8b303a60dd69f5e473930dca6803de854fd92aaeb0b9087a08cf37a1c6be7594"
     },
     {
       "path": "styles.css",
@@ -33,8 +33,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 990,
-      "sha256": "8b85a6c0f87c3a8cf7c35cb802fa5ef3a2f598cf4b82d39e7b9058ed39032d77"
+      "bytes": 971,
+      "sha256": "953cf7769db176b0206396a10ff4b14a0c6c2ef7284a974cd126bc4863be76c9"
     },
     {
       "path": "assets/gullwatch-aftermath-hero-v1.png",
