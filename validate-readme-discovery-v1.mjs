@@ -22,6 +22,14 @@ includes("nothing is transmitted to Loot Table Works", "Data-transmission bounda
 includes("may write that save to browser storage", "Optional local-storage disclosure is missing");
 includes("[Choose the right $3 World Foundry module]", "Paid selector handoff is missing");
 includes(
+  "[Inspect the illustrated Item Catalog demo](https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/?utm_source=github&utm_medium=repository_readme&utm_campaign=item_catalog_demo_v2&utm_content=readme_demo)",
+  "Illustrated Item Catalog demo handoff is missing or untracked",
+);
+includes(
+  "500 stable item records, 100 mapped icons, four sprite sheets, and two offline tools",
+  "Paid Item Catalog proof is missing",
+);
+includes(
   "[Choose from 12 original one-shot ideas](https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/?utm_source=github&utm_medium=repository_readme&utm_campaign=one_shot_ideas_v1&utm_content=readme_ideas)",
   "Primary one-shot ideas handoff is missing or untracked",
 );

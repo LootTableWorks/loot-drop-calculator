@@ -10,6 +10,8 @@ Loot Table Works makes original, system-neutral tabletop adventures, local-first
 
 [Choose the right $3 World Foundry module](https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=github&utm_medium=repository_readme&utm_campaign=module_selector_v1&utm_content=readme_choose_module)
 
+[Inspect the illustrated Item Catalog demo](https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/?utm_source=github&utm_medium=repository_readme&utm_campaign=item_catalog_demo_v2&utm_content=readme_demo)
+
 [Browse all 12 free RPG tools by task](https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/?utm_source=github&utm_medium=repository_readme&utm_campaign=free_tools_v1&utm_content=readme_directory)
 
 [Read the RPG data integration guides](https://loottableworks.github.io/loot-drop-calculator/integration-guides/?utm_source=github&utm_medium=repository_readme&utm_campaign=integration_guides_v1&utm_content=readme_guides)
@@ -54,7 +56,7 @@ The paid modules contain structured production data, offline workflow tools, doc
 
 | Module | Production boundary |
 |---|---|
-| [Item Catalog & Economy Kit](https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=item_catalog) | 500 stable item records |
+| [Item Catalog & Economy Kit](https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=item_catalog) | 500 stable item records, 100 mapped icons, four sprite sheets, and two offline tools |
 | [Merchant & Shop Kit](https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=merchant_shop) | 150 merchants and 1,500 stock relationships |
 | [Crafting & Recipe Kit](https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=crafting_recipe) | 300 recipes and 900 ingredient relationships |
 | [Enemy Loot & Reward Kit](https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=enemy_loot) | 250 profiles and 2,000 reward records |
