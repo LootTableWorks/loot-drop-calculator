@@ -54,13 +54,13 @@
     },
     {
       "path": "storefront-registry.js",
-      "bytes": 12741,
-      "sha256": "098290827604d86a0de5788089151bd04edec716b0f1bb9f36063d50290df1f2"
+      "bytes": 14033,
+      "sha256": "dcee72ee0965ded7b23715b93512a3912870e95968ef2111bb5b39807dd3edb3"
     },
     {
       "path": "storefront-router.js",
-      "bytes": 4980,
-      "sha256": "7913a3fe1cbfed5feb5945432064e2cccde68ab999573e495510ac2ad56dd4e4"
+      "bytes": 5110,
+      "sha256": "c4d31868c450e8a4e5245f4c972acf115f6b9b47f9d9f0a8a09efbba236bd399"
     },
     {
       "path": "styles.css",

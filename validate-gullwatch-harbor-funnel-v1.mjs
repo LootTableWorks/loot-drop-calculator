@@ -139,6 +139,10 @@ check(registry.resolvePublicStores("gullwatch_harbor").length === 0, "Pending of
 for (const storeId of manifest.pending_storefronts) {
   check(offer.stores[storeId].status === "pending", `${storeId}: pending state drift`);
   check(offer.stores[storeId].url === null, `${storeId}: draft URL exposed`);
+  check(
+    registry.STORE_POLICIES[storeId].approvedCanonicalUrls.length === 0,
+    `${storeId}: unverified product identity is allowlisted`
+  );
 }
 
 for (const [storeId, url] of Object.entries({
@@ -147,10 +151,24 @@ for (const [storeId, url] of Object.entries({
   apple_books: "https://books.apple.com/us/book/gullwatch-harbor/id1234567890",
   barnes_noble: "https://www.barnesandnoble.com/w/gullwatch-harbor-loot-table-works/1140000000"
 })) {
+  const unapproved = JSON.parse(JSON.stringify(registry.offers));
+  unapproved.gullwatch_harbor.stores[storeId] = { status: "public", url };
+  assert.throws(
+    () => registry.validateRegistry(unapproved),
+    undefined,
+    `${storeId}: in-domain but unapproved product must fail`
+  );
+  checks += 1;
+
   const future = JSON.parse(JSON.stringify(registry.offers));
+  const futurePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
   future.gullwatch_harbor.stores[storeId] = { status: "public", url };
-  check(registry.validateRegistry(future), `${storeId}: future verified state must validate`);
-  const stores = registry.resolvePublicStores("gullwatch_harbor", future);
+  futurePolicies[storeId].approvedCanonicalUrls = [url];
+  check(
+    registry.validateRegistry(future, futurePolicies),
+    `${storeId}: exact-allowlisted future state must validate`
+  );
+  const stores = registry.resolvePublicStores("gullwatch_harbor", future, futurePolicies);
   check(stores.length === 1, `${storeId}: future selector count drift`);
   const attributed = new URL(stores[0].url);
   check(attributed.searchParams.get("utm_source") === "world_foundry_hub", `${storeId}: source missing`);

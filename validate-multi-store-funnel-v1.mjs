@@ -40,6 +40,20 @@ const standaloneOffers = ["item", "merchant", "recipe", "loot", "quest", "encoun
 const expectedOffers = [...standaloneOffers, "gullwatch_harbor"];
 const directStores = ["gumroad", "kofi", "payhip"];
 const bookStores = ["amazon_kdp", "google_play_books", "apple_books", "barnes_noble"];
+check(
+  registry.STORE_POLICIES.itch.approvedCanonicalUrls.length === 6,
+  "itch allowlist must bind the six exact public products"
+);
+for (const storeId of [...directStores, ...bookStores]) {
+  check(
+    Array.isArray(registry.STORE_POLICIES[storeId].approvedCanonicalUrls),
+    `${storeId}: exact canonical URL allowlist missing`
+  );
+  check(
+    registry.STORE_POLICIES[storeId].approvedCanonicalUrls.length === 0,
+    `${storeId}: unverified product identity is allowlisted`
+  );
+}
 for (const offerId of standaloneOffers) {
   const offer = registry.offers[offerId];
   check(Boolean(offer), `${offerId}: offer missing`);
@@ -156,12 +170,21 @@ for (const entry of manifest.files) {
 }
 
 const futureRegistry = JSON.parse(JSON.stringify(registry.offers));
+const futurePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
+const futureGumroadUrl = "https://loottableworks.gumroad.com/l/verified-item-catalog";
 futureRegistry.item.stores.gumroad = {
   status: "public",
-  url: "https://loottableworks.gumroad.com/l/verified-item-catalog"
+  url: futureGumroadUrl
 };
-check(registry.validateRegistry(futureRegistry), "Verified future Gumroad state should validate");
-check(registry.resolvePublicStores("item", futureRegistry).length === 2, "Future item selector needs two stores");
+futurePolicies.gumroad.approvedCanonicalUrls = [futureGumroadUrl];
+check(
+  registry.validateRegistry(futureRegistry, futurePolicies),
+  "Exact-allowlisted future Gumroad state should validate"
+);
+check(
+  registry.resolvePublicStores("item", futureRegistry, futurePolicies).length === 2,
+  "Future item selector needs two stores"
+);
 
 class FakeElement {
   constructor(documentRef, tagName) {
@@ -232,11 +255,11 @@ class FakeDocument {
   }
 }
 
-function registryView(offers) {
+function registryView(offers, policies = registry.STORE_POLICIES) {
   return {
     offers,
-    validateRegistry: registry.validateRegistry,
-    resolvePublicStores: (offerId) => registry.resolvePublicStores(offerId, offers)
+    validateRegistry: (candidateOffers) => registry.validateRegistry(candidateOffers, policies),
+    resolvePublicStores: (offerId) => registry.resolvePublicStores(offerId, offers, policies)
   };
 }
 
@@ -274,7 +297,10 @@ check(
 check(unavailableDocument.links[0].hidden === true, "Zero-store offer must remain hidden");
 
 const futureDocument = new FakeDocument(["item"]);
-const futureResult = router.enhance(futureDocument, registryView(futureRegistry));
+const futureResult = router.enhance(
+  futureDocument,
+  registryView(futureRegistry, futurePolicies)
+);
 check(futureResult.enhanced === 1, "Future multi-store offer must enhance");
 const futurePicker = futureDocument.links[0].replacement;
 check(futurePicker?.tagName === "DETAILS", "Future multi-store offer must render a details picker");
@@ -284,6 +310,29 @@ check(
     "Choose a verified store for Item Catalog & Economy Kit, $3",
   "Store picker needs a product-specific accessible name"
 );
+
+const singleStoreRegistry = JSON.parse(JSON.stringify(registry.offers));
+const singleStorePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
+const singleStoreUrl = "https://loottableworks.gumroad.com/l/gullwatch-harbor";
+singleStoreRegistry.gullwatch_harbor.stores.gumroad = {
+  status: "public",
+  url: singleStoreUrl
+};
+singleStorePolicies.gumroad.approvedCanonicalUrls = [singleStoreUrl];
+const singleStoreDocument = new FakeDocument(["gullwatch_harbor"]);
+const singleStoreLink = singleStoreDocument.links[0];
+singleStoreLink.hidden = true;
+singleStoreLink.setAttribute("aria-hidden", "true");
+singleStoreLink.setAttribute("aria-disabled", "true");
+const singleStoreResult = router.enhance(
+  singleStoreDocument,
+  registryView(singleStoreRegistry, singleStorePolicies)
+);
+check(singleStoreResult.enhanced === 1, "First verified store must enhance");
+check(singleStoreLink.hidden === false, "First verified store must become visible");
+check(singleStoreLink.getAttribute("aria-hidden") === null, "Visible store must leave aria-hidden");
+check(singleStoreLink.getAttribute("aria-disabled") === null, "Visible store must leave disabled state");
+check(singleStoreLink.href.includes("utm_term=gumroad"), "First verified store needs attribution");
 
 const missingRegistryDocument = new FakeDocument(["item"]);
 const missingRegistryResult = router.enhance(missingRegistryDocument, null);
@@ -298,6 +347,15 @@ for (const invalid of [
     name: "pending URL",
     mutate: (copy) => {
       copy.item.stores.gumroad.url = "https://loottableworks.gumroad.com/l/draft";
+    }
+  },
+  {
+    name: "unapproved in-domain Gumroad product",
+    mutate: (copy) => {
+      copy.item.stores.gumroad = {
+        status: "public",
+        url: "https://loottableworks.gumroad.com/l/another-product"
+      };
     }
   },
   {

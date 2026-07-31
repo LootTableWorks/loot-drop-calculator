@@ -18,6 +18,8 @@
 
   function setSingleStoreLink(link, offer, store) {
     link.hidden = false;
+    link.removeAttribute("aria-hidden");
+    link.removeAttribute("aria-disabled");
     link.href = store.url;
     link.target = "_blank";
     link.rel = "noopener";
@@ -92,6 +94,7 @@
     link.removeAttribute("rel");
     link.dataset.storefrontState = "unavailable";
     link.hidden = true;
+    link.setAttribute("aria-hidden", "true");
     link.setAttribute("aria-disabled", "true");
     link.setAttribute("aria-label", `${offer.label} is not currently available`);
 

@@ -20,46 +20,59 @@
     itch: Object.freeze({
       label: "itch.io",
       host: "loot-table-works.itch.io",
-      hostMode: "exact"
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([
+        "https://loot-table-works.itch.io/original-fantasy-item-data-pack",
+        "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit",
+        "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit",
+        "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit",
+        "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit",
+        "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit"
+      ])
     }),
     gumroad: Object.freeze({
       label: "Gumroad",
       host: "loottableworks.gumroad.com",
-      hostMode: "exact"
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
     }),
     kofi: Object.freeze({
       label: "Ko-fi",
       host: "ko-fi.com",
       hostMode: "exact",
-      approvedProductPaths: Object.freeze([])
+      approvedCanonicalUrls: Object.freeze([])
     }),
     payhip: Object.freeze({
       label: "Payhip",
       host: "payhip.com",
       hostMode: "root-or-subdomain",
-      approvedProductPaths: Object.freeze([])
+      approvedCanonicalUrls: Object.freeze([])
     }),
     amazon_kdp: Object.freeze({
       label: "Amazon",
       host: "www.amazon.com",
-      hostMode: "exact"
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
     }),
     google_play_books: Object.freeze({
       label: "Google Play Books",
       host: "play.google.com",
       hostMode: "exact",
       allowedCanonicalSearchParams: Object.freeze(["id"]),
-      requiredCanonicalSearchParams: Object.freeze(["id"])
+      requiredCanonicalSearchParams: Object.freeze(["id"]),
+      approvedCanonicalUrls: Object.freeze([])
     }),
     apple_books: Object.freeze({
       label: "Apple Books",
       host: "books.apple.com",
-      hostMode: "exact"
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
     }),
     barnes_noble: Object.freeze({
       label: "Barnes & Noble",
       host: "www.barnesandnoble.com",
-      hostMode: "exact"
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
     })
   });
 
@@ -200,8 +213,9 @@
     return normalized === policy.host;
   }
 
-  function validatePublicUrl(value, storeId) {
-    const policy = STORE_POLICIES[storeId];
+  function validatePublicUrl(value, storeId, policies) {
+    const policyRegistry = policies || STORE_POLICIES;
+    const policy = policyRegistry[storeId];
     if (!policy) throw new Error(`Unknown storefront: ${storeId}`);
 
     let parsed;
@@ -233,17 +247,22 @@
     if (parsed.pathname === "/" || parsed.pathname.length < 3) {
       throw new Error(`${storeId}: product path is required`);
     }
-    if (
-      Array.isArray(policy.approvedProductPaths) &&
-      !policy.approvedProductPaths.includes(parsed.pathname.replace(/\/$/, ""))
-    ) {
-      throw new Error(`${storeId}: product ownership is not approved`);
+    const canonical = parsed.toString().replace(/\/$/, "");
+    if (!Array.isArray(policy.approvedCanonicalUrls)) {
+      throw new Error(`${storeId}: canonical URL allowlist is required`);
+    }
+    const approvedCanonicalUrls = policy.approvedCanonicalUrls.map((approved) =>
+      new URL(approved).toString().replace(/\/$/, "")
+    );
+    if (!approvedCanonicalUrls.includes(canonical)) {
+      throw new Error(`${storeId}: product identity is not approved`);
     }
 
-    return parsed.toString().replace(/\/$/, "");
+    return canonical;
   }
 
-  function validateRegistry(offers) {
+  function validateRegistry(offers, policies) {
+    const policyRegistry = policies || STORE_POLICIES;
     const offerEntries = Object.entries(offers || {});
     if (offerEntries.length !== 7) throw new Error("Exactly seven paid offers are required");
 
@@ -255,11 +274,11 @@
       if (!offer.attributionContent) throw new Error(`${offerId}: attribution content is required`);
 
       const storeIds = Object.keys(offer.stores || {});
-      if (storeIds.length !== Object.keys(STORE_POLICIES).length) {
+      if (storeIds.length !== Object.keys(policyRegistry).length) {
         throw new Error(`${offerId}: every storefront state must be explicit`);
       }
 
-      for (const storeId of Object.keys(STORE_POLICIES)) {
+      for (const storeId of Object.keys(policyRegistry)) {
         const state = offer.stores[storeId];
         if (!state || !["public", "pending", "not_applicable"].includes(state.status)) {
           throw new Error(
@@ -269,20 +288,21 @@
         if (state.status !== "public" && state.url !== null) {
           throw new Error(`${offerId}/${storeId}: non-public storefront must not expose a URL`);
         }
-        if (state.status === "public") validatePublicUrl(state.url, storeId);
+        if (state.status === "public") validatePublicUrl(state.url, storeId, policyRegistry);
       }
     }
 
     return true;
   }
 
-  function buildAttributedUrl(offerId, storeId, offers) {
+  function buildAttributedUrl(offerId, storeId, offers, policies) {
     const registry = offers || OFFER_DEFINITIONS;
+    const policyRegistry = policies || STORE_POLICIES;
     const offer = registry[offerId];
     const state = offer && offer.stores && offer.stores[storeId];
     if (!offer || !state || state.status !== "public") return null;
 
-    const canonical = validatePublicUrl(state.url, storeId);
+    const canonical = validatePublicUrl(state.url, storeId, policyRegistry);
     const destination = new URL(canonical);
     const attribution = {
       ...ATTRIBUTION,
@@ -296,18 +316,19 @@
     return destination.toString();
   }
 
-  function resolvePublicStores(offerId, offers) {
+  function resolvePublicStores(offerId, offers, policies) {
     const registry = offers || OFFER_DEFINITIONS;
+    const policyRegistry = policies || STORE_POLICIES;
     const offer = registry[offerId];
     if (!offer) return [];
 
-    return Object.keys(STORE_POLICIES)
+    return Object.keys(policyRegistry)
       .filter((storeId) => offer.stores[storeId].status === "public")
       .map((storeId) => ({
         id: storeId,
-        label: STORE_POLICIES[storeId].label,
+        label: policyRegistry[storeId].label,
         priceUsd: offer.priceUsd,
-        url: buildAttributedUrl(offerId, storeId, registry)
+        url: buildAttributedUrl(offerId, storeId, registry, policyRegistry)
       }));
   }
 
