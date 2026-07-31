@@ -8,6 +8,10 @@ free Gullwatch one-shot or Campaign Workspace. It contains no private archive,
 paid download, checkout, account requirement, background analytics, or
 automatic external action.
 
+The page also routes visitors to the owned Gullwatch Harbor campaign page,
+where the complete four-session edition is described and free PDF and EPUB
+samples are available. That route exposes no unverified checkout.
+
 Canonical route:
 
 `https://loottableworks.github.io/loot-drop-calculator/gullwatch-aftermath/`

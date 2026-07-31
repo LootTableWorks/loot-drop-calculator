@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "gullwatch-harbor-acquisition-v1",
+  "status": "approved_for_deployment",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_destination": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/",
+  "campaign": "gullwatch_harbor_book_v1",
+  "owned_routes": [
+    {
+      "surface": "front_door",
+      "path": "index.html",
+      "href": "gullwatch-harbor/?utm_source=owned_site&utm_medium=front_door&utm_campaign=gullwatch_harbor_book_v1&utm_content=continuity_campaign_book"
+    },
+    {
+      "surface": "gullwatch_beacon",
+      "path": "gullwatch-beacon/index.html",
+      "href": "../gullwatch-harbor/?utm_source=gullwatch_beacon&utm_medium=owned_page&utm_campaign=gullwatch_harbor_book_v1&utm_content=continue_four_session_campaign"
+    },
+    {
+      "surface": "gullwatch_aftermath_hero",
+      "path": "gullwatch-aftermath/index.html",
+      "href": "../gullwatch-harbor/?utm_source=gullwatch_aftermath&utm_medium=owned_page&utm_campaign=gullwatch_harbor_book_v1&utm_content=hero_full_campaign"
+    },
+    {
+      "surface": "gullwatch_aftermath_footer",
+      "path": "gullwatch-aftermath/index.html",
+      "href": "../gullwatch-harbor/?utm_source=gullwatch_aftermath&utm_medium=owned_page&utm_campaign=gullwatch_harbor_book_v1&utm_content=footer_full_campaign"
+    },
+    {
+      "surface": "free_rpg_tools",
+      "path": "free-rpg-tools/index.html",
+      "href": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/?utm_source=free_rpg_tools&utm_medium=playable_sample&utm_campaign=gullwatch_harbor_book_v1&utm_content=gullwatch_harbor_campaign_book"
+    }
+  ],
+  "feed_route": {
+    "path": "feed.xml",
+    "entry_id": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/#campaign-book-v1",
+    "href": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/?utm_source=loot_table_works_feed&utm_medium=organic_feed&utm_campaign=ltw_updates_v1&utm_content=updates_feed",
+    "updated": "2026-07-31T03:54:57Z"
+  },
+  "claims": {
+    "pdf_pages": 61,
+    "linked_sessions": 4,
+    "playable_scenes": 19,
+    "sample_pdf_pages": 12
+  },
+  "commerce_boundary": {
+    "verified_public_storefronts": [],
+    "checkout_links_exposed": 0,
+    "purchase_available_claimed": false
+  },
+  "demand_integrity": {
+    "qualified_external_sessions": 0,
+    "attributed_paid_listing_visits": 0,
+    "legitimate_external_downloads": 0,
+    "verified_paid_sales": 0,
+    "verified_gross_revenue_usd": 0,
+    "owner_or_qa_activity_counted_as_demand": false
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 10158,
+      "sha256": "b003c9e061d5b0938a6d49f3cb7495d1143b36c28b807944af8f17f7fe1e1117"
+    },
+    {
+      "path": "gullwatch-beacon/index.html",
+      "bytes": 12890,
+      "sha256": "cd7f1864636e1cd30567c6d6b844034551a7d3b72852c8e9a46ac3565365896a"
+    },
+    {
+      "path": "gullwatch-aftermath/index.html",
+      "bytes": 15786,
+      "sha256": "691c26495da0bac942fbfe8eb83de9d42bbe02eccceb72c739c86b6498496048"
+    },
+    {
+      "path": "gullwatch-aftermath/README.md",
+      "bytes": 990,
+      "sha256": "8b85a6c0f87c3a8cf7c35cb802fa5ef3a2f598cf4b82d39e7b9058ed39032d77"
+    },
+    {
+      "path": "gullwatch-aftermath/MANIFEST.json",
+      "bytes": 2144,
+      "sha256": "a442580ac4dbc2657bfb79ea35566975c2b3a825826adcb91f96e35f8753c131"
+    },
+    {
+      "path": "free-rpg-tools/index.html",
+      "bytes": 26733,
+      "sha256": "4cb9b6d91ce517b89596f99a04aadf117f4ff18599f7579b75d6fcc8c46f49ef"
+    },
+    {
+      "path": "free-rpg-tools/README.md",
+      "bytes": 1017,
+      "sha256": "cd5861609d71d5ab1927e67de67fdb8321513985b49347edd1d605a72377b01b"
+    },
+    {
+      "path": "free-rpg-tools/MANIFEST.json",
+      "bytes": 1389,
+      "sha256": "b59a9c9e2aae9be239c214167a89ba8dd563a6951e35c0e10426fba22c1757a2"
+    },
+    {
+      "path": "feed.xml",
+      "bytes": 5835,
+      "sha256": "1d2398e68712f4a3be6dc563bf3b4c07812acffeaee9d118de8d3efe7a48fb0c"
+    },
+    {
+      "path": "test-updates-feed-v1.mjs",
+      "bytes": 6882,
+      "sha256": "7a47638dde9ec98d864c436e9444803c96042d0f45c103d89c81c5627ed0333c"
+    },
+    {
+      "path": "validate-updates-feed-structure-v1.py",
+      "bytes": 14929,
+      "sha256": "8262bfc4c9201c48ed166f80c94110e9e23d21943df13fb6b9e68e3a4cabd2d4"
+    }
+  ]
+}

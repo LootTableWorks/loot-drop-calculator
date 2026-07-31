@@ -29,7 +29,7 @@ test("unescaped ampersand fails", () => {
 });
 
 test("invalid feed timestamp fails", () => {
-  fails(source.replace("2026-07-30T15:30:00Z", "not-a-date"));
+  fails(source.replace("2026-07-31T03:54:57Z", "not-a-date"));
 });
 
 test("missing entry title fails", () => {
@@ -52,8 +52,8 @@ test("duplicate entry summary fails", () => {
 
 test("extra feed alternate link fails", () => {
   fails(source.replace(
-    "<updated>2026-07-30T15:30:00Z</updated>",
-    '<link rel="alternate" type="text/html" href="https://example.com/"/><updated>2026-07-30T15:30:00Z</updated>',
+    "<updated>2026-07-31T03:54:57Z</updated>",
+    '<link rel="alternate" type="text/html" href="https://example.com/"/><updated>2026-07-31T03:54:57Z</updated>',
   ));
 });
 
@@ -207,8 +207,8 @@ test("bundle route fails", () => {
 
 test("lowercase prohibited business name fails", () => {
   fails(source.replace(
-    "<updated>2026-07-30T15:30:00Z</updated>",
-    "<rights>all faze electric</rights><updated>2026-07-30T15:30:00Z</updated>",
+    "<updated>2026-07-31T03:54:57Z</updated>",
+    "<rights>all faze electric</rights><updated>2026-07-31T03:54:57Z</updated>",
   ));
 });
 

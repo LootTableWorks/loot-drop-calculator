@@ -1,13 +1,14 @@
 {
   "product_id": "free-rpg-tools-directory",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
   "public_release_requires_review": false,
   "release_authority": "delegated_internal_aaa_qa",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/free-rpg-tools/",
-  "free_tool_destinations": 10,
+  "free_tool_destinations": 12,
+  "owned_product_preview_destinations": 1,
   "paid_standalone_destinations": 6,
   "task_lanes": 5,
   "bundle_destinations": 0,
@@ -16,8 +17,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 934,
-      "sha256": "d9ef0f4695b9c37c111c9c057faf93b4a8ff5180f25f8ceea785e1c612f0dcd7"
+      "bytes": 1017,
+      "sha256": "cd5861609d71d5ab1927e67de67fdb8321513985b49347edd1d605a72377b01b"
     },
     {
       "path": "assets/character-foundry-party-v1.jpg",
@@ -26,8 +27,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 23974,
-      "sha256": "139f492ba0240bd964d8de1a3851863b98aa4e0d1f58a4ac035d412f5efe08db"
+      "bytes": 26733,
+      "sha256": "4cb9b6d91ce517b89596f99a04aadf117f4ff18599f7579b75d6fcc8c46f49ef"
     },
     {
       "path": "sitemap.xml",

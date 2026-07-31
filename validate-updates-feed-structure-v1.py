@@ -17,6 +17,13 @@ ATTRIBUTION = (
 
 EXPECTED_ENTRIES = [
     {
+        "title": "Gullwatch Harbor: preview the complete four-session campaign",
+        "id": f"{ORIGIN}gullwatch-harbor/#campaign-book-v1",
+        "path": "gullwatch-harbor/",
+        "updated": "2026-07-31T03:54:57Z",
+        "summary": "Preview a 61-page system-neutral coastal fantasy campaign with four linked sessions, nineteen playable scenes, and free PDF and EPUB samples.",
+    },
+    {
         "title": "One-Shot Forge: reproducible adventures and shareable settings",
         "id": f"{ORIGIN}one-shot-forge/#v1.1.3",
         "path": "one-shot-forge/",
@@ -261,7 +268,7 @@ def validate(payload):
     require(text(root, "id") == f"{ORIGIN}feed.xml", "Feed ID changed")
     feed_updated = text(root, "updated")
     parse_timestamp(feed_updated)
-    require(feed_updated == "2026-07-30T15:30:00Z", "Feed updated timestamp changed")
+    require(feed_updated == "2026-07-31T03:54:57Z", "Feed updated timestamp changed")
 
     author = root.find(f"{ATOM}author")
     require(author is not None, "Feed author is missing")
