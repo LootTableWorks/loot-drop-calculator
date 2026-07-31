@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Choose a Verified Store | Loot Table Works</title>
+    <meta name="description" content="Continue to a verified Loot Table Works storefront for the selected World Foundry product.">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/buy/">
+    <link rel="stylesheet" href="styles.css?v=1.0.0">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../world-foundry/">
+        <span class="brand-mark" aria-hidden="true">LTW</span>
+        <span><strong>Loot Table Works</strong><small>Verified checkout</small></span>
+      </a>
+      <a class="catalog-link" href="../world-foundry/#catalog">View catalog</a>
+    </header>
+
+    <main id="main-content">
+      <section class="checkout-shell" aria-labelledby="checkout-title">
+        <p class="eyebrow">World Foundry commerce router</p>
+        <h1 id="checkout-title">Checking verified stores</h1>
+        <p id="checkout-message">Only an allowlisted public product page can appear here.</p>
+        <div id="store-options" class="store-options" aria-live="polite"></div>
+        <p id="checkout-status" class="status-line">Validating product identity and destination.</p>
+        <noscript>
+          <p class="noscript">JavaScript is required for storefront verification. Use the World Foundry catalog to open the current public product page.</p>
+        </noscript>
+      </section>
+    </main>
+
+    <footer>
+      <span>Exact public URLs only</span>
+      <span>No draft or private links</span>
+      <span>Channel-attributed checkout</span>
+    </footer>
+
+    <script src="../world-foundry/storefront-registry.js?v=3.0.0"></script>
+    <script src="app.js?v=1.0.0"></script>
+  </body>
+</html>

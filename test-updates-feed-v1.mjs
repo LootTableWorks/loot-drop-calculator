@@ -139,7 +139,7 @@ test("existing paid-route drift fails", () => {
   fails(source, {
     ...pages,
     directory: pages.directory.replace(
-      "https://loot-table-works.itch.io/original-fantasy-item-data-pack",
+      "../buy/?offer=item",
       "https://loottableworks.github.io/loot-drop-calculator/world-foundry/",
     ),
   });
@@ -149,8 +149,8 @@ test("same-count paid-route substitution fails", () => {
   fails(source, {
     ...pages,
     directory: pages.directory.replace(
-      "https://loot-table-works.itch.io/original-fantasy-item-data-pack",
-      "https://loot-table-works.itch.io/world-foundry-six-module-fantasy-data-collection",
+      "../buy/?offer=item",
+      "../buy/?offer=unknown",
     ),
   });
 });
@@ -199,8 +199,8 @@ test("bundle route fails", () => {
   fails(source, {
     ...pages,
     directory: pages.directory.replace(
-      "https://loot-table-works.itch.io/original-fantasy-item-data-pack",
-      "https://loot-table-works.itch.io/world-foundry-bundle",
+      "../buy/?offer=item",
+      "../buy/?offer=bundle",
     ),
   });
 });

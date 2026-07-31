@@ -8,7 +8,12 @@ A dependency-free static learning and catalog hub for Loot Table Works / World F
 - a direct route to the outcome-based Free RPG Tools discovery directory;
 - a first-class Gullwatch Harbor campaign-book preview whose verified store
   selector remains hidden until a public buyer path passes QA;
-- a six-module standalone catalog with fail-closed verified-store routing and per-store campaign attribution;
+- a six-module standalone catalog with twelve explicit marketplace policies,
+  exact public-URL allowlists, store-specific pricing, and per-store campaign
+  attribution;
+- a shared `/buy/` handoff used by 70 paid calls-to-action across 14 owned
+  pages, with automatic direct routing when one store is verified and a buyer
+  choice when multiple stores are verified;
 - substantive guides to dependency-closed world seeds, merchant economies, and engine data contracts;
 - canonical, Open Graph, X card, JSON-LD, sitemap, and crawl metadata;
 - a copied, reviewed World Seed Studio v2 screenshot;

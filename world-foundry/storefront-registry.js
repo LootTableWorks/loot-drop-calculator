@@ -73,6 +73,30 @@
       host: "www.barnesandnoble.com",
       hostMode: "exact",
       approvedCanonicalUrls: Object.freeze([])
+    }),
+    artstation: Object.freeze({
+      label: "ArtStation",
+      host: "www.artstation.com",
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
+    }),
+    etsy: Object.freeze({
+      label: "Etsy",
+      host: "www.etsy.com",
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
+    }),
+    unity_asset_store: Object.freeze({
+      label: "Unity Asset Store",
+      host: "assetstore.unity.com",
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
+    }),
+    fab: Object.freeze({
+      label: "Fab",
+      host: "www.fab.com",
+      hostMode: "exact",
+      approvedCanonicalUrls: Object.freeze([])
     })
   });
 
@@ -92,7 +116,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "pending", url: null }),
+        etsy: Object.freeze({ status: "pending", url: null }),
+        unity_asset_store: Object.freeze({ status: "pending", url: null }),
+        fab: Object.freeze({ status: "pending", url: null })
       })
     }),
     merchant: Object.freeze({
@@ -110,7 +138,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     recipe: Object.freeze({
@@ -128,7 +160,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     loot: Object.freeze({
@@ -146,7 +182,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     quest: Object.freeze({
@@ -164,7 +204,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     encounter: Object.freeze({
@@ -182,7 +226,11 @@
         amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
         google_play_books: Object.freeze({ status: "not_applicable", url: null }),
         apple_books: Object.freeze({ status: "not_applicable", url: null }),
-        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     gullwatch_harbor: Object.freeze({
@@ -198,7 +246,11 @@
         amazon_kdp: Object.freeze({ status: "pending", url: null }),
         google_play_books: Object.freeze({ status: "pending", url: null }),
         apple_books: Object.freeze({ status: "pending", url: null }),
-        barnes_noble: Object.freeze({ status: "pending", url: null })
+        barnes_noble: Object.freeze({ status: "pending", url: null }),
+        artstation: Object.freeze({ status: "not_applicable", url: null }),
+        etsy: Object.freeze({ status: "not_applicable", url: null }),
+        unity_asset_store: Object.freeze({ status: "not_applicable", url: null }),
+        fab: Object.freeze({ status: "not_applicable", url: null })
       })
     })
   });
@@ -288,6 +340,12 @@
         if (state.status !== "public" && state.url !== null) {
           throw new Error(`${offerId}/${storeId}: non-public storefront must not expose a URL`);
         }
+        if (
+          Object.prototype.hasOwnProperty.call(state, "priceUsd") &&
+          (!Number.isFinite(state.priceUsd) || state.priceUsd <= 0)
+        ) {
+          throw new Error(`${offerId}/${storeId}: price override must be positive`);
+        }
         if (state.status === "public") validatePublicUrl(state.url, storeId, policyRegistry);
       }
     }
@@ -295,7 +353,12 @@
     return true;
   }
 
-  function buildAttributedUrl(offerId, storeId, offers, policies) {
+  function sanitizeAttribution(value, fallback) {
+    const normalized = String(value || "").trim();
+    return /^[a-z0-9][a-z0-9_.-]{0,79}$/i.test(normalized) ? normalized : fallback;
+  }
+
+  function buildAttributedUrl(offerId, storeId, offers, policies, attributionOverrides) {
     const registry = offers || OFFER_DEFINITIONS;
     const policyRegistry = policies || STORE_POLICIES;
     const offer = registry[offerId];
@@ -304,19 +367,24 @@
 
     const canonical = validatePublicUrl(state.url, storeId, policyRegistry);
     const destination = new URL(canonical);
+    const overrides = attributionOverrides || {};
     const attribution = {
-      ...ATTRIBUTION,
-      utm_campaign: offer.attributionCampaign || ATTRIBUTION.utm_campaign
+      utm_source: sanitizeAttribution(overrides.utm_source, ATTRIBUTION.utm_source),
+      utm_medium: sanitizeAttribution(overrides.utm_medium, ATTRIBUTION.utm_medium),
+      utm_campaign: sanitizeAttribution(
+        overrides.utm_campaign,
+        offer.attributionCampaign || ATTRIBUTION.utm_campaign
+      ),
+      utm_content: sanitizeAttribution(overrides.utm_content, offer.attributionContent)
     };
     for (const [key, value] of Object.entries(attribution)) {
       destination.searchParams.set(key, value);
     }
-    destination.searchParams.set("utm_content", offer.attributionContent);
     destination.searchParams.set("utm_term", storeId);
     return destination.toString();
   }
 
-  function resolvePublicStores(offerId, offers, policies) {
+  function resolvePublicStores(offerId, offers, policies, attributionOverrides) {
     const registry = offers || OFFER_DEFINITIONS;
     const policyRegistry = policies || STORE_POLICIES;
     const offer = registry[offerId];
@@ -327,9 +395,38 @@
       .map((storeId) => ({
         id: storeId,
         label: policyRegistry[storeId].label,
-        priceUsd: offer.priceUsd,
-        url: buildAttributedUrl(offerId, storeId, registry, policyRegistry)
+        priceUsd: offer.stores[storeId].priceUsd || offer.priceUsd,
+        url: buildAttributedUrl(
+          offerId,
+          storeId,
+          registry,
+          policyRegistry,
+          attributionOverrides
+        )
       }));
+  }
+
+  function findOfferIdByUrl(value, offers, policies) {
+    const registry = offers || OFFER_DEFINITIONS;
+    const policyRegistry = policies || STORE_POLICIES;
+    let parsed;
+    try {
+      parsed = new URL(value, "https://loottableworks.github.io/");
+    } catch {
+      return null;
+    }
+    parsed.search = "";
+    parsed.hash = "";
+    const candidate = parsed.toString().replace(/\/$/, "");
+
+    for (const [offerId, offer] of Object.entries(registry)) {
+      for (const [storeId, state] of Object.entries(offer.stores)) {
+        if (state.status !== "public") continue;
+        const canonical = validatePublicUrl(state.url, storeId, policyRegistry);
+        if (canonical === candidate) return offerId;
+      }
+    }
+    return null;
   }
 
   validateRegistry(OFFER_DEFINITIONS);
@@ -341,6 +438,7 @@
     validatePublicUrl,
     validateRegistry,
     buildAttributedUrl,
-    resolvePublicStores
+    resolvePublicStores,
+    findOfferIdByUrl
   });
 });

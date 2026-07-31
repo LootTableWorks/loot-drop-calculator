@@ -67,8 +67,8 @@
     },
     {
       "path": "gullwatch-beacon/index.html",
-      "bytes": 12826,
-      "sha256": "49394bb463e16199bc2a97b6d63e620dac8c1142222b87ed1d620e069dab0868"
+      "bytes": 12916,
+      "sha256": "80f18fd0dd9a3966edd92a47c743ee8e3d04dc0a66b947d108f3a6f417881e60"
     },
     {
       "path": "gullwatch-aftermath/index.html",
@@ -87,8 +87,8 @@
     },
     {
       "path": "free-rpg-tools/index.html",
-      "bytes": 26711,
-      "sha256": "91b6219404a9659d3bbecff2672b2de1905ae1c73520014a1f056647945c2d86"
+      "bytes": 26592,
+      "sha256": "06c4f163bd341952362586749b11db2fb6535618a03cbe76000bd0eff9e36e9e"
     },
     {
       "path": "free-rpg-tools/README.md",
@@ -97,8 +97,8 @@
     },
     {
       "path": "free-rpg-tools/MANIFEST.json",
-      "bytes": 1393,
-      "sha256": "b111994acf54196447fdb37ddfccd7915f40325fb6dabd9dcc28fb7d991d50d2"
+      "bytes": 1425,
+      "sha256": "094adcd4341040180a428e8910989fd69b9eda83a7ef4fa7b985731352cd7e73"
     },
     {
       "path": "feed.xml",
@@ -107,13 +107,13 @@
     },
     {
       "path": "test-updates-feed-v1.mjs",
-      "bytes": 6882,
-      "sha256": "7a47638dde9ec98d864c436e9444803c96042d0f45c103d89c81c5627ed0333c"
+      "bytes": 6651,
+      "sha256": "8d4928dea42070a04047632400b0bd2d8826dd75775bcd0d49627aa548bedc76"
     },
     {
       "path": "validate-updates-feed-structure-v1.py",
-      "bytes": 14929,
-      "sha256": "8262bfc4c9201c48ed166f80c94110e9e23d21943df13fb6b9e68e3a4cabd2d4"
+      "bytes": 14540,
+      "sha256": "4b22ac96382e68f51890d5329f5a91946b6a15d69582f25832f55aa216f39b85"
     }
   ]
 }

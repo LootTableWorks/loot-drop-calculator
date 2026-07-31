@@ -1,5 +1,5 @@
 {
-  "release_id": "run-one-shot-tonight-v2",
+  "release_id": "run-one-shot-tonight-v3",
   "prepared_at": "2026-07-30T19:00:09.235Z",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/run-one-shot-tonight/",
   "promise": "Choose one of twelve original premises, generate the complete one-shot, run it tonight, and preserve the ending.",
@@ -13,8 +13,8 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 30519,
-      "sha256": "44ba5f586ae1cb2c11b5d946e70924c70308582bde50b5837b15305c796c41ce"
+      "bytes": 30573,
+      "sha256": "06e9644a376d4673c57257a36420303e784e5b8e7e311fda954a1b91812b5536"
     },
     {
       "path": "styles.css",
@@ -31,5 +31,6 @@
       "bytes": 2140,
       "sha256": "de23b20d66f041fcc5092c36b110259927ade04f9e1e28e2d499ec35571a854b"
     }
-  ]
+  ],
+  "checkout_router": "../buy/"
 }

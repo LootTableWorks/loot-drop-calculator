@@ -25,7 +25,7 @@ function check(condition, message) {
 
 check(registry.validateRegistry(registry.offers), "Default registry must validate");
 check(Object.keys(registry.offers).length === 7, "Seven paid offers required");
-check(Object.keys(registry.STORE_POLICIES).length === 8, "Eight storefront policies required");
+check(Object.keys(registry.STORE_POLICIES).length === 12, "Twelve storefront policies required");
 check(registry.ATTRIBUTION.utm_medium === "storefront_selector", "Attribution medium drift");
 check(router.priceLabel(3) === "$3", "Price label drift");
 check(router.priceLabel(2.99) === "$2.99", "Campaign-book price label drift");
@@ -40,11 +40,12 @@ const standaloneOffers = ["item", "merchant", "recipe", "loot", "quest", "encoun
 const expectedOffers = [...standaloneOffers, "gullwatch_harbor"];
 const directStores = ["gumroad", "kofi", "payhip"];
 const bookStores = ["amazon_kdp", "google_play_books", "apple_books", "barnes_noble"];
+const nativeAssetStores = ["artstation", "etsy", "unity_asset_store", "fab"];
 check(
   registry.STORE_POLICIES.itch.approvedCanonicalUrls.length === 6,
   "itch allowlist must bind the six exact public products"
 );
-for (const storeId of [...directStores, ...bookStores]) {
+for (const storeId of [...directStores, ...bookStores, ...nativeAssetStores]) {
   check(
     Array.isArray(registry.STORE_POLICIES[storeId].approvedCanonicalUrls),
     `${storeId}: exact canonical URL allowlist missing`
@@ -58,7 +59,7 @@ for (const offerId of standaloneOffers) {
   const offer = registry.offers[offerId];
   check(Boolean(offer), `${offerId}: offer missing`);
   check(offer.priceUsd === 3, `${offerId}: price drift`);
-  check(Object.keys(offer.stores).length === 8, `${offerId}: storefront state incomplete`);
+  check(Object.keys(offer.stores).length === 12, `${offerId}: storefront state incomplete`);
   check(offer.stores.itch.status === "public", `${offerId}: itch fallback must be public`);
   check(typeof offer.stores.itch.url === "string", `${offerId}: itch URL missing`);
 
@@ -70,6 +71,14 @@ for (const offerId of standaloneOffers) {
     check(
       offer.stores[storeId].status === "not_applicable",
       `${offerId}/${storeId}: must remain not applicable`
+    );
+    check(offer.stores[storeId].url === null, `${offerId}/${storeId}: URL exposed`);
+  }
+  for (const storeId of nativeAssetStores) {
+    const expectedStatus = offerId === "item" ? "pending" : "not_applicable";
+    check(
+      offer.stores[storeId].status === expectedStatus,
+      `${offerId}/${storeId}: ${expectedStatus} state required`
     );
     check(offer.stores[storeId].url === null, `${offerId}/${storeId}: URL exposed`);
   }
@@ -92,11 +101,18 @@ for (const offerId of standaloneOffers) {
 
 const campaignBook = registry.offers.gullwatch_harbor;
 check(campaignBook.priceUsd === 2.99, "Gullwatch Harbor price drift");
-check(Object.keys(campaignBook.stores).length === 8, "Gullwatch Harbor store state incomplete");
+check(Object.keys(campaignBook.stores).length === 12, "Gullwatch Harbor store state incomplete");
 check(campaignBook.stores.itch.status === "not_applicable", "Gullwatch Harbor itch state drift");
 for (const storeId of [...directStores, ...bookStores]) {
   check(campaignBook.stores[storeId].status === "pending", `Gullwatch Harbor/${storeId} state drift`);
   check(campaignBook.stores[storeId].url === null, `Gullwatch Harbor/${storeId} draft URL exposed`);
+}
+for (const storeId of nativeAssetStores) {
+  check(
+    campaignBook.stores[storeId].status === "not_applicable",
+    `Gullwatch Harbor/${storeId} state drift`
+  );
+  check(campaignBook.stores[storeId].url === null, `Gullwatch Harbor/${storeId} URL exposed`);
 }
 check(registry.resolvePublicStores("gullwatch_harbor").length === 0, "Gullwatch Harbor must expose zero stores");
 check(
@@ -111,12 +127,14 @@ check(
   html.indexOf("storefront-registry.js") < html.indexOf("storefront-router.js"),
   "Registry must load before router"
 );
+check(html.includes("storefront-registry.js?v=3.0.0"), "Registry cache key drift");
+check(html.includes("storefront-router.js?v=2.0.0"), "Router cache key drift");
 check((html.match(/data-link-kind="paid-module"/g) || []).length === 7, "Seven paid offer markers required");
 check((html.match(/Buy on itch\.io/g) || []).length === 6, "Static fallbacks must name itch.io");
 check(css.includes(".storefront-picker"), "Storefront picker styles missing");
 check(css.includes(".storefront-menu"), "Storefront menu styles missing");
-check(manifest.version === "1.9.0", "World Foundry manifest version drift");
-check(manifest.storefront_registry_version === "2.0.0", "Storefront registry version drift");
+check(manifest.version === "1.10.0", "World Foundry manifest version drift");
+check(manifest.storefront_registry_version === "3.0.0", "Storefront registry version drift");
 check(
   readme.includes(`Status: \`${manifest.status}\``),
   "README and manifest release statuses must match"
@@ -136,7 +154,7 @@ check(
 );
 check(
   JSON.stringify(manifest.pending_storefronts) ===
-    JSON.stringify([...directStores, ...bookStores]),
+    JSON.stringify([...directStores, ...bookStores, ...nativeAssetStores]),
   "Pending storefront state drift"
 );
 check(manifest.draft_storefront_urls_exposed === 0, "Draft storefront exposure must remain zero");
@@ -174,7 +192,8 @@ const futurePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
 const futureGumroadUrl = "https://loottableworks.gumroad.com/l/verified-item-catalog";
 futureRegistry.item.stores.gumroad = {
   status: "public",
-  url: futureGumroadUrl
+  url: futureGumroadUrl,
+  priceUsd: 3
 };
 futurePolicies.gumroad.approvedCanonicalUrls = [futureGumroadUrl];
 check(
@@ -184,6 +203,45 @@ check(
 check(
   registry.resolvePublicStores("item", futureRegistry, futurePolicies).length === 2,
   "Future item selector needs two stores"
+);
+const futureAttributedStore = registry.resolvePublicStores(
+  "item",
+  futureRegistry,
+  futurePolicies,
+  {
+    utm_source: "integration_guides",
+    utm_medium: "seo_guide",
+    utm_campaign: "schema_design",
+    utm_content: "item_upgrade"
+  }
+).find((store) => store.id === "gumroad");
+check(Boolean(futureAttributedStore), "Future Gumroad route missing");
+const futureAttributedUrl = new URL(futureAttributedStore.url);
+check(
+  futureAttributedUrl.searchParams.get("utm_source") === "integration_guides",
+  "Inbound source attribution must survive store selection"
+);
+check(
+  futureAttributedUrl.searchParams.get("utm_medium") === "seo_guide",
+  "Inbound medium attribution must survive store selection"
+);
+check(
+  futureAttributedUrl.searchParams.get("utm_campaign") === "schema_design",
+  "Inbound campaign attribution must survive store selection"
+);
+check(
+  futureAttributedUrl.searchParams.get("utm_content") === "item_upgrade",
+  "Inbound content attribution must survive store selection"
+);
+check(
+  futureAttributedUrl.searchParams.get("utm_term") === "gumroad",
+  "Selected marketplace must be attributed"
+);
+check(
+  registry.findOfferIdByUrl(
+    "https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=test"
+  ) === "item",
+  "Public fallback URL must resolve to its offer"
 );
 
 class FakeElement {
@@ -399,6 +457,21 @@ for (const invalid of [
         url: "https://another-seller.payhip.com/b/item"
       };
     }
+  },
+  {
+    name: "unapproved ArtStation product ownership",
+    mutate: (copy) => {
+      copy.item.stores.artstation = {
+        status: "public",
+        url: "https://www.artstation.com/marketplace/p/unverified-product"
+      };
+    }
+  },
+  {
+    name: "invalid public price override",
+    mutate: (copy) => {
+      copy.item.stores.itch.priceUsd = 0;
+    }
   }
 ]) {
   const copy = JSON.parse(JSON.stringify(registry.offers));
@@ -408,5 +481,5 @@ for (const invalid of [
 }
 
 console.log(
-  `Validated multi-store funnel v2: ${checks} checks; six itch fallbacks are public and Gullwatch Harbor remains fail-closed.`
+  `Validated multi-store funnel v3: ${checks} checks; twelve channels are explicit, six itch fallbacks are public, and all pending channels remain fail-closed.`
 );

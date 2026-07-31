@@ -75,12 +75,12 @@ EXPECTED_ENTRIES = [
 ]
 
 EXPECTED_DIRECTORY_PAID_ROUTES = [
-    "https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=item_catalog",
-    "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=merchant_shop",
-    "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=crafting_recipes",
-    "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=enemy_loot",
-    "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=quest_contracts",
-    "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=encounter_threats",
+    "../buy/?offer=item&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=item_catalog",
+    "../buy/?offer=merchant&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=merchant_shop",
+    "../buy/?offer=recipe&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=crafting_recipes",
+    "../buy/?offer=loot&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=enemy_loot",
+    "../buy/?offer=quest&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=quest_contracts",
+    "../buy/?offer=encounter&utm_source=free_rpg_tools&utm_medium=catalog&utm_campaign=standalone_modules&utm_content=encounter_threats",
 ]
 
 checks = 0
@@ -203,16 +203,14 @@ def validate_page(name, source, expected_href, expected_paid_routes):
     paid_routes = [
         anchor["attrs"].get("href")
         for anchor in parser.anchors
-        if (anchor["attrs"].get("href") or "").startswith(
-            "https://loot-table-works.itch.io/"
-        )
+        if (anchor["attrs"].get("href") or "").startswith("../buy/?offer=")
     ]
     require(len(paid_routes) == expected_paid_routes, f"{name} direct paid-route count changed")
     expected_routes = [] if name == "homepage" else EXPECTED_DIRECTORY_PAID_ROUTES
     require(paid_routes == expected_routes, f"{name} direct paid-route destinations changed")
     decoded_source = unescape(source)
     all_paid_routes = re.findall(
-        r"https://loot-table-works\.itch\.io/[^\s\"'<>`]+",
+        r"\.\./buy/\?offer=[^\s\"'<>`]+",
         decoded_source,
         re.I,
     )
@@ -222,8 +220,8 @@ def validate_page(name, source, expected_href, expected_paid_routes):
     )
     require(
         len(re.findall(r"loot-table-works\.itch\.io", decoded_source, re.I))
-        == expected_paid_routes,
-        f"{name} contains an unreviewed paid host reference",
+        == 0,
+        f"{name} bypasses the verified checkout router",
     )
     for script in parser.script_chunks:
         compact_script = re.sub(r"[\s'\"+`]+", "", unescape(script)).lower()
@@ -232,7 +230,7 @@ def validate_page(name, source, expected_href, expected_paid_routes):
             and "loot-table-works" not in compact_script,
             f"{name} script contains an unreviewed commerce redirect",
         )
-    require(not re.search(r"https://loot-table-works\.itch\.io/[^\"']*bundle", source, re.I), f"{name} exposes a bundle route")
+    require(not re.search(r"\.\./buy/\?offer=bundle", source, re.I), f"{name} exposes a bundle route")
     validate_prohibited_text(name, f"{source}\n{''.join(parser.text_chunks)}")
 
 

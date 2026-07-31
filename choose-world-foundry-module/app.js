@@ -19,7 +19,7 @@ const MODULES = {
     ],
     dependency: "<strong>No other World Foundry module required.</strong> This is the canonical foundation for the connected module line.",
     boundary: "Structured item data and workflow tools. No icons, sprites, illustrations, maps, audio, hosted service, or rules-specific stat blocks.",
-    url: "https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=item_catalog"
+    url: "../buy/?offer=item&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=item_catalog"
   },
   merchants: {
     code: "WF-02 / Commerce",
@@ -39,7 +39,7 @@ const MODULES = {
     ],
     dependency: "<strong>Uses stable Item Catalog IDs.</strong> Pair with WF-01 for the complete item-and-shop workflow, or map the references to your own item system.",
     boundary: "Structured merchant and stock data. No merchant portraits, shop maps, interface art, audio, or rules-specific stat blocks.",
-    url: "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=merchant_shop"
+    url: "../buy/?offer=merchant&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=merchant_shop"
   },
   crafting: {
     code: "WF-03 / Crafting",
@@ -59,7 +59,7 @@ const MODULES = {
     ],
     dependency: "<strong>Uses stable Item Catalog IDs.</strong> Pair with WF-01 for complete ingredients and outputs, or map those IDs to your own item records.",
     boundary: "Structured recipe data and workflow tools. No crafting icons, animations, interface art, audio, or rules-specific crafting mechanics.",
-    url: "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=crafting_recipes"
+    url: "../buy/?offer=recipe&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=crafting_recipes"
   },
   loot: {
     code: "WF-04 / Rewards",
@@ -79,7 +79,7 @@ const MODULES = {
     ],
     dependency: "<strong>Uses stable Item Catalog IDs.</strong> Pair with WF-01 for complete reward records, or map the reward references to your own items.",
     boundary: "Structured loot and reward data. No enemy art, tokens, animations, audio, or rules-specific combat statistics.",
-    url: "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=enemy_loot"
+    url: "../buy/?offer=loot&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=enemy_loot"
   },
   quests: {
     code: "WF-05 / Campaigns",
@@ -99,7 +99,7 @@ const MODULES = {
     ],
     dependency: "<strong>Includes all 40 locations and cached reference summaries.</strong> Canonical item, merchant, stock, and recipe IDs remain external; pair modules or map them to your systems.",
     boundary: "Structured quest, location, and campaign-preparation data. No character art, maps, tokens, voice acting, encounter statistics, or protected game rules.",
-    url: "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=quest_contracts"
+    url: "../buy/?offer=quest&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=quest_contracts"
   },
   encounters: {
     code: "WF-06 / Play",
@@ -119,7 +119,7 @@ const MODULES = {
     ],
     dependency: "<strong>Complete encounter records are included.</strong> Canonical Item, Quest, Location, and Loot Profile IDs refer to other modules; pair them or map the references.",
     boundary: "Structured encounter and threat-preparation data. No maps, tiles, tokens, character art, animations, audio, hosted service, or rules-specific stat blocks.",
-    url: "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=encounter_threats"
+    url: "../buy/?offer=encounter&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=encounter_threats"
   }
 };
 
@@ -128,6 +128,15 @@ const WORKFLOW_NOTES = {
   engine: "Includes structured JSON and CSV plus integration starters for Unity, Godot 4, and TypeScript. Review the schema before production import.",
   tabletop: "Use the offline browser, simulator, studio, or state board during preparation. The content is system-neutral, so adapt mechanics to your table."
 };
+
+const CHECKOUT_OFFER_IDS = Object.freeze({
+  items: "item",
+  merchants: "merchant",
+  crafting: "recipe",
+  loot: "loot",
+  quests: "quest",
+  encounters: "encounter"
+});
 
 function safeAttributionValue(value) {
   return (value || "")
@@ -152,7 +161,7 @@ function incomingAttributionTerm() {
 const attributionTerm = incomingAttributionTerm();
 
 function attributedPaidUrl(rawUrl) {
-  const url = new URL(rawUrl);
+  const url = new URL(rawUrl, window.location.href);
   if (attributionTerm) {
     url.searchParams.set("utm_term", attributionTerm);
   }
@@ -178,7 +187,8 @@ function selectedValue(name) {
 }
 
 function renderRecommendation() {
-  const module = MODULES[selectedValue("problem")];
+  const moduleId = selectedValue("problem");
+  const module = MODULES[moduleId];
   const audience = selectedValue("audience");
   const workflow = selectedValue("workflow");
 
@@ -203,10 +213,11 @@ function renderRecommendation() {
   elements.workflow.textContent = WORKFLOW_NOTES[workflow];
   elements.boundary.textContent = module.boundary;
   elements.link.href = attributedPaidUrl(module.url);
+  elements.link.dataset.offerId = CHECKOUT_OFFER_IDS[moduleId];
   elements.itemDemo.hidden = selectedValue("problem") !== "items";
 }
 
-document.querySelectorAll('#compare a[href*="loot-table-works.itch.io/"]').forEach((link) => {
+document.querySelectorAll('#compare a[data-link-kind="marketplace-checkout"]').forEach((link) => {
   link.href = attributedPaidUrl(link.href);
 });
 document.querySelector(".selector-controls").addEventListener("change", renderRecommendation);
