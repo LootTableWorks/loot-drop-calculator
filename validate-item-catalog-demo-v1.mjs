@@ -31,6 +31,7 @@ const sitemap = read("sitemap.xml");
 const manifest = JSON.parse(read("item-catalog-demo/MANIFEST.json"));
 const acquisition = JSON.parse(read("item-catalog-demo/ACQUISITION.json"));
 const packageManifest = JSON.parse(read("item-catalog-demo/PACKAGE-MANIFEST.json"));
+const iconMap = JSON.parse(read("item-catalog-demo/item-icons/icon-map.json"));
 const items = JSON.parse(read("item-catalog-demo/items.json"));
 
 assert(index === launchpad, "Hosted index and package launchpad differ");
@@ -49,9 +50,10 @@ assert(
   "Hosted demo item-count proof changed",
 );
 assert(
-  index.includes("<strong>26</strong><span>ITEM FAMILIES SAMPLED</span>"),
-  "Hosted demo family-count proof changed",
+  index.includes("<strong>20</strong><span>MAPPED SAMPLE ICONS</span>"),
+  "Hosted demo icon-count proof changed",
 );
+assert(index.includes("item-icons/icons/pitm-0036-brineworn-relic.png"), "Hosted icon preview missing");
 assert(index.includes("FREE SCHEMA-V2 DEMO"), "Hosted demo label changed");
 assert(!index.includes("Five hundred original"), "Hosted demo exposes premium count copy");
 assert(
@@ -96,13 +98,15 @@ assert(new Set(items.map((item) => item.category)).size === 10, "Hosted demo cat
 assert(new Set(items.map((item) => item.tier)).size === 5, "Hosted demo tier count changed");
 
 assert(manifest.schema_version === "1.0.0", "Hosted manifest schema changed");
-assert(manifest.version === "2.0.0-rc3", "Hosted demo release changed");
+assert(manifest.version === "2.0.0-rc4", "Hosted demo release changed");
 assert(manifest.publication_allowed === true, "Hosted demo publication gate changed");
 assert(manifest.item_count === 100 && manifest.unique_item_ids === 100, "Hosted manifest item contract changed");
 assert(manifest.family_count === 26, "Hosted manifest family count changed");
 assert(manifest.biome_count === 10, "Hosted manifest biome count changed");
 assert(manifest.category_count === 10, "Hosted manifest category count changed");
 assert(manifest.tier_count === 5, "Hosted manifest tier count changed");
+assert(manifest.mapped_icon_count === 20, "Hosted manifest mapped-icon count changed");
+assert(manifest.icon_atlas_count === 1, "Hosted manifest atlas count changed");
 assert(manifest.paid_upgrade_price_usd === 3, "Hosted demo upgrade price changed");
 assert(manifest.paid_upgrade_campaign === "paid_catalog_feature_v1", "Hosted demo paid campaign changed");
 assert(
@@ -130,10 +134,10 @@ assert(
     manifest.acquisition_attribution.storage_used === false,
   "Hosted demo acquisition privacy boundary changed",
 );
-assert(manifest.archive.bytes === 1334983, "Hosted archive byte count changed");
+assert(manifest.archive.bytes === 3630049, "Hosted archive byte count changed");
 assert(
   manifest.archive.sha256 ===
-    "27658cc2be956148aa626996a0238a02758b7379e79d50cdffbe08444f0c97be",
+    "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf",
   "Hosted archive SHA-256 changed",
 );
 
@@ -148,7 +152,7 @@ for (const record of manifest.files) {
   assert(bytes.length === record.bytes, `Manifest byte count changed: ${record.path}`);
   assert(sha256(bytes) === record.sha256, `Manifest SHA-256 changed: ${record.path}`);
 }
-assert(manifest.files.length === 22, "Hosted manifest file count changed");
+assert(manifest.files.length === 45, "Hosted manifest file count changed");
 
 assert(
   acquisition.release_id ===
@@ -192,17 +196,21 @@ assert(
 );
 
 assert(
-  packageManifest.package_id === "world-foundry-item-catalog-demo-v2-rc3",
+  packageManifest.package_id === "world-foundry-item-catalog-demo-v2-rc4",
   "Embedded package ID changed",
 );
 assert(packageManifest.price_usd === 0, "Embedded demo price changed");
 assert(packageManifest.item_count === 100, "Embedded package item count changed");
 assert(packageManifest.publication_allowed === false, "Embedded package publication boundary changed");
+assert(iconMap.icon_count === 20, "Embedded demo icon count changed");
+assert(iconMap.atlas_count === 1, "Embedded demo atlas count changed");
+assert(iconMap.coverage.catalog_demo_count === 100, "Embedded icon catalog boundary changed");
+assert(iconMap.coverage.illustrated_sample_count === 20, "Embedded icon sample boundary changed");
 
 const archivePath = path.join(
   demoRoot,
   "downloads",
-  "world-foundry-item-catalog-demo-v2-rc3.zip",
+  "world-foundry-item-catalog-demo-v2-rc4.zip",
 );
 const archive = fs.readFileSync(archivePath);
 assert(archive.length === manifest.archive.bytes, "Archive byte count does not match manifest");
@@ -231,9 +239,21 @@ assert(
 );
 assert(
   selector.includes(
-    "item-catalog-demo/downloads/world-foundry-item-catalog-demo-v2-rc3.zip?utm_source=world_foundry_selector&amp;utm_medium=owned_web&amp;utm_campaign=item_catalog_demo_v1&amp;utm_content=download_demo_zip",
+    "item-catalog-demo/downloads/world-foundry-item-catalog-demo-v2-rc4.zip?utm_source=world_foundry_selector&amp;utm_medium=owned_web&amp;utm_campaign=item_catalog_demo_v1&amp;utm_content=download_demo_zip",
   ),
   "Selector demo-download attribution changed",
+);
+assert(
+  selector.includes("Explore 100 stable demo records with 20 mapped icons"),
+  "Selector demo icon proof changed",
+);
+assert(
+  selector.includes("<strong>100</strong> mapped icons"),
+  "Selector paid icon proof changed",
+);
+assert(
+  selectorScript.includes('["100", "mapped icons"]'),
+  "Selector dynamic paid icon proof changed",
 );
 assert(
   selectorScript.includes(

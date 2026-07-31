@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "product": "World Foundry Item Catalog free demo",
-  "version": "2.0.0-rc3",
+  "version": "2.0.0-rc4",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/",
   "publication_allowed": true,
   "item_count": 100,
@@ -10,6 +10,8 @@
   "biome_count": 10,
   "category_count": 10,
   "tier_count": 5,
+  "mapped_icon_count": 20,
+  "icon_atlas_count": 1,
   "paid_upgrade_price_usd": 3,
   "paid_upgrade_campaign": "paid_catalog_feature_v1",
   "acquisition_attribution": {
@@ -25,9 +27,9 @@
     "storage_used": false
   },
   "archive": {
-    "path": "downloads/world-foundry-item-catalog-demo-v2-rc3.zip",
-    "bytes": 1334983,
-    "sha256": "27658cc2be956148aa626996a0238a02758b7379e79d50cdffbe08444f0c97be"
+    "path": "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
+    "bytes": 3630049,
+    "sha256": "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
   },
   "files": [
     {
@@ -41,9 +43,9 @@
       "sha256": "f05355131e0d2f7a906916ef59b668286a347d791ebe78fec3d3df11a6817e8c"
     },
     {
-      "path": "downloads/world-foundry-item-catalog-demo-v2-rc3.zip",
-      "bytes": 1334983,
-      "sha256": "27658cc2be956148aa626996a0238a02758b7379e79d50cdffbe08444f0c97be"
+      "path": "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
+      "bytes": 3630049,
+      "sha256": "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
     },
     {
       "path": "examples.md",
@@ -57,8 +59,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9405,
-      "sha256": "c7555adb442abcd3a11cba67287daac900aff6450fdfc1a152db487fb09b15f6"
+      "bytes": 11223,
+      "sha256": "e17f825db41d5d70fe1c9e23bbeeae4b9aaaa0af47bc252070dc3f0de00b3e88"
     },
     {
       "path": "INTEGRATION-GUIDE.md",
@@ -87,13 +89,128 @@
     },
     {
       "path": "item-collection-builder.html",
-      "bytes": 222004,
-      "sha256": "1861f29f12492583c0fe2df86aeb8c3dc54bf72b87bfacc1af066dfa75390347"
+      "bytes": 223529,
+      "sha256": "f05b56c5219d5539a774a2055706cf8625a4dde6d39d5c25a1b2a49fd4d4b699"
     },
     {
       "path": "item-explorer.html",
-      "bytes": 230985,
-      "sha256": "4d3b08eacdd6eed5b89ae838156c5194f4485d7ff0d918b78b377c5e235f1fe9"
+      "bytes": 233979,
+      "sha256": "4fa5b3df8c568fd7c64190d3d9bbbdbbae1ce2edbe066898d26fdcee111fff84"
+    },
+    {
+      "path": "item-icons/atlases/demo-sample-atlas.png",
+      "bytes": 1151797,
+      "sha256": "4487dc21900b5dddedda06ccd3a169f8a9e136a4eaa0bc85d7b8d9c18728000d"
+    },
+    {
+      "path": "item-icons/icon-map.json",
+      "bytes": 7196,
+      "sha256": "641f14517b438bd5861f89462fb48ef327c5f21de4869632e2d37d3816929ffe"
+    },
+    {
+      "path": "item-icons/icons/pitm-0008-brineworn-bottle.png",
+      "bytes": 53574,
+      "sha256": "de618a376ea76541e9e1cd47c7c6121cd462327dc81d6509b4ad5e07c143d8c4"
+    },
+    {
+      "path": "item-icons/icons/pitm-0009-brineworn-brooch.png",
+      "bytes": 62985,
+      "sha256": "0ef60b4906bf7f05819d7ca6a399db7531409e9d2dcdbb1a9cf79605c563d455"
+    },
+    {
+      "path": "item-icons/icons/pitm-0012-brineworn-chisel.png",
+      "bytes": 31958,
+      "sha256": "92f079a43a3e6515951170277aadd097ed05584c3c82ead30ee1cbdf6993be0c"
+    },
+    {
+      "path": "item-icons/icons/pitm-0016-brineworn-cup.png",
+      "bytes": 69177,
+      "sha256": "bb44817bb92ae4d068614e01024ad2bafb0e443220a492edffbdfae3438f939f"
+    },
+    {
+      "path": "item-icons/icons/pitm-0017-brineworn-dagger.png",
+      "bytes": 30053,
+      "sha256": "f89cce1dfc38a424dac08595f35ee9e50ec8cc3013ef2b0e796e1d3b0e8c220d"
+    },
+    {
+      "path": "item-icons/icons/pitm-0018-brineworn-drum.png",
+      "bytes": 70451,
+      "sha256": "a2751a144f4040d337b99f3b5b328424389c957b817f9c520811f9f8c2671faf"
+    },
+    {
+      "path": "item-icons/icons/pitm-0025-brineworn-key.png",
+      "bytes": 38312,
+      "sha256": "603287a78a4111a02eff28e385bd8e97ad2b322ae63218ea4679dfb297f61a52"
+    },
+    {
+      "path": "item-icons/icons/pitm-0036-brineworn-relic.png",
+      "bytes": 64331,
+      "sha256": "0fcb5a87d4550b3951decf5ef5424b10cb6b8830e5014790d51040d0811ab556"
+    },
+    {
+      "path": "item-icons/icons/pitm-0044-brineworn-spindle.png",
+      "bytes": 33674,
+      "sha256": "ddf48400d2c008b3891e0409e29792cd044068f222cbc5844539d5d80889944a"
+    },
+    {
+      "path": "item-icons/icons/pitm-0045-brineworn-stone.png",
+      "bytes": 66082,
+      "sha256": "81a494c26e47dea5ad8a0bef6dfec0df322a394c7d392d46476a72854d2ae4e1"
+    },
+    {
+      "path": "item-icons/icons/pitm-0054-mossbound-bell.png",
+      "bytes": 74018,
+      "sha256": "03d05ecf57ac50472881723aa141044d81d6efd76f5b7caaf8a710fb1cf40449"
+    },
+    {
+      "path": "item-icons/icons/pitm-0057-mossbound-boots.png",
+      "bytes": 93503,
+      "sha256": "dd8d2e3c4b6f46726c4fd36125118954ee7924e9d264c02cc0ba054ceced220a"
+    },
+    {
+      "path": "item-icons/icons/pitm-0058-mossbound-bottle.png",
+      "bytes": 56533,
+      "sha256": "718d1c8291281ed41397fd0c12a63660bf7c3d1908297aa002e373d4d2daa737"
+    },
+    {
+      "path": "item-icons/icons/pitm-0065-mossbound-crown.png",
+      "bytes": 68899,
+      "sha256": "e54053e66bddb69c2745c135ba7f6c449ff53df629f3a2892f9da22730e8d50b"
+    },
+    {
+      "path": "item-icons/icons/pitm-0066-mossbound-cup.png",
+      "bytes": 78454,
+      "sha256": "8aa1ab45c9ac1d38c24a60de303da983c917ded5bf39aa3ea4f0becdd79cc0c3"
+    },
+    {
+      "path": "item-icons/icons/pitm-0067-mossbound-dagger.png",
+      "bytes": 37660,
+      "sha256": "4ab31370041bd6c4310d0eadfb1a47728b421ba5c549831dadd6d8101fff99f4"
+    },
+    {
+      "path": "item-icons/icons/pitm-0075-mossbound-key.png",
+      "bytes": 52069,
+      "sha256": "ad8e1a97ce00c91f16f296280c8ce1585736bda47177fc429a4800da1e5d8b1b"
+    },
+    {
+      "path": "item-icons/icons/pitm-0081-mossbound-needle.png",
+      "bytes": 19265,
+      "sha256": "5e401442cc0a69df63555d2fa7fda56f1422e2b00fe364473dd9f19852f5d48a"
+    },
+    {
+      "path": "item-icons/icons/pitm-0093-mossbound-shell.png",
+      "bytes": 74290,
+      "sha256": "0c0ac18bb4aa73b52b376ad5cc4f44c640b2e655bf05f5666ca70d1339a26a0c"
+    },
+    {
+      "path": "item-icons/icons/pitm-0094-mossbound-spindle.png",
+      "bytes": 64820,
+      "sha256": "f7ebec65073bda9b016b4a9bcc2015adadf71849981dd015c49f755a48080bb6"
+    },
+    {
+      "path": "item-icons/README.md",
+      "bytes": 620,
+      "sha256": "3f898c46715a338f8e688cfba18884404eb797dbdd3f780218a237f685a48099"
     },
     {
       "path": "items.csv",
@@ -107,8 +224,8 @@
     },
     {
       "path": "PACKAGE-MANIFEST.json",
-      "bytes": 4485,
-      "sha256": "8954d620cb867f4365917f1bb1b4412beb7c9df8361d2e09b557a5300361302a"
+      "bytes": 10428,
+      "sha256": "a0d4561f7dad56a86c206ea4b387777bbc945e9b391a09f0bad2e6bd49162073"
     },
     {
       "path": "QUICKSTART.md",
@@ -117,8 +234,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 666,
-      "sha256": "61ae82c5a802ef8c877d3249ea7cd5cfe6dff39dfacf745cbdc369885ee0f285"
+      "bytes": 827,
+      "sha256": "f79f59b880f6da83dbf92bcbcbd7972e6c60258770d3d40181d9b70cfed3bb96"
     },
     {
       "path": "schema-version.json",
@@ -132,8 +249,8 @@
     },
     {
       "path": "START-HERE.html",
-      "bytes": 9405,
-      "sha256": "c7555adb442abcd3a11cba67287daac900aff6450fdfc1a152db487fb09b15f6"
+      "bytes": 11223,
+      "sha256": "e17f825db41d5d70fe1c9e23bbeeae4b9aaaa0af47bc252070dc3f0de00b3e88"
     },
     {
       "path": "USAGE-TERMS.md",

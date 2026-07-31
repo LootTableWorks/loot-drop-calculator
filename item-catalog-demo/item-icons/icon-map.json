@@ -1,0 +1,242 @@
+{
+  "asset_pack_id": "world-foundry-item-icons-v1-demo-sample",
+  "publication_allowed": false,
+  "icon_count": 20,
+  "icon_size_px": 256,
+  "atlas_count": 1,
+  "coverage": {
+    "catalog_demo_count": 100,
+    "illustrated_sample_count": 20,
+    "biomes": [
+      "coastal",
+      "forest"
+    ]
+  },
+  "disclosure": {
+    "art_direction": "Original Brineworn coastal and Mossbound forest inventory icon families created for Loot Table Works.",
+    "production": "AI-assisted raster generation with human art direction, cell-by-cell mapping, background cleanup, normalization, and automated QA.",
+    "rights_boundary": "No copyrighted characters, brands, logos, or third-party game settings are represented. Usage is governed by the package USAGE-TERMS.md."
+  },
+  "icons": [
+    {
+      "id": "pitm-0036",
+      "name": "Brineworn Relic",
+      "biome": "coastal",
+      "object_type": "arcane-focus",
+      "icon": "icons/pitm-0036-brineworn-relic.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 0,
+      "atlas_column": 0,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0016",
+      "name": "Brineworn Cup",
+      "biome": "coastal",
+      "object_type": "ceremonial-vessel",
+      "icon": "icons/pitm-0016-brineworn-cup.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 0,
+      "atlas_column": 1,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0012",
+      "name": "Brineworn Chisel",
+      "biome": "coastal",
+      "object_type": "field-tool",
+      "icon": "icons/pitm-0012-brineworn-chisel.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 0,
+      "atlas_column": 2,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0017",
+      "name": "Brineworn Dagger",
+      "biome": "coastal",
+      "object_type": "weapon",
+      "icon": "icons/pitm-0017-brineworn-dagger.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 0,
+      "atlas_column": 3,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0008",
+      "name": "Brineworn Bottle",
+      "biome": "coastal",
+      "object_type": "prepared-consumable",
+      "icon": "icons/pitm-0008-brineworn-bottle.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 0,
+      "atlas_column": 4,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0018",
+      "name": "Brineworn Drum",
+      "biome": "coastal",
+      "object_type": "personal-object",
+      "icon": "icons/pitm-0018-brineworn-drum.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 1,
+      "atlas_column": 0,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0044",
+      "name": "Brineworn Spindle",
+      "biome": "coastal",
+      "object_type": "workshop-tool",
+      "icon": "icons/pitm-0044-brineworn-spindle.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 1,
+      "atlas_column": 1,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0009",
+      "name": "Brineworn Brooch",
+      "biome": "coastal",
+      "object_type": "wearable",
+      "icon": "icons/pitm-0009-brineworn-brooch.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 1,
+      "atlas_column": 2,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0045",
+      "name": "Brineworn Stone",
+      "biome": "coastal",
+      "object_type": "raw-material",
+      "icon": "icons/pitm-0045-brineworn-stone.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 1,
+      "atlas_column": 3,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0025",
+      "name": "Brineworn Key",
+      "biome": "coastal",
+      "object_type": "key-item",
+      "icon": "icons/pitm-0025-brineworn-key.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 1,
+      "atlas_column": 4,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0075",
+      "name": "Mossbound Key",
+      "biome": "forest",
+      "object_type": "key-item",
+      "icon": "icons/pitm-0075-mossbound-key.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 2,
+      "atlas_column": 0,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0065",
+      "name": "Mossbound Crown",
+      "biome": "forest",
+      "object_type": "arcane-focus",
+      "icon": "icons/pitm-0065-mossbound-crown.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 2,
+      "atlas_column": 1,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0081",
+      "name": "Mossbound Needle",
+      "biome": "forest",
+      "object_type": "field-tool",
+      "icon": "icons/pitm-0081-mossbound-needle.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 2,
+      "atlas_column": 2,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0066",
+      "name": "Mossbound Cup",
+      "biome": "forest",
+      "object_type": "ceremonial-vessel",
+      "icon": "icons/pitm-0066-mossbound-cup.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 2,
+      "atlas_column": 3,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0067",
+      "name": "Mossbound Dagger",
+      "biome": "forest",
+      "object_type": "weapon",
+      "icon": "icons/pitm-0067-mossbound-dagger.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 2,
+      "atlas_column": 4,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0057",
+      "name": "Mossbound Boots",
+      "biome": "forest",
+      "object_type": "wearable",
+      "icon": "icons/pitm-0057-mossbound-boots.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 3,
+      "atlas_column": 0,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0058",
+      "name": "Mossbound Bottle",
+      "biome": "forest",
+      "object_type": "prepared-consumable",
+      "icon": "icons/pitm-0058-mossbound-bottle.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 3,
+      "atlas_column": 1,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0093",
+      "name": "Mossbound Shell",
+      "biome": "forest",
+      "object_type": "raw-material",
+      "icon": "icons/pitm-0093-mossbound-shell.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 3,
+      "atlas_column": 2,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0094",
+      "name": "Mossbound Spindle",
+      "biome": "forest",
+      "object_type": "workshop-tool",
+      "icon": "icons/pitm-0094-mossbound-spindle.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 3,
+      "atlas_column": 3,
+      "atlas_cell_px": 256
+    },
+    {
+      "id": "pitm-0054",
+      "name": "Mossbound Bell",
+      "biome": "forest",
+      "object_type": "personal-object",
+      "icon": "icons/pitm-0054-mossbound-bell.png",
+      "atlas": "atlases/demo-sample-atlas.png",
+      "atlas_row": 3,
+      "atlas_column": 4,
+      "atlas_cell_px": 256
+    }
+  ]
+}

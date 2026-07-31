@@ -45,14 +45,14 @@ if (items.length !== 100 || new Set(items.map((item) => item.id)).size !== 100) 
 const archivePath = path.join(
   demoRoot,
   "downloads",
-  "world-foundry-item-catalog-demo-v2-rc3.zip",
+  "world-foundry-item-catalog-demo-v2-rc4.zip",
 );
 const archive = fs.readFileSync(archivePath);
 const archiveSha256 = crypto.createHash("sha256").update(archive).digest("hex");
 if (
-  archive.length !== 1334983 ||
+  archive.length !== 3630049 ||
   archiveSha256 !==
-    "27658cc2be956148aa626996a0238a02758b7379e79d50cdffbe08444f0c97be"
+    "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
 ) {
   throw new Error("Hosted demo archive drift");
 }
@@ -60,7 +60,7 @@ if (
 const manifest = {
   schema_version: "1.0.0",
   product: "World Foundry Item Catalog free demo",
-  version: "2.0.0-rc3",
+  version: "2.0.0-rc4",
   canonical_url:
     "https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/",
   publication_allowed: true,
@@ -70,6 +70,8 @@ const manifest = {
   biome_count: new Set(items.map((item) => item.biome)).size,
   category_count: new Set(items.map((item) => item.category)).size,
   tier_count: new Set(items.map((item) => item.tier)).size,
+  mapped_icon_count: 20,
+  icon_atlas_count: 1,
   paid_upgrade_price_usd: 3,
   paid_upgrade_campaign: "paid_catalog_feature_v1",
   acquisition_attribution: {
@@ -81,7 +83,7 @@ const manifest = {
     storage_used: false,
   },
   archive: {
-    path: "downloads/world-foundry-item-catalog-demo-v2-rc3.zip",
+    path: "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
     bytes: archive.length,
     sha256: archiveSha256,
   },

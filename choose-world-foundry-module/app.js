@@ -11,7 +11,7 @@ const MODULES = {
     },
     cover: "assets/item-catalog-cover.png",
     coverAlt: "World Foundry Item Catalog and Economy Kit cover.",
-    proof: [["500", "items"], ["50", "families"], ["2", "offline tools"]],
+    proof: [["500", "items"], ["100", "mapped icons"], ["2", "offline tools"]],
     capabilities: [
       "Browse and filter complete item records.",
       "Build reproducible collections for loot, shops, crafting, or quests.",
