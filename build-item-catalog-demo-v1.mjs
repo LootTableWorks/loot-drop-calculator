@@ -72,6 +72,14 @@ const manifest = {
   tier_count: new Set(items.map((item) => item.tier)).size,
   paid_upgrade_price_usd: 3,
   paid_upgrade_campaign: "paid_catalog_feature_v1",
+  acquisition_attribution: {
+    approved_sources: ["the_compendium"],
+    approved_referrer_hosts: ["compendium.tools"],
+    downstream_campaign: "ltw_free_tool_directory_v1",
+    downstream_content: "item_catalog_demo_upgrade",
+    analytics_used: false,
+    storage_used: false,
+  },
   archive: {
     path: "downloads/world-foundry-item-catalog-demo-v2-rc3.zip",
     bytes: archive.length,

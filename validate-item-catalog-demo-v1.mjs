@@ -63,6 +63,27 @@ assert(
   index.includes("https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/"),
   "Hosted demo no longer upgrades through the owned selector",
 );
+assert(index.includes('id="paid-upgrade"'), "Hosted paid-upgrade hook missing");
+assert(
+  index.includes('source !== "the_compendium"'),
+  "Hosted demo source allowlist changed",
+);
+assert(
+  index.includes('hostname === "compendium.tools"'),
+  "Hosted demo referrer allowlist changed",
+);
+assert(
+  index.includes(
+    'destination.searchParams.set("utm_campaign", "ltw_free_tool_directory_v1")',
+  ),
+  "Hosted demo downstream directory campaign changed",
+);
+assert(
+  index.includes(
+    'destination.searchParams.set("utm_content", "item_catalog_demo_upgrade")',
+  ),
+  "Hosted demo downstream directory content changed",
+);
 assert(!index.includes("loot-table-works.itch.io"), "Hosted demo exposes a direct marketplace URL");
 assert(!/\bbundle\b/i.test(index), "Hosted demo exposes bundle copy");
 
@@ -83,6 +104,31 @@ assert(manifest.category_count === 10, "Hosted manifest category count changed")
 assert(manifest.tier_count === 5, "Hosted manifest tier count changed");
 assert(manifest.paid_upgrade_price_usd === 3, "Hosted demo upgrade price changed");
 assert(manifest.paid_upgrade_campaign === "paid_catalog_feature_v1", "Hosted demo paid campaign changed");
+assert(
+  manifest.acquisition_attribution.approved_sources.join("|") ===
+    "the_compendium",
+  "Hosted demo source allowlist manifest changed",
+);
+assert(
+  manifest.acquisition_attribution.approved_referrer_hosts.join("|") ===
+    "compendium.tools",
+  "Hosted demo referrer allowlist manifest changed",
+);
+assert(
+  manifest.acquisition_attribution.downstream_campaign ===
+    "ltw_free_tool_directory_v1",
+  "Hosted demo directory campaign manifest changed",
+);
+assert(
+  manifest.acquisition_attribution.downstream_content ===
+    "item_catalog_demo_upgrade",
+  "Hosted demo directory content manifest changed",
+);
+assert(
+  manifest.acquisition_attribution.analytics_used === false &&
+    manifest.acquisition_attribution.storage_used === false,
+  "Hosted demo acquisition privacy boundary changed",
+);
 assert(manifest.archive.bytes === 1334983, "Hosted archive byte count changed");
 assert(
   manifest.archive.sha256 ===

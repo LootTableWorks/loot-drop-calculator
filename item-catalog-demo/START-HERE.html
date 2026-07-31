@@ -40,9 +40,44 @@
     </section>
     <aside class="upgrade">
       <p><strong>Need the complete production catalog?</strong>The $3 edition expands this exact contract to 500 records and 50 complete item families. Inspect the current files and terms before buying.</p>
-      <a href="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=item_catalog_demo&amp;utm_medium=product_launchpad&amp;utm_campaign=paid_catalog_feature_v1&amp;utm_content=upgrade_to_500">Inspect the $3 edition</a>
+      <a id="paid-upgrade" href="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=item_catalog_demo&amp;utm_medium=product_launchpad&amp;utm_campaign=paid_catalog_feature_v1&amp;utm_content=upgrade_to_500">Inspect the $3 edition</a>
     </aside>
   </main>
   <footer class="footer"><strong>Commercial use included.</strong> No attribution required. See <a href="USAGE-TERMS.md">USAGE-TERMS.md</a> for the complete terms.</footer>
+  <script>
+    (() => {
+      const upgrade = document.querySelector("#paid-upgrade");
+      const query = new URLSearchParams(window.location.search);
+      const safe = (value) => (value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 40);
+      let source = safe(query.get("utm_source"));
+
+      if (source !== "the_compendium") {
+        source = "";
+      }
+      if (!source && document.referrer) {
+        try {
+          if (new URL(document.referrer).hostname === "compendium.tools") {
+            source = "the_compendium";
+          }
+        } catch {
+          source = "";
+        }
+      }
+      if (!source) {
+        return;
+      }
+
+      const destination = new URL(upgrade.href);
+      destination.searchParams.set("utm_source", source);
+      destination.searchParams.set("utm_medium", "referral_directory");
+      destination.searchParams.set("utm_campaign", "ltw_free_tool_directory_v1");
+      destination.searchParams.set("utm_content", "item_catalog_demo_upgrade");
+      upgrade.href = destination.toString();
+    })();
+  </script>
 </body>
 </html>

@@ -12,6 +12,18 @@
   "tier_count": 5,
   "paid_upgrade_price_usd": 3,
   "paid_upgrade_campaign": "paid_catalog_feature_v1",
+  "acquisition_attribution": {
+    "approved_sources": [
+      "the_compendium"
+    ],
+    "approved_referrer_hosts": [
+      "compendium.tools"
+    ],
+    "downstream_campaign": "ltw_free_tool_directory_v1",
+    "downstream_content": "item_catalog_demo_upgrade",
+    "analytics_used": false,
+    "storage_used": false
+  },
   "archive": {
     "path": "downloads/world-foundry-item-catalog-demo-v2-rc3.zip",
     "bytes": 1334983,
@@ -40,8 +52,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 8256,
-      "sha256": "eab88a0753dca19cdd8fa268fe6b47d1a658bfdc25bd9743f6d4f9259a55ef57"
+      "bytes": 9405,
+      "sha256": "c7555adb442abcd3a11cba67287daac900aff6450fdfc1a152db487fb09b15f6"
     },
     {
       "path": "INTEGRATION-GUIDE.md",
@@ -115,8 +127,8 @@
     },
     {
       "path": "START-HERE.html",
-      "bytes": 8256,
-      "sha256": "eab88a0753dca19cdd8fa268fe6b47d1a658bfdc25bd9743f6d4f9259a55ef57"
+      "bytes": 9405,
+      "sha256": "c7555adb442abcd3a11cba67287daac900aff6450fdfc1a152db487fb09b15f6"
     },
     {
       "path": "USAGE-TERMS.md",
