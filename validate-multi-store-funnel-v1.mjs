@@ -24,10 +24,11 @@ function check(condition, message) {
 }
 
 check(registry.validateRegistry(registry.offers), "Default registry must validate");
-check(Object.keys(registry.offers).length === 6, "Six standalone offers required");
-check(Object.keys(registry.STORE_POLICIES).length === 4, "Four storefront policies required");
+check(Object.keys(registry.offers).length === 7, "Seven paid offers required");
+check(Object.keys(registry.STORE_POLICIES).length === 8, "Eight storefront policies required");
 check(registry.ATTRIBUTION.utm_medium === "storefront_selector", "Attribution medium drift");
 check(router.priceLabel(3) === "$3", "Price label drift");
+check(router.priceLabel(2.99) === "$2.99", "Campaign-book price label drift");
 check(
   attributes.includes("world-foundry/*.html text eol=lf") &&
     attributes.includes("world-foundry/*.js text eol=lf") &&
@@ -35,18 +36,28 @@ check(
   "World Foundry deployment text must be pinned to LF"
 );
 
-const expectedOffers = ["item", "merchant", "recipe", "loot", "quest", "encounter"];
-for (const offerId of expectedOffers) {
+const standaloneOffers = ["item", "merchant", "recipe", "loot", "quest", "encounter"];
+const expectedOffers = [...standaloneOffers, "gullwatch_harbor"];
+const directStores = ["gumroad", "kofi", "payhip"];
+const bookStores = ["amazon_kdp", "google_play_books", "apple_books", "barnes_noble"];
+for (const offerId of standaloneOffers) {
   const offer = registry.offers[offerId];
   check(Boolean(offer), `${offerId}: offer missing`);
   check(offer.priceUsd === 3, `${offerId}: price drift`);
-  check(Object.keys(offer.stores).length === 4, `${offerId}: storefront state incomplete`);
+  check(Object.keys(offer.stores).length === 8, `${offerId}: storefront state incomplete`);
   check(offer.stores.itch.status === "public", `${offerId}: itch fallback must be public`);
   check(typeof offer.stores.itch.url === "string", `${offerId}: itch URL missing`);
 
-  for (const storeId of ["gumroad", "kofi", "payhip"]) {
+  for (const storeId of directStores) {
     check(offer.stores[storeId].status === "pending", `${offerId}/${storeId}: must remain pending`);
     check(offer.stores[storeId].url === null, `${offerId}/${storeId}: draft URL exposed`);
+  }
+  for (const storeId of bookStores) {
+    check(
+      offer.stores[storeId].status === "not_applicable",
+      `${offerId}/${storeId}: must remain not applicable`
+    );
+    check(offer.stores[storeId].url === null, `${offerId}/${storeId}: URL exposed`);
   }
 
   const publicStores = registry.resolvePublicStores(offerId);
@@ -65,6 +76,20 @@ for (const offerId of expectedOffers) {
   check((html.match(marker) || []).length === 1, `${offerId}: HTML marker must appear once`);
 }
 
+const campaignBook = registry.offers.gullwatch_harbor;
+check(campaignBook.priceUsd === 2.99, "Gullwatch Harbor price drift");
+check(Object.keys(campaignBook.stores).length === 8, "Gullwatch Harbor store state incomplete");
+check(campaignBook.stores.itch.status === "not_applicable", "Gullwatch Harbor itch state drift");
+for (const storeId of [...directStores, ...bookStores]) {
+  check(campaignBook.stores[storeId].status === "pending", `Gullwatch Harbor/${storeId} state drift`);
+  check(campaignBook.stores[storeId].url === null, `Gullwatch Harbor/${storeId} draft URL exposed`);
+}
+check(registry.resolvePublicStores("gullwatch_harbor").length === 0, "Gullwatch Harbor must expose zero stores");
+check(
+  (html.match(/data-offer-id="gullwatch_harbor"/g) || []).length === 1,
+  "Gullwatch Harbor hub marker must appear once"
+);
+
 check(!html.includes("loottableworks.gumroad.com/l/"), "Draft Gumroad product URL exposed");
 check(!html.includes("ko-fi.com/s/"), "Draft Ko-fi product URL exposed");
 check(!html.includes("payhip.com/b/"), "Draft Payhip product URL exposed");
@@ -72,12 +97,12 @@ check(
   html.indexOf("storefront-registry.js") < html.indexOf("storefront-router.js"),
   "Registry must load before router"
 );
-check((html.match(/data-link-kind="paid-module"/g) || []).length === 6, "Six static paid fallbacks required");
+check((html.match(/data-link-kind="paid-module"/g) || []).length === 7, "Seven paid offer markers required");
 check((html.match(/Buy on itch\.io/g) || []).length === 6, "Static fallbacks must name itch.io");
 check(css.includes(".storefront-picker"), "Storefront picker styles missing");
 check(css.includes(".storefront-menu"), "Storefront menu styles missing");
-check(manifest.version === "1.8.0", "World Foundry manifest version drift");
-check(manifest.storefront_registry_version === "1.0.0", "Storefront registry version drift");
+check(manifest.version === "1.9.0", "World Foundry manifest version drift");
+check(manifest.storefront_registry_version === "2.0.0", "Storefront registry version drift");
 check(
   readme.includes(`Status: \`${manifest.status}\``),
   "README and manifest release statuses must match"
@@ -97,10 +122,11 @@ check(
 );
 check(
   JSON.stringify(manifest.pending_storefronts) ===
-    JSON.stringify(["gumroad", "kofi", "payhip"]),
+    JSON.stringify([...directStores, ...bookStores]),
   "Pending storefront state drift"
 );
 check(manifest.draft_storefront_urls_exposed === 0, "Draft storefront exposure must remain zero");
+check(manifest.pending_storefront_controls_exposed === 0, "Pending store controls must remain hidden");
 
 const expectedManifestFiles = [
   "README.md",
@@ -148,6 +174,7 @@ class FakeElement {
     this.href = "";
     this.target = "";
     this.rel = "";
+    this.hidden = false;
     this.textContent = "";
     this.replacement = null;
   }
@@ -215,13 +242,17 @@ function registryView(offers) {
 
 const defaultDocument = new FakeDocument(expectedOffers);
 const defaultEnhancement = router.enhance(defaultDocument, registry);
-check(defaultEnhancement.enhanced === 6, "Six current purchase links must enhance");
+check(defaultEnhancement.enhanced === 7, "Seven current purchase links must enhance");
 check(defaultEnhancement.fallback === 0, "Current verified registry must not use fallback");
-for (const link of defaultDocument.links) {
+for (const link of defaultDocument.links.slice(0, standaloneOffers.length)) {
   check(link.dataset.storefrontState === "single-public", "Current link state must be single-public");
   check(link.dataset.storeId === "itch", "Current enhanced link must identify itch");
   check(link.href.includes("utm_term=itch"), "Current enhanced link needs per-store attribution");
 }
+const campaignBookLink = defaultDocument.links.at(-1);
+check(campaignBookLink.dataset.storefrontState === "unavailable", "Campaign book must fail closed");
+check(campaignBookLink.hidden === true, "Campaign-book pending control must remain hidden");
+check(campaignBookLink.href === "", "Campaign book must expose no buyer URL");
 
 const noPublicStore = JSON.parse(JSON.stringify(registry.offers));
 for (const storeId of Object.keys(noPublicStore.item.stores)) {
@@ -240,6 +271,7 @@ check(
   unavailableDocument.links[0].getAttribute("aria-disabled") === "true",
   "Zero-store offer must be exposed as disabled"
 );
+check(unavailableDocument.links[0].hidden === true, "Zero-store offer must remain hidden");
 
 const futureDocument = new FakeDocument(["item"]);
 const futureResult = router.enhance(futureDocument, registryView(futureRegistry));
@@ -317,4 +349,6 @@ for (const invalid of [
   checks += 1;
 }
 
-console.log(`Validated multi-store funnel v1: ${checks} checks; only verified itch.io fallbacks are exposed.`);
+console.log(
+  `Validated multi-store funnel v2: ${checks} checks; six itch fallbacks are public and Gullwatch Harbor remains fail-closed.`
+);

@@ -235,7 +235,7 @@ for (const relativePath of [
   );
 }
 assert(
-  JSON.parse(read("world-foundry/MANIFEST.json")).version === "1.8.0",
+  JSON.parse(read("world-foundry/MANIFEST.json")).version === "1.9.0",
   "World Foundry multi-store funnel version drifted"
 );
 

@@ -12,10 +12,12 @@
   "use strict";
 
   function priceLabel(priceUsd) {
-    return `$${Number(priceUsd).toFixed(0)}`;
+    const price = Number(priceUsd);
+    return `$${price.toFixed(Number.isInteger(price) ? 0 : 2)}`;
   }
 
   function setSingleStoreLink(link, offer, store) {
+    link.hidden = false;
     link.href = store.url;
     link.target = "_blank";
     link.rel = "noopener";
@@ -89,6 +91,7 @@
     link.removeAttribute("target");
     link.removeAttribute("rel");
     link.dataset.storefrontState = "unavailable";
+    link.hidden = true;
     link.setAttribute("aria-disabled", "true");
     link.setAttribute("aria-label", `${offer.label} is not currently available`);
 

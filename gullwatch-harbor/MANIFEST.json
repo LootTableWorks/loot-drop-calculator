@@ -1,0 +1,72 @@
+{
+  "product_id": "gullwatch-harbor-product-funnel",
+  "version": "1.0.0",
+  "status": "approved_for_deployment",
+  "publication_allowed": true,
+  "deployment_allowed": true,
+  "public_release_requires_review": false,
+  "release_authority": "delegated_internal_aaa_qa",
+  "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/",
+  "product": {
+    "title": "Gullwatch Harbor",
+    "price_usd": 2.99,
+    "pdf_pages": 61,
+    "sessions": 4,
+    "scenes": 19,
+    "players": "3-6"
+  },
+  "preview": {
+    "pdf_pages": 12,
+    "complete_sessions_included": 0,
+    "opening_scenes_included": 1
+  },
+  "verified_public_storefronts": [],
+  "pending_storefronts": [
+    "gumroad",
+    "kofi",
+    "payhip",
+    "amazon_kdp",
+    "google_play_books",
+    "apple_books",
+    "barnes_noble"
+  ],
+  "draft_storefront_urls_exposed": 0,
+  "checkout_links_exposed": 0,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 602,
+      "sha256": "12e2b2f1315a1f507c9a5b594fa2239a4919cac6ba9c87a7e1933851ae57b2ad"
+    },
+    {
+      "path": "assets/gullwatch-harbor-cover-v1.jpg",
+      "bytes": 990961,
+      "sha256": "8206ab77b3915504435eadb68a8f397827aa518a4a8db82eb6a5d24ef66988a9"
+    },
+    {
+      "path": "downloads/Gullwatch-Harbor-Sample-v1.epub",
+      "bytes": 1029123,
+      "sha256": "13e234dfffe7d6677e89fe823c442ba5e4031f1c739918b202239d07c386bed9"
+    },
+    {
+      "path": "downloads/Gullwatch-Harbor-Sample-v1.pdf",
+      "bytes": 1287972,
+      "sha256": "025d8efca2d5427845c29bebbc42f2824bbfe9280157bc4f1626523aea33fa4c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9834,
+      "sha256": "d980c8a6efdf6bad8cfe3843c3626cdbdf370a55644aa4e8500afec7b089c4da"
+    },
+    {
+      "path": "robots.txt",
+      "bytes": 99,
+      "sha256": "67867ced6ab018d919584f68cbebabfe78b21eec4878019e0f6898d0d0f28fff"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 10425,
+      "sha256": "0811ac4830cf8e588d61855eaf6948aba3c5313b8f9e4f38173ca882e228f227"
+    }
+  ]
+}

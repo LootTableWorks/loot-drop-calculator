@@ -6,6 +6,8 @@ A dependency-free static learning and catalog hub for Loot Table Works / World F
 
 - one first-viewport index to ten public free utilities, including the guided campaign launchpad, campaign-arc, one-shot, linked-party, and player-chronicle tools;
 - a direct route to the outcome-based Free RPG Tools discovery directory;
+- a first-class Gullwatch Harbor campaign-book preview whose verified store
+  selector remains hidden until a public buyer path passes QA;
 - a six-module standalone catalog with fail-closed verified-store routing and per-store campaign attribution;
 - substantive guides to dependency-closed world seeds, merchant economies, and engine data contracts;
 - canonical, Open Graph, X card, JSON-LD, sitemap, and crawl metadata;

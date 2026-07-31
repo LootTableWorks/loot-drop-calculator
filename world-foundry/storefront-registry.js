@@ -38,6 +38,28 @@
       host: "payhip.com",
       hostMode: "root-or-subdomain",
       approvedProductPaths: Object.freeze([])
+    }),
+    amazon_kdp: Object.freeze({
+      label: "Amazon",
+      host: "www.amazon.com",
+      hostMode: "exact"
+    }),
+    google_play_books: Object.freeze({
+      label: "Google Play Books",
+      host: "play.google.com",
+      hostMode: "exact",
+      allowedCanonicalSearchParams: Object.freeze(["id"]),
+      requiredCanonicalSearchParams: Object.freeze(["id"])
+    }),
+    apple_books: Object.freeze({
+      label: "Apple Books",
+      host: "books.apple.com",
+      hostMode: "exact"
+    }),
+    barnes_noble: Object.freeze({
+      label: "Barnes & Noble",
+      host: "www.barnesandnoble.com",
+      hostMode: "exact"
     })
   });
 
@@ -53,7 +75,11 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     merchant: Object.freeze({
@@ -67,7 +93,11 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     recipe: Object.freeze({
@@ -81,7 +111,11 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     loot: Object.freeze({
@@ -95,7 +129,11 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     quest: Object.freeze({
@@ -109,7 +147,11 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
       })
     }),
     encounter: Object.freeze({
@@ -123,7 +165,27 @@
         }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
-        payhip: Object.freeze({ status: "pending", url: null })
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "not_applicable", url: null }),
+        google_play_books: Object.freeze({ status: "not_applicable", url: null }),
+        apple_books: Object.freeze({ status: "not_applicable", url: null }),
+        barnes_noble: Object.freeze({ status: "not_applicable", url: null })
+      })
+    }),
+    gullwatch_harbor: Object.freeze({
+      label: "Gullwatch Harbor",
+      priceUsd: 2.99,
+      attributionContent: "gullwatch_harbor_campaign_book",
+      attributionCampaign: "gullwatch_harbor_book_v1",
+      stores: Object.freeze({
+        itch: Object.freeze({ status: "not_applicable", url: null }),
+        gumroad: Object.freeze({ status: "pending", url: null }),
+        kofi: Object.freeze({ status: "pending", url: null }),
+        payhip: Object.freeze({ status: "pending", url: null }),
+        amazon_kdp: Object.freeze({ status: "pending", url: null }),
+        google_play_books: Object.freeze({ status: "pending", url: null }),
+        apple_books: Object.freeze({ status: "pending", url: null }),
+        barnes_noble: Object.freeze({ status: "pending", url: null })
       })
     })
   });
@@ -152,7 +214,21 @@
     if (parsed.protocol !== "https:") throw new Error(`${storeId}: HTTPS is required`);
     if (parsed.username || parsed.password) throw new Error(`${storeId}: credentials are forbidden`);
     if (!isAllowedHost(parsed.hostname, policy)) throw new Error(`${storeId}: host is not allowlisted`);
-    if (parsed.search || parsed.hash) throw new Error(`${storeId}: canonical URL must be query and fragment free`);
+    if (parsed.hash) throw new Error(`${storeId}: canonical URL must be fragment free`);
+    const allowedSearchParams = policy.allowedCanonicalSearchParams || [];
+    if (parsed.search && allowedSearchParams.length === 0) {
+      throw new Error(`${storeId}: canonical URL must be query free`);
+    }
+    for (const key of parsed.searchParams.keys()) {
+      if (!allowedSearchParams.includes(key)) {
+        throw new Error(`${storeId}: canonical URL contains an unapproved query parameter`);
+      }
+    }
+    for (const key of policy.requiredCanonicalSearchParams || []) {
+      if (!parsed.searchParams.get(key)) {
+        throw new Error(`${storeId}: canonical URL is missing required query parameter ${key}`);
+      }
+    }
     if (SUSPICIOUS_PATH.test(parsed.pathname)) throw new Error(`${storeId}: draft-like path is forbidden`);
     if (parsed.pathname === "/" || parsed.pathname.length < 3) {
       throw new Error(`${storeId}: product path is required`);
@@ -169,10 +245,13 @@
 
   function validateRegistry(offers) {
     const offerEntries = Object.entries(offers || {});
-    if (offerEntries.length !== 6) throw new Error("Exactly six standalone offers are required");
+    if (offerEntries.length !== 7) throw new Error("Exactly seven paid offers are required");
 
     for (const [offerId, offer] of offerEntries) {
-      if (!offer || offer.priceUsd !== 3) throw new Error(`${offerId}: price must remain $3`);
+      const expectedPrice = offerId === "gullwatch_harbor" ? 2.99 : 3;
+      if (!offer || offer.priceUsd !== expectedPrice) {
+        throw new Error(`${offerId}: price must remain $${expectedPrice}`);
+      }
       if (!offer.attributionContent) throw new Error(`${offerId}: attribution content is required`);
 
       const storeIds = Object.keys(offer.stores || {});
@@ -182,11 +261,13 @@
 
       for (const storeId of Object.keys(STORE_POLICIES)) {
         const state = offer.stores[storeId];
-        if (!state || !["public", "pending"].includes(state.status)) {
-          throw new Error(`${offerId}/${storeId}: status must be public or pending`);
+        if (!state || !["public", "pending", "not_applicable"].includes(state.status)) {
+          throw new Error(
+            `${offerId}/${storeId}: status must be public, pending, or not_applicable`
+          );
         }
-        if (state.status === "pending" && state.url !== null) {
-          throw new Error(`${offerId}/${storeId}: pending storefront must not expose a URL`);
+        if (state.status !== "public" && state.url !== null) {
+          throw new Error(`${offerId}/${storeId}: non-public storefront must not expose a URL`);
         }
         if (state.status === "public") validatePublicUrl(state.url, storeId);
       }
@@ -203,7 +284,11 @@
 
     const canonical = validatePublicUrl(state.url, storeId);
     const destination = new URL(canonical);
-    for (const [key, value] of Object.entries(ATTRIBUTION)) {
+    const attribution = {
+      ...ATTRIBUTION,
+      utm_campaign: offer.attributionCampaign || ATTRIBUTION.utm_campaign
+    };
+    for (const [key, value] of Object.entries(attribution)) {
       destination.searchParams.set(key, value);
     }
     destination.searchParams.set("utm_content", offer.attributionContent);

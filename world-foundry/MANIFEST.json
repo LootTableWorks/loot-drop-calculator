@@ -1,6 +1,6 @@
 {
   "product_id": "world-foundry-hub",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -9,22 +9,28 @@
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/world-foundry/",
   "free_tool_destinations": 10,
   "paid_standalone_destinations": 6,
-  "storefront_registry_version": "1.0.0",
+  "paid_offer_definitions": 7,
+  "storefront_registry_version": "2.0.0",
   "public_storefronts": [
     "itch"
   ],
   "pending_storefronts": [
     "gumroad",
     "kofi",
-    "payhip"
+    "payhip",
+    "amazon_kdp",
+    "google_play_books",
+    "apple_books",
+    "barnes_noble"
   ],
   "draft_storefront_urls_exposed": 0,
+  "pending_storefront_controls_exposed": 0,
   "external_runtime_dependencies": 0,
   "files": [
     {
       "path": "README.md",
-      "bytes": 1497,
-      "sha256": "410053ff6e327c8caf9c1c03063de066593c56af5f00eaf561f501e52471813d"
+      "bytes": 1636,
+      "sha256": "ff96dcf3bea41cdc0a39c1e01188961837f93ae6cd46ab008a5b37c636255214"
     },
     {
       "path": "assets/campaign-workspace-preview-v1.png",
@@ -33,8 +39,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 36953,
-      "sha256": "373a2e3081d4b48688ed38ddb51d6bfc24fc56b9221127afdb0253bb26cfe5f7"
+      "bytes": 38438,
+      "sha256": "fe3fc1d6b8bc2cc065cbb0bf480bcf2fc9e5855329863d6fc771dc7552872592"
     },
     {
       "path": "robots.txt",
@@ -48,18 +54,18 @@
     },
     {
       "path": "storefront-registry.js",
-      "bytes": 8505,
-      "sha256": "79b3027ec2809be7b2ec78c059e5a5ec692ffcde55858b18b2756942d7eeddfe"
+      "bytes": 12741,
+      "sha256": "098290827604d86a0de5788089151bd04edec716b0f1bb9f36063d50290df1f2"
     },
     {
       "path": "storefront-router.js",
-      "bytes": 4876,
-      "sha256": "e43c1562d9e09573beabf5524f08f1184533abe475cd239fdc0716e07ee30e87"
+      "bytes": 4980,
+      "sha256": "7913a3fe1cbfed5feb5945432064e2cccde68ab999573e495510ac2ad56dd4e4"
     },
     {
       "path": "styles.css",
-      "bytes": 20536,
-      "sha256": "62d57894e646459d6bc8f91cfd098653cf4c5378293d582084e6405d90952a78"
+      "bytes": 22492,
+      "sha256": "dcadb1acb86a1955ef46fe359005d73df71965aba9e74d4fca33d9fad76792f4"
     }
   ]
 }
