@@ -29,6 +29,7 @@ const selectorScript = read("choose-world-foundry-module/app.js");
 const selectorStyles = read("choose-world-foundry-module/styles.css");
 const sitemap = read("sitemap.xml");
 const manifest = JSON.parse(read("item-catalog-demo/MANIFEST.json"));
+const acquisition = JSON.parse(read("item-catalog-demo/ACQUISITION.json"));
 const packageManifest = JSON.parse(read("item-catalog-demo/PACKAGE-MANIFEST.json"));
 const items = JSON.parse(read("item-catalog-demo/items.json"));
 
@@ -147,7 +148,48 @@ for (const record of manifest.files) {
   assert(bytes.length === record.bytes, `Manifest byte count changed: ${record.path}`);
   assert(sha256(bytes) === record.sha256, `Manifest SHA-256 changed: ${record.path}`);
 }
-assert(manifest.files.length === 21, "Hosted manifest file count changed");
+assert(manifest.files.length === 22, "Hosted manifest file count changed");
+
+assert(
+  acquisition.release_id ===
+    "item-catalog-demo-compendium-attribution-v1",
+  "Hosted acquisition release ID changed",
+);
+assert(acquisition.publication_allowed === true, "Hosted acquisition publication gate changed");
+assert(acquisition.approved_source === "the_compendium", "Hosted acquisition source changed");
+assert(
+  acquisition.approved_referrer_host === "compendium.tools",
+  "Hosted acquisition referrer changed",
+);
+assert(
+  acquisition.entry_campaign === "ltw_free_tool_directory_v1" &&
+    acquisition.entry_content === "item_catalog_demo" &&
+    acquisition.downstream_content === "item_catalog_demo_upgrade",
+  "Hosted acquisition campaign contract changed",
+);
+assert(
+  acquisition.paid_handoff_term ===
+    "origin_the_compendium_item_catalog_demo_upgrade",
+  "Hosted acquisition paid handoff changed",
+);
+assert(
+  acquisition.unknown_sources_discarded === true &&
+    acquisition.unapproved_referrer_hosts_discarded === true &&
+    acquisition.email_like_values_discarded === true,
+  "Hosted acquisition rejection boundary changed",
+);
+assert(
+  acquisition.path_or_user_identifier_preserved === false &&
+    acquisition.analytics_used === false &&
+    acquisition.storage_used === false,
+  "Hosted acquisition privacy boundary changed",
+);
+assert(
+  acquisition.submission_or_acceptance_counted_as_demand === false &&
+    acquisition.owner_or_qa_activity_counted_as_demand === false &&
+    acquisition.crawler_or_impression_activity_counted_as_demand === false,
+  "Hosted acquisition demand boundary changed",
+);
 
 assert(
   packageManifest.package_id === "world-foundry-item-catalog-demo-v2-rc3",

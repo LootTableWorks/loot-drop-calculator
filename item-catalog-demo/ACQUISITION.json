@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "item-catalog-demo-compendium-attribution-v1",
+  "product": "World Foundry Item Catalog free demo",
+  "publication_allowed": true,
+  "approved_source": "the_compendium",
+  "approved_referrer_host": "compendium.tools",
+  "entry_campaign": "ltw_free_tool_directory_v1",
+  "entry_content": "item_catalog_demo",
+  "downstream_content": "item_catalog_demo_upgrade",
+  "paid_handoff_term": "origin_the_compendium_item_catalog_demo_upgrade",
+  "unknown_sources_discarded": true,
+  "unapproved_referrer_hosts_discarded": true,
+  "email_like_values_discarded": true,
+  "path_or_user_identifier_preserved": false,
+  "analytics_used": false,
+  "storage_used": false,
+  "submission_or_acceptance_counted_as_demand": false,
+  "owner_or_qa_activity_counted_as_demand": false,
+  "crawler_or_impression_activity_counted_as_demand": false
+}

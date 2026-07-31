@@ -31,6 +31,11 @@
   },
   "files": [
     {
+      "path": "ACQUISITION.json",
+      "bytes": 871,
+      "sha256": "67bfd521bd626b276fac713e0eda3274fb14c72e6dfd2571c0efb18750a06f4c"
+    },
+    {
       "path": "CHANGELOG.md",
       "bytes": 1352,
       "sha256": "f05355131e0d2f7a906916ef59b668286a347d791ebe78fec3d3df11a6817e8c"
