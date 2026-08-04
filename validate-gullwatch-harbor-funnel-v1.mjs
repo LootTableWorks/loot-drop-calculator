@@ -100,8 +100,7 @@ for (const text of [
   "3-6</strong> players",
   "Read the 12-page PDF sample",
   "Download EPUB sample",
-  "Retail release in progress",
-  "No draft checkout links are exposed",
+  "The complete 61-page campaign is available now for $2.99",
   "Transparent AI-assisted text and visual-production disclosure",
   "data-offer-id=\"gullwatch_harbor\" hidden"
 ]) {
