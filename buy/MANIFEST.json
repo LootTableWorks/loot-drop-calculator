@@ -1,6 +1,6 @@
 {
   "product_id": "verified-marketplace-checkout-router",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -39,13 +39,13 @@
     },
     {
       "path": "app.js",
-      "bytes": 10505,
-      "sha256": "5eb8fb622c69a8d48a529b504350793556a93b16c699c107bd695923c9f9f172"
+      "bytes": 10837,
+      "sha256": "d9382d76cd73a841142b4bfd72ac779207cbb469eb02dfe00f42cb37af3904a3"
     },
     {
       "path": "index.html",
       "bytes": 2070,
-      "sha256": "435e34aae83ae2850d798fe0fb84ca8f2d5090b95453ad1d92c2fb771a0ac543"
+      "sha256": "ecee4972feada3cb8724bb41688fdacabab157130225543bcb022c93b5a59912"
     },
     {
       "path": "robots.txt",

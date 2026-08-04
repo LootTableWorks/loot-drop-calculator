@@ -66,7 +66,7 @@ const buyDirectory = path.join(root, "buy");
 const buyFiles = ["README.md", "app.js", "index.html", "robots.txt", "styles.css"];
 const buyManifestPath = path.join(buyDirectory, "MANIFEST.json");
 const buyManifest = JSON.parse(fs.readFileSync(buyManifestPath, "utf8"));
-buyManifest.version = "1.1.4";
+buyManifest.version = "1.1.5";
 buyManifest.paid_routes = 72;
 buyManifest.routed_pages = 15;
 buyManifest.offer_definitions = 7;
@@ -126,4 +126,4 @@ fs.writeFileSync(
   "utf8"
 );
 
-console.log("Built World Foundry v1.10.1 and verified checkout router v1.1.4 manifests.");
+console.log("Built World Foundry v1.10.1 and verified checkout router v1.1.5 manifests.");

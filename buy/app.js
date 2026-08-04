@@ -177,13 +177,22 @@
         .toLowerCase();
       if (ATTRIBUTION_ALLOWLISTS[key].has(value)) attribution[key] = value;
     }
-    const sourceContract = ATTRIBUTION_SOURCE_CONTRACTS[attribution.utm_source];
-    if (
-      sourceContract &&
-      (attribution.utm_medium !== sourceContract.medium ||
-        attribution.utm_campaign !== sourceContract.campaign ||
-        !sourceContract.contents.has(attribution.utm_content))
-    ) {
+    const invalidProtectedContract = Object.entries(
+      ATTRIBUTION_SOURCE_CONTRACTS
+    ).some(([source, contract]) => {
+      const protectedMarkerPresent =
+        attribution.utm_source === source ||
+        attribution.utm_medium === contract.medium ||
+        attribution.utm_campaign === contract.campaign;
+      return (
+        protectedMarkerPresent &&
+        (attribution.utm_source !== source ||
+          attribution.utm_medium !== contract.medium ||
+          attribution.utm_campaign !== contract.campaign ||
+          !contract.contents.has(attribution.utm_content))
+      );
+    });
+    if (invalidProtectedContract) {
       return {
         offerId: requestUrl.searchParams.get("offer") || "",
         attribution: {}

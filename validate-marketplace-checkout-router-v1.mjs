@@ -34,14 +34,14 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.1.4"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.5"), "Checkout app version drift");
 check(
-  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.4"),
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.5"),
   "Measurement handshake must load before checkout auto-redirect"
 );
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
-check(buyManifest.version === "1.1.4", "Checkout manifest version drift");
+check(buyManifest.version === "1.1.5", "Checkout manifest version drift");
 check(buyManifest.paid_routes === 72, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
@@ -144,7 +144,10 @@ for (const [label, href] of [
   ["medium", `${ownedBase}buy/?offer=item&utm_source=gamestruction&utm_medium=owned_web&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog`],
   ["campaign", `${ownedBase}buy/?offer=item&utm_source=gamestruction&utm_medium=tool_directory&utm_campaign=standalone_modules&utm_content=item_catalog`],
   ["content", `${ownedBase}buy/?offer=item&utm_source=gamestruction&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=schema_item_catalog`],
-  ["source", `${ownedBase}buy/?offer=item&utm_source=private_customer&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog`]
+  ["source", `${ownedBase}buy/?offer=item&utm_source=private_customer&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog`],
+  ["allowlisted_source", `${ownedBase}buy/?offer=item&utm_source=module_selector&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog`],
+  ["protected_medium_only", `${ownedBase}buy/?offer=item&utm_source=module_selector&utm_medium=tool_directory&utm_campaign=standalone_modules&utm_content=item_catalog`],
+  ["protected_campaign_only", `${ownedBase}buy/?offer=item&utm_source=module_selector&utm_medium=owned_web&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog`]
 ]) {
   const request = checkout.readRequest({ href });
   check(
