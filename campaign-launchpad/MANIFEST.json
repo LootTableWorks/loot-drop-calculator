@@ -34,8 +34,8 @@
     },
     {
       "path": "campaign-launchpad-core.js",
-      "bytes": 10193,
-      "sha256": "a2c1b360e375fde478b3512fbac54ad2b19a7a1b23c54391e44b68e65978e1cb"
+      "bytes": 10218,
+      "sha256": "0eff2781bd8d9df9ca1ac7eb7b4471438150ed1a8236a2e3b4b01e880510f137"
     },
     {
       "path": "campaign-start-adapter.js",
@@ -49,8 +49,8 @@
     },
     {
       "path": "campaign-start-one-shot-core.js",
-      "bytes": 26109,
-      "sha256": "6c5c3ae18af0891032813d91c4216f8d94eab5ee63c9a69c5888eb1b8c3c4b4c"
+      "bytes": 26236,
+      "sha256": "adfd2b2dee0903e2481eb9ad965e66561b91d3537cfddf8e5388572597c4a175"
     },
     {
       "path": "campaign-start-one-shot-data.js",

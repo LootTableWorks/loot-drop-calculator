@@ -43,7 +43,7 @@
         <a href="../player-chronicle/">Chronicle</a>
         <a href="../world-foundry/">Hub</a>
       </nav>
-      <a class="header-cta" href="#module-marketplace">Expand the data</a>
+      <a class="header-cta" href="#module-marketplace">Explore paid expansions</a>
     </header>
 
     <main class="workspace">
@@ -163,21 +163,39 @@
           </div>
         </section>
 
-        <nav class="result-tabs" aria-label="Adventure packet views">
-          <button class="active" type="button" data-tab="run-sheet">Run sheet</button>
-          <button type="button" data-tab="scenes">Scene detail</button>
-          <button type="button" data-tab="party">Pregenerated party</button>
-          <button type="button" data-tab="references">Reference ledger</button>
-          <button type="button" data-tab="json">JSON</button>
+        <nav class="result-tabs" role="tablist" aria-label="Adventure packet views">
+          <button class="active" id="run-sheet-tab" type="button" role="tab" aria-selected="true" aria-controls="run-sheet-panel" tabindex="0" data-tab="run-sheet">Run sheet</button>
+          <button id="scenes-tab" type="button" role="tab" aria-selected="false" aria-controls="scenes-panel" tabindex="-1" data-tab="scenes">Scene detail</button>
+          <button id="party-tab" type="button" role="tab" aria-selected="false" aria-controls="party-panel" tabindex="-1" data-tab="party">Pregenerated party</button>
+          <button id="references-tab" type="button" role="tab" aria-selected="false" aria-controls="references-panel" tabindex="-1" data-tab="references">Reference ledger</button>
+          <button id="json-tab" type="button" role="tab" aria-selected="false" aria-controls="json-panel" tabindex="-1" data-tab="json">JSON</button>
         </nav>
 
-        <section class="result-panel" id="run-sheet-panel"></section>
-        <section class="result-panel" id="scenes-panel" hidden></section>
-        <section class="result-panel" id="party-panel" hidden></section>
-        <section class="result-panel" id="references-panel" hidden></section>
-        <section class="result-panel json-panel" id="json-panel" hidden><pre id="json-output"></pre></section>
+        <section class="result-panel" id="run-sheet-panel" role="tabpanel" aria-labelledby="run-sheet-tab" tabindex="0"></section>
+        <section class="result-panel" id="scenes-panel" role="tabpanel" aria-labelledby="scenes-tab" tabindex="0" hidden></section>
+        <section class="result-panel" id="party-panel" role="tabpanel" aria-labelledby="party-tab" tabindex="0" hidden></section>
+        <section class="result-panel" id="references-panel" role="tabpanel" aria-labelledby="references-tab" tabindex="0" hidden></section>
+        <section class="result-panel json-panel" id="json-panel" role="tabpanel" aria-labelledby="json-tab" tabindex="0" hidden><pre id="json-output"></pre></section>
 
         <section class="module-marketplace" id="module-marketplace" aria-labelledby="module-title">
+          <article class="campaign-continuation" aria-labelledby="campaign-continuation-title">
+            <img src="assets/gullwatch-harbor-cover-v1.jpg" width="1600" height="2560" alt="Gullwatch Harbor campaign book cover showing a storm-lit beacon above a coastal harbor.">
+            <div class="campaign-continuation-copy">
+              <p class="section-label">Complete campaign</p>
+              <h2 id="campaign-continuation-title">Run a complete coastal campaign next</h2>
+              <p>For a ready-made coastal story, Gullwatch Harbor expands our free Signal at Gullwatch opening into four linked sessions with persistent choices, nineteen scenes, maps, continuity records, and ready-to-import Campaign Workspace saves.</p>
+              <ul aria-label="Campaign contents">
+                <li>61-page PDF and reflowable EPUB</li>
+                <li>Four opening outcomes that change later sessions</li>
+                <li>Low-prep, system-neutral play for 3-6 players</li>
+              </ul>
+            </div>
+            <div class="campaign-continuation-action">
+              <strong>$2.99</strong>
+              <a id="campaign-offer-link" data-offer-id="gullwatch_harbor" href="https://loottableworks.github.io/loot-drop-calculator/buy/?offer=gullwatch_harbor&amp;utm_source=one_shot_forge&amp;utm_medium=free_tool&amp;utm_campaign=one_shot_value_launch&amp;utm_content=gullwatch_harbor_featured_campaign&amp;utm_term=direct">Get the complete campaign</a>
+              <a class="campaign-preview-link" href="https://loottableworks.github.io/loot-drop-calculator/gullwatch-harbor/?utm_source=one_shot_forge&amp;utm_medium=free_tool&amp;utm_campaign=one_shot_value_launch&amp;utm_content=gullwatch_harbor_preview">Preview the free sample</a>
+            </div>
+          </article>
           <div class="marketplace-heading">
             <div>
               <p class="section-label">Deepen this one-shot</p>

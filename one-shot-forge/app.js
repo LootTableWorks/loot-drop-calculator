@@ -85,6 +85,7 @@
     partyPanel: document.querySelector("#party-panel"),
     referencesPanel: document.querySelector("#references-panel"),
     jsonOutput: document.querySelector("#json-output"),
+    campaignOfferLink: document.querySelector("#campaign-offer-link"),
     recommendationGrid: document.querySelector("#recommendation-grid"),
     toast: document.querySelector("#toast")
   };
@@ -197,14 +198,19 @@
 
   function trackedProductUrl(product, placement) {
     const url = new URL(product.url);
+    const originSuffix = acquisitionOrigin ? `_origin_${acquisitionOrigin}` : "";
     url.searchParams.set("utm_source", "one_shot_forge");
     url.searchParams.set("utm_medium", "free_tool");
     url.searchParams.set("utm_campaign", "one_shot_value_launch");
-    url.searchParams.set("utm_content", `${product.id}_${placement}`);
-    if (acquisitionOrigin) {
-      url.searchParams.set("utm_term", `origin_${acquisitionOrigin}`);
-    }
+    url.searchParams.set("utm_content", `${product.id}_${placement}${originSuffix}`);
     return url.toString();
+  }
+
+  function trackedCampaignUrl() {
+    return trackedProductUrl({
+      id: "gullwatch_harbor",
+      url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=gullwatch_harbor"
+    }, "featured_campaign");
   }
 
   function renderRunSheet() {
@@ -281,7 +287,7 @@
   }
 
   function renderRecommendations() {
-    elements.recommendationGrid.innerHTML = core.recommendProducts(3).map((product) => `
+    elements.recommendationGrid.innerHTML = core.recommendProducts(6).map((product) => `
       <article class="recommendation-card">
         <span>${escapeHtml(product.proof)}</span>
         <h3>${escapeHtml(product.title)}</h3>
@@ -304,7 +310,7 @@
     elements.statCharacters.textContent = oneShot.validation.character_count;
     elements.statClues.textContent = oneShot.clues.length;
     elements.statReferences.textContent = oneShot.reference_ledger.length;
-    elements.mapLabel.textContent = `${core.REGIONS[oneShot.region].label} | ${location.name}`;
+    elements.mapLabel.textContent = "Six-region atlas overview";
     elements.mapProof.textContent = `${oneShot.validation.missing_reference_count} missing references`;
     elements.loglineTitle.textContent = `${objective.action || "Complete"}${Number(objective.quantity || 1) > 1 ? ` ${objective.quantity}` : ""} ${objective.target_item_name || "documented objective"}`;
     elements.logline.textContent = oneShot.logline;
@@ -345,6 +351,7 @@
   setSegment("#duration-control", "duration", state.durationMinutes);
   elements.partySizeOutput.value = elements.partySize.value;
   elements.tierOutput.value = elements.maximumTier.value;
+  elements.campaignOfferLink.href = trackedCampaignUrl();
   renderRecommendations();
 
   document.querySelector("#generate").addEventListener("click", generate);
@@ -378,11 +385,31 @@
   elements.partySize.addEventListener("change", generate);
   elements.maximumTier.addEventListener("input", () => { elements.tierOutput.value = elements.maximumTier.value; });
   elements.maximumTier.addEventListener("change", generate);
-  document.querySelectorAll(".result-tabs button").forEach((button) => button.addEventListener("click", () => {
+  const resultTabs = [...document.querySelectorAll(".result-tabs button")];
+  function activateResultTab(button, focus = false) {
     state.activeTab = button.dataset.tab;
-    document.querySelectorAll(".result-tabs button").forEach((tab) => tab.classList.toggle("active", tab === button));
+    resultTabs.forEach((tab) => {
+      const selected = tab === button;
+      tab.classList.toggle("active", selected);
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
     document.querySelectorAll(".result-panel").forEach((panel) => { panel.hidden = panel.id !== `${state.activeTab}-panel`; });
-  }));
+    if (focus) button.focus();
+  }
+  resultTabs.forEach((button, index) => {
+    button.addEventListener("click", () => activateResultTab(button));
+    button.addEventListener("keydown", (event) => {
+      let nextIndex = null;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % resultTabs.length;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + resultTabs.length) % resultTabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = resultTabs.length - 1;
+      if (nextIndex === null) return;
+      event.preventDefault();
+      activateResultTab(resultTabs[nextIndex], true);
+    });
+  });
   document.querySelector("#copy-link").addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(shareUrl()); showToast("Tracked share link copied"); }
     catch { showToast("Copy unavailable in this browser"); }

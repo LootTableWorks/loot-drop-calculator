@@ -9,12 +9,12 @@
   const CAMPAIGN = "campaign_launchpad_v1";
 
   const PRODUCTS = Object.freeze({
-    items: Object.freeze({ id: "items", code: "WF-01", title: "Item Catalog & Economy Kit", proof: "500 original items", value: "Equip rewards, shops, quests, and character signatures from one stable catalog.", url: "https://loot-table-works.itch.io/original-fantasy-item-data-pack" }),
-    merchants: Object.freeze({ id: "merchants", code: "WF-02", title: "Merchant & Shop Kit", proof: "150 merchants", value: "Put witnesses, suppliers, rivals, and useful stock inside the party's route.", url: "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit" }),
-    recipes: Object.freeze({ id: "recipes", code: "WF-03", title: "Crafting & Recipe Kit", proof: "300 recipes", value: "Turn salvage, field supplies, and scarce rewards into decisions between sessions.", url: "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit" }),
-    loot: Object.freeze({ id: "loot", code: "WF-04", title: "Enemy Loot & Reward Kit", proof: "250 reward profiles", value: "Give dangerous opposition reproducible rewards with inspectable probabilities.", url: "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit" }),
-    quests: Object.freeze({ id: "quests", code: "WF-05", title: "Quest, Contract & Reward Kit", proof: "240 quests", value: "Add patrons, objectives, complications, and rewards that connect to stable IDs.", url: "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit" }),
-    encounters: Object.freeze({ id: "encounters", code: "WF-06", title: "Encounter & Threat Kit", proof: "180 encounters", value: "Drop in three-phase encounters with telegraphs, state changes, and threat evidence.", url: "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit" })
+    items: Object.freeze({ id: "items", code: "WF-01", title: "Item Catalog & Economy Kit", proof: "500 original items", value: "Equip rewards, shops, quests, and character signatures from one stable catalog.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=item" }),
+    merchants: Object.freeze({ id: "merchants", code: "WF-02", title: "Merchant & Shop Kit", proof: "150 merchants", value: "Put witnesses, suppliers, rivals, and useful stock inside the party's route.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=merchant" }),
+    recipes: Object.freeze({ id: "recipes", code: "WF-03", title: "Crafting & Recipe Kit", proof: "300 recipes", value: "Turn salvage, field supplies, and scarce rewards into decisions between sessions.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=recipe" }),
+    loot: Object.freeze({ id: "loot", code: "WF-04", title: "Enemy Loot & Reward Kit", proof: "250 reward profiles", value: "Give dangerous opposition reproducible rewards with inspectable probabilities.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=loot" }),
+    quests: Object.freeze({ id: "quests", code: "WF-05", title: "Quest, Contract & Reward Kit", proof: "240 quests", value: "Add patrons, objectives, complications, and rewards that connect to stable IDs.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=quest" }),
+    encounters: Object.freeze({ id: "encounters", code: "WF-06", title: "Encounter & Threat Kit", proof: "180 encounters", value: "Drop in three-phase encounters with telegraphs, state changes, and threat evidence.", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=encounter" })
   });
 
   const SCOPES = Object.freeze({

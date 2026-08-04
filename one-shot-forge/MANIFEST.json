@@ -1,6 +1,6 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -15,13 +15,16 @@
   "pregenerated_characters_min": 3,
   "pregenerated_characters_max": 6,
   "live_standalone_destinations": 6,
+  "visible_standalone_recommendations": 6,
+  "live_campaign_destinations": 1,
+  "checkout_router_destinations": 7,
   "bundle_destinations": 0,
   "external_runtime_dependencies": 0,
   "files": [
     {
       "path": "README.md",
-      "bytes": 3126,
-      "sha256": "17140ea2ffeb0e36a8bed42bb7306f9f9b61d8093addcc13b026910aada6ebba"
+      "bytes": 3306,
+      "sha256": "8d8daf642b82e7f6cd9dc29a0eb73a6e7968d1fcd6ad56ba5a667bae1be19116"
     },
     {
       "path": "USAGE-TERMS.md",
@@ -30,8 +33,13 @@
     },
     {
       "path": "app.js",
-      "bytes": 19427,
-      "sha256": "8d29046a6012363d8a265710411825e61ba7aecfd00c99222a983e6f3bcd94c3"
+      "bytes": 20522,
+      "sha256": "55a311bac436a27c251749e7a291bc7688095a8c4d60c733b2219d8dccd7b20e"
+    },
+    {
+      "path": "assets/gullwatch-harbor-cover-v1.jpg",
+      "bytes": 990961,
+      "sha256": "8206ab77b3915504435eadb68a8f397827aa518a4a8db82eb6a5d24ef66988a9"
     },
     {
       "path": "assets/one-shot-forge-six-region-atlas-v1.jpg",
@@ -50,18 +58,18 @@
     },
     {
       "path": "campaign-start-launchpad-core.js",
-      "bytes": 10193,
-      "sha256": "a2c1b360e375fde478b3512fbac54ad2b19a7a1b23c54391e44b68e65978e1cb"
+      "bytes": 10218,
+      "sha256": "0eff2781bd8d9df9ca1ac7eb7b4471438150ed1a8236a2e3b4b01e880510f137"
     },
     {
       "path": "index.html",
-      "bytes": 13507,
-      "sha256": "afd58492b3bc3bece5c7d5db471032a4ef96a63c39a8cb48a681f04a0c336754"
+      "bytes": 16097,
+      "sha256": "1bdab36f47718aa30ae7f70d04b22a71e3c7c81a9c93aff88d2a526096bdfa0f"
     },
     {
       "path": "one-shot-core.js",
-      "bytes": 26109,
-      "sha256": "6c5c3ae18af0891032813d91c4216f8d94eab5ee63c9a69c5888eb1b8c3c4b4c"
+      "bytes": 26236,
+      "sha256": "adfd2b2dee0903e2481eb9ad965e66561b91d3537cfddf8e5388572597c4a175"
     },
     {
       "path": "one-shot-data.js",
@@ -70,8 +78,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 17517,
-      "sha256": "683b223fe24d4207c9e696bd2856ae256591ff5cf73bd3e58c4777e9698c4af4"
+      "bytes": 20356,
+      "sha256": "0e197468820c5c4b481e321bedbc62ff66eca4d762e0f1bafb348583170ac661"
     }
   ]
 }

@@ -78,8 +78,8 @@ for (const file of htmlFiles(root)) {
   }
 }
 
-check(routeLinks.length === 70, `Expected 70 routed paid links, found ${routeLinks.length}`);
-check(new Set(routeLinks.map((entry) => entry.file)).size === 14, "Routed page count drift");
+check(routeLinks.length === 71, `Expected 71 routed paid links, found ${routeLinks.length}`);
+check(new Set(routeLinks.map((entry) => entry.file)).size === 15, "Routed page count drift");
 for (const offerId of ["item", "merchant", "recipe", "loot", "quest", "encounter"]) {
   check(routeLinks.some((entry) => entry.offerId === offerId), `${offerId}: no routed buyer path`);
 }
@@ -132,5 +132,5 @@ check(
 );
 
 console.log(
-  `Validated marketplace checkout router v1: ${checks} checks; ${routeLinks.length} paid links across 14 pages route through exact public URL gates.`
+  `Validated marketplace checkout router v1: ${checks} checks; ${routeLinks.length} paid links across 15 pages route through exact public URL gates.`
 );

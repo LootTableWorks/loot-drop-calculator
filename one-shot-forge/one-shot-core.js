@@ -6,12 +6,12 @@
   "use strict";
 
   const PRODUCTS = Object.freeze([
-    Object.freeze({ id: "items", title: "Item Catalog & Economy Kit", proof: "500 items", url: "https://loot-table-works.itch.io/original-fantasy-item-data-pack" }),
-    Object.freeze({ id: "merchants", title: "Merchant & Shop Kit", proof: "150 merchants", url: "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit" }),
-    Object.freeze({ id: "recipes", title: "Crafting & Recipe Kit", proof: "300 recipes", url: "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit" }),
-    Object.freeze({ id: "loot_profiles", title: "Enemy Loot & Reward Kit", proof: "250 profiles", url: "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit" }),
-    Object.freeze({ id: "quests", title: "Quest, Contract & Reward Kit", proof: "240 quests", url: "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit" }),
-    Object.freeze({ id: "encounters", title: "Encounter & Threat Kit", proof: "180 encounters", url: "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit" })
+    Object.freeze({ id: "items", offer: "item", title: "Item Catalog & Economy Kit", proof: "500 items", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=item" }),
+    Object.freeze({ id: "merchants", offer: "merchant", title: "Merchant & Shop Kit", proof: "150 merchants", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=merchant" }),
+    Object.freeze({ id: "recipes", offer: "recipe", title: "Crafting & Recipe Kit", proof: "300 recipes", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=recipe" }),
+    Object.freeze({ id: "loot_profiles", offer: "loot", title: "Enemy Loot & Reward Kit", proof: "250 profiles", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=loot" }),
+    Object.freeze({ id: "quests", offer: "quest", title: "Quest, Contract & Reward Kit", proof: "240 quests", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=quest" }),
+    Object.freeze({ id: "encounters", offer: "encounter", title: "Encounter & Threat Kit", proof: "180 encounters", url: "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=encounter" })
   ]);
 
   const TONES = Object.freeze({
