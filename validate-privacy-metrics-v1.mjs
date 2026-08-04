@@ -287,7 +287,7 @@ for (const filePath of allHtmlFiles(root)) {
     );
   }
 }
-assert(routedAttribution.length === 71, "Paid-route attribution inventory drifted");
+assert(routedAttribution.length === 72, "Paid-route attribution inventory drifted");
 for (const route of routedAttribution) {
   const reduced = api.fixedAttribution(route.search, "");
   for (const [key, prefix] of [

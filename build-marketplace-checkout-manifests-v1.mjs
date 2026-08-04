@@ -42,7 +42,7 @@ function refreshManifest(directoryName, mutate) {
 const worldDirectory = path.join(root, "world-foundry");
 const worldManifestPath = path.join(worldDirectory, "MANIFEST.json");
 const worldManifest = JSON.parse(fs.readFileSync(worldManifestPath, "utf8"));
-worldManifest.version = "1.10.0";
+worldManifest.version = "1.10.1";
 worldManifest.storefront_registry_version = "3.0.1";
 worldManifest.pending_storefronts = [
   "gumroad",
@@ -64,27 +64,21 @@ fs.writeFileSync(worldManifestPath, `${JSON.stringify(worldManifest, null, 2)}\n
 
 const buyDirectory = path.join(root, "buy");
 const buyFiles = ["README.md", "app.js", "index.html", "robots.txt", "styles.css"];
-const buyManifest = {
-  product_id: "verified-marketplace-checkout-router",
-  version: "1.0.0",
-  status: "approved_for_deployment",
-  publication_allowed: true,
-  deployment_allowed: true,
-  public_release_requires_review: false,
-  release_authority: "delegated_internal_aaa_qa",
-  canonical_url: "https://loottableworks.github.io/loot-drop-calculator/buy/",
-  indexed: false,
-  paid_routes: 70,
-  routed_pages: 14,
-  offer_definitions: 7,
-  storefront_policies: 12,
-  public_storefronts: ["itch"],
-  pending_storefronts: worldManifest.pending_storefronts,
-  draft_storefront_urls_exposed: 0,
-  files: buyFiles.map((entry) => fileRecord(path.join(buyDirectory, entry), buyDirectory))
-};
+const buyManifestPath = path.join(buyDirectory, "MANIFEST.json");
+const buyManifest = JSON.parse(fs.readFileSync(buyManifestPath, "utf8"));
+buyManifest.version = "1.1.2";
+buyManifest.paid_routes = 72;
+buyManifest.routed_pages = 15;
+buyManifest.offer_definitions = 7;
+buyManifest.storefront_policies = 12;
+buyManifest.public_storefronts = ["itch"];
+buyManifest.pending_storefronts = worldManifest.pending_storefronts;
+buyManifest.draft_storefront_urls_exposed = 0;
+buyManifest.files = buyFiles.map((entry) =>
+  fileRecord(path.join(buyDirectory, entry), buyDirectory)
+);
 fs.writeFileSync(
-  path.join(buyDirectory, "MANIFEST.json"),
+  buyManifestPath,
   `${JSON.stringify(buyManifest, null, 2)}\n`,
   "utf8"
 );
@@ -132,4 +126,4 @@ fs.writeFileSync(
   "utf8"
 );
 
-console.log("Built World Foundry v1.10.0 and verified checkout router v1.0.0 manifests.");
+console.log("Built World Foundry v1.10.1 and verified checkout router v1.1.2 manifests.");

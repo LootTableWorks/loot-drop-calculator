@@ -27,6 +27,7 @@
   const ATTRIBUTION_ALLOWLISTS = Object.freeze({
     utm_source: new Set([
       "connected_record_proof",
+      "data_pack_finder",
       "free_rpg_tools",
       "gullwatch_kit",
       "integration_guides",
@@ -39,6 +40,7 @@
     utm_medium: new Set(["catalog", "free_tool", "html", "owned_web", "seo_guide"]),
     utm_campaign: new Set([
       "game_economy_shop_data_integration",
+      "fantasy_rpg_data_packs_v1",
       "godot_4_resource_data_import",
       "integration_guides_index",
       "item_catalog",
@@ -74,6 +76,7 @@
       "godot_merchant_shop",
       "godot_quest_contracts",
       "gullwatch_harbor_featured_campaign",
+      "gullwatch_harbor_campaign",
       "header",
       "index_crafting_recipes",
       "index_encounter_threats",

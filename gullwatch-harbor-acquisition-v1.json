@@ -62,18 +62,18 @@
   "files": [
     {
       "path": "index.html",
-      "bytes": 10347,
-      "sha256": "4799b27517eb214d3bfcab2f03ae4336a9693e5294b4e6295d8255abf742ac9a"
+      "bytes": 10631,
+      "sha256": "bcdc26b89922863197d59441f05ad7d7739b1c38ddc21cc0e49da7fde5f5e3e5"
     },
     {
       "path": "gullwatch-beacon/index.html",
-      "bytes": 12916,
-      "sha256": "80f18fd0dd9a3966edd92a47c743ee8e3d04dc0a66b947d108f3a6f417881e60"
+      "bytes": 13140,
+      "sha256": "1aad06bb18187422a4ed2142cf6c9bb21234e2dab5ce7de865f832cbb0da1739"
     },
     {
       "path": "gullwatch-aftermath/index.html",
-      "bytes": 15548,
-      "sha256": "8b303a60dd69f5e473930dca6803de854fd92aaeb0b9087a08cf37a1c6be7594"
+      "bytes": 15779,
+      "sha256": "44484b6ff77f8d58129a49f29ae8cebc9432e5ddcabff15a77edb4bfd5772537"
     },
     {
       "path": "gullwatch-aftermath/README.md",
