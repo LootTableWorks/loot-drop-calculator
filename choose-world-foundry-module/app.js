@@ -18,7 +18,7 @@ const MODULES = {
       "Export JSON or CSV and load records into supported engines."
     ],
     dependency: "<strong>No other World Foundry module required.</strong> This is the canonical foundation for the connected module line.",
-    boundary: "Structured item data and workflow tools. No icons, sprites, illustrations, maps, audio, hosted service, or rules-specific stat blocks.",
+    boundary: "Structured item data, 100 mapped inventory icons, four sprite sheets, and offline workflow tools. No maps, audio, hosted service, or rules-specific stat blocks.",
     url: "../buy/?offer=item&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=item_catalog"
   },
   merchants: {
