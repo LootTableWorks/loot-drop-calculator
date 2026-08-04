@@ -13,4 +13,6 @@ Each verified canonical URL must also be added to the store policy's explicit
 product allowlist; a same-domain URL alone cannot activate the control.
 
 The page contains no external runtime dependency, tracking script, password,
-draft link, private listing URL, or checkout.
+draft link, private listing URL, or hardcoded third-party checkout URL. Its
+purchase control resolves at runtime only through the exact-allowlisted
+Gullwatch Harbor itch.io listing.

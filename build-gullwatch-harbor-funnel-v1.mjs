@@ -45,7 +45,7 @@ writeManifest(worldFoundry, {
   free_tool_destinations: 10,
   paid_standalone_destinations: 6,
   paid_offer_definitions: 7,
-  storefront_registry_version: "2.0.0",
+  storefront_registry_version: "3.0.1",
   public_storefronts: ["itch"],
   pending_storefronts: [
     "gumroad",
@@ -94,7 +94,7 @@ writeManifest(product, {
     complete_sessions_included: 0,
     opening_scenes_included: 1
   },
-  verified_public_storefronts: [],
+  verified_public_storefronts: ["itch"],
   pending_storefronts: [
     "gumroad",
     "kofi",
@@ -105,7 +105,7 @@ writeManifest(product, {
     "barnes_noble"
   ],
   draft_storefront_urls_exposed: 0,
-  checkout_links_exposed: 0,
+  checkout_links_exposed: 1,
   files: productFiles.map((file) => fileRecord(product, file))
 });
 

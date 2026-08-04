@@ -40,10 +40,13 @@ check(manifest.product.scenes === 19, "Scene count drift");
 check(manifest.preview.pdf_pages === 12, "PDF preview page count drift");
 check(manifest.preview.complete_sessions_included === 0, "Preview must not include a complete session");
 check(manifest.preview.opening_scenes_included === 1, "Preview opening-scene boundary drift");
-check(manifest.verified_public_storefronts.length === 0, "Unverified public store recorded");
+check(
+  JSON.stringify(manifest.verified_public_storefronts) === JSON.stringify(["itch"]),
+  "Verified public storefront state drift"
+);
 check(manifest.pending_storefronts.length === 7, "Pending channel count drift");
 check(manifest.draft_storefront_urls_exposed === 0, "Draft storefront exposure drift");
-check(manifest.checkout_links_exposed === 0, "Checkout exposure drift");
+check(manifest.checkout_links_exposed === 1, "Checkout exposure drift");
 check(readme.includes(`Status: \`${manifest.status}\``), "README status drift");
 
 const expectedFiles = [
@@ -135,7 +138,14 @@ check(registry.validateRegistry(registry.offers), "Shared storefront registry in
 const offer = registry.offers.gullwatch_harbor;
 check(offer.priceUsd === 2.99, "Registry price drift");
 check(router.priceLabel(offer.priceUsd) === "$2.99", "Router price rendering drift");
-check(registry.resolvePublicStores("gullwatch_harbor").length === 0, "Pending offer exposed");
+const currentStores = registry.resolvePublicStores("gullwatch_harbor");
+check(currentStores.length === 1, "Gullwatch Harbor public store count drift");
+check(currentStores[0].id === "itch", "Gullwatch Harbor must resolve to itch.io");
+check(
+  new URL(currentStores[0].url).origin + new URL(currentStores[0].url).pathname ===
+    "https://loot-table-works.itch.io/gullwatch-harbor",
+  "Gullwatch Harbor canonical buyer URL drift"
+);
 for (const storeId of manifest.pending_storefronts) {
   check(offer.stores[storeId].status === "pending", `${storeId}: pending state drift`);
   check(offer.stores[storeId].url === null, `${storeId}: draft URL exposed`);
@@ -169,8 +179,10 @@ for (const [storeId, url] of Object.entries({
     `${storeId}: exact-allowlisted future state must validate`
   );
   const stores = registry.resolvePublicStores("gullwatch_harbor", future, futurePolicies);
-  check(stores.length === 1, `${storeId}: future selector count drift`);
-  const attributed = new URL(stores[0].url);
+  check(stores.length === 2, `${storeId}: future selector count drift`);
+  const futureStore = stores.find((store) => store.id === storeId);
+  check(Boolean(futureStore), `${storeId}: future selector entry missing`);
+  const attributed = new URL(futureStore.url);
   check(attributed.searchParams.get("utm_source") === "world_foundry_hub", `${storeId}: source missing`);
   check(attributed.searchParams.get("utm_medium") === "storefront_selector", `${storeId}: medium missing`);
   check(attributed.searchParams.get("utm_campaign") === "gullwatch_harbor_book_v1", `${storeId}: campaign missing`);
@@ -182,5 +194,5 @@ for (const [storeId, url] of Object.entries({
 }
 
 console.log(
-  `Validated Gullwatch Harbor product funnel v1: ${checks} checks, zero checkout URLs exposed.`
+  `Validated Gullwatch Harbor product funnel v1: ${checks} checks, one exact verified checkout URL exposed.`
 );

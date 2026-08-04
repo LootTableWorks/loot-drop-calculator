@@ -43,7 +43,7 @@ const worldDirectory = path.join(root, "world-foundry");
 const worldManifestPath = path.join(worldDirectory, "MANIFEST.json");
 const worldManifest = JSON.parse(fs.readFileSync(worldManifestPath, "utf8"));
 worldManifest.version = "1.10.0";
-worldManifest.storefront_registry_version = "3.0.0";
+worldManifest.storefront_registry_version = "3.0.1";
 worldManifest.pending_storefronts = [
   "gumroad",
   "kofi",
@@ -102,7 +102,10 @@ refreshManifest("shop-inventory-generator", (manifest) => {
   manifest.paid_destination =
     "https://loottableworks.github.io/loot-drop-calculator/buy/?offer=merchant";
 });
-refreshManifest("gullwatch-harbor");
+refreshManifest("gullwatch-harbor", (manifest) => {
+  manifest.verified_public_storefronts = ["itch"];
+  manifest.checkout_links_exposed = 1;
+});
 const integrationReleasePath = path.join(root, "integration-guides", "release.json");
 const integrationRelease = JSON.parse(fs.readFileSync(integrationReleasePath, "utf8"));
 integrationRelease.version = "1.2.0";

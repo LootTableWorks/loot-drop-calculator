@@ -20,7 +20,9 @@
     "complete_sessions_included": 0,
     "opening_scenes_included": 1
   },
-  "verified_public_storefronts": [],
+  "verified_public_storefronts": [
+    "itch"
+  ],
   "pending_storefronts": [
     "gumroad",
     "kofi",
@@ -31,12 +33,12 @@
     "barnes_noble"
   ],
   "draft_storefront_urls_exposed": 0,
-  "checkout_links_exposed": 0,
+  "checkout_links_exposed": 1,
   "files": [
     {
       "path": "README.md",
-      "bytes": 752,
-      "sha256": "19ebc74070e3ae65c6c76c016d26d99f1a3bdfd94cfb1ae053e4c53a0d307b0a"
+      "bytes": 888,
+      "sha256": "6d0d0a5c3558e6f5a3d8ebc7a5fb5331a46de9f88a76e0bcafd3934c4c04ed65"
     },
     {
       "path": "assets/gullwatch-harbor-cover-v1.jpg",
@@ -55,8 +57,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9852,
-      "sha256": "81b8776e103ec8abf5f491b3a4da5b66094307a7155f8cd53884ed4c4c36127f"
+      "bytes": 9835,
+      "sha256": "17fb367520bbb0bf7affb1e831ebd39f42d6b1009136baade94790c441f9e1e5"
     },
     {
       "path": "robots.txt",

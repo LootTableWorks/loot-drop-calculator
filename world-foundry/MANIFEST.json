@@ -10,7 +10,7 @@
   "free_tool_destinations": 10,
   "paid_standalone_destinations": 6,
   "paid_offer_definitions": 7,
-  "storefront_registry_version": "3.0.0",
+  "storefront_registry_version": "3.0.1",
   "public_storefronts": [
     "itch"
   ],
@@ -43,8 +43,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 38822,
-      "sha256": "948eed887bdc3c3659b3ec143cdd0c61cdea195d8c8eba359cc06d394ec57270"
+      "bytes": 38828,
+      "sha256": "557e01379a7cf5217045b9fe50ff95307a816ca7ded4cd6609081a64cdcc828f"
     },
     {
       "path": "robots.txt",
@@ -58,8 +58,8 @@
     },
     {
       "path": "storefront-registry.js",
-      "bytes": 18421,
-      "sha256": "5faecd5ff2a1b36d5171141ab478a614a8aa038735f13d082e153c992c071ad9"
+      "bytes": 18549,
+      "sha256": "ebc133d4199b54cfeaae51f70265bd219ea567e19a9b22fbfd6e1b1654f30006"
     },
     {
       "path": "storefront-router.js",

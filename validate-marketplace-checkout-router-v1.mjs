@@ -30,7 +30,7 @@ function htmlFiles(directory) {
 
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
-check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.0"), "Registry version drift");
+check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
 check(buyHtml.includes("app.js?v=1.0.0"), "Checkout app version drift");
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
@@ -104,12 +104,13 @@ const unknown = checkout.resolveRequest(
 );
 check(unknown.state === "blocked", "Unknown offer must fail closed");
 
-const unavailable = checkout.resolveRequest(
+const gullwatch = checkout.resolveRequest(
   { href: `${ownedBase}buy/?offer=gullwatch_harbor&utm_source=test` },
   registry
 );
-check(unavailable.state === "unavailable", "Zero-store offer must remain unavailable");
-check(unavailable.stores.length === 0, "Unavailable offer must expose zero stores");
+check(gullwatch.state === "single", "Gullwatch Harbor must resolve to one verified store");
+check(gullwatch.stores.length === 1, "Gullwatch Harbor store count drift");
+check(gullwatch.stores[0].id === "itch", "Gullwatch Harbor must resolve to itch.io");
 
 const futureOffers = JSON.parse(JSON.stringify(registry.offers));
 const futurePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));

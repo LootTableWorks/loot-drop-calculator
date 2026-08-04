@@ -42,8 +42,8 @@ const directStores = ["gumroad", "kofi", "payhip"];
 const bookStores = ["amazon_kdp", "google_play_books", "apple_books", "barnes_noble"];
 const nativeAssetStores = ["artstation", "etsy", "unity_asset_store", "fab"];
 check(
-  registry.STORE_POLICIES.itch.approvedCanonicalUrls.length === 6,
-  "itch allowlist must bind the six exact public products"
+  registry.STORE_POLICIES.itch.approvedCanonicalUrls.length === 7,
+  "itch allowlist must bind the seven exact public products"
 );
 for (const storeId of [...directStores, ...bookStores, ...nativeAssetStores]) {
   check(
@@ -102,7 +102,11 @@ for (const offerId of standaloneOffers) {
 const campaignBook = registry.offers.gullwatch_harbor;
 check(campaignBook.priceUsd === 2.99, "Gullwatch Harbor price drift");
 check(Object.keys(campaignBook.stores).length === 12, "Gullwatch Harbor store state incomplete");
-check(campaignBook.stores.itch.status === "not_applicable", "Gullwatch Harbor itch state drift");
+check(campaignBook.stores.itch.status === "public", "Gullwatch Harbor itch state drift");
+check(
+  campaignBook.stores.itch.url === "https://loot-table-works.itch.io/gullwatch-harbor",
+  "Gullwatch Harbor itch URL drift"
+);
 for (const storeId of [...directStores, ...bookStores]) {
   check(campaignBook.stores[storeId].status === "pending", `Gullwatch Harbor/${storeId} state drift`);
   check(campaignBook.stores[storeId].url === null, `Gullwatch Harbor/${storeId} draft URL exposed`);
@@ -114,7 +118,9 @@ for (const storeId of nativeAssetStores) {
   );
   check(campaignBook.stores[storeId].url === null, `Gullwatch Harbor/${storeId} URL exposed`);
 }
-check(registry.resolvePublicStores("gullwatch_harbor").length === 0, "Gullwatch Harbor must expose zero stores");
+const campaignBookStores = registry.resolvePublicStores("gullwatch_harbor");
+check(campaignBookStores.length === 1, "Gullwatch Harbor must expose one verified store");
+check(campaignBookStores[0].id === "itch", "Gullwatch Harbor must resolve to itch.io");
 check(
   (html.match(/data-offer-id="gullwatch_harbor"/g) || []).length === 1,
   "Gullwatch Harbor hub marker must appear once"
@@ -127,14 +133,14 @@ check(
   html.indexOf("storefront-registry.js") < html.indexOf("storefront-router.js"),
   "Registry must load before router"
 );
-check(html.includes("storefront-registry.js?v=3.0.0"), "Registry cache key drift");
+check(html.includes("storefront-registry.js?v=3.0.1"), "Registry cache key drift");
 check(html.includes("storefront-router.js?v=2.0.0"), "Router cache key drift");
 check((html.match(/data-link-kind="paid-module"/g) || []).length === 7, "Seven paid offer markers required");
 check((html.match(/Buy on itch\.io/g) || []).length === 6, "Static fallbacks must name itch.io");
 check(css.includes(".storefront-picker"), "Storefront picker styles missing");
 check(css.includes(".storefront-menu"), "Storefront menu styles missing");
 check(manifest.version === "1.10.0", "World Foundry manifest version drift");
-check(manifest.storefront_registry_version === "3.0.0", "Storefront registry version drift");
+check(manifest.storefront_registry_version === "3.0.1", "Storefront registry version drift");
 check(
   readme.includes(`Status: \`${manifest.status}\``),
   "README and manifest release statuses must match"
@@ -331,9 +337,10 @@ for (const link of defaultDocument.links.slice(0, standaloneOffers.length)) {
   check(link.href.includes("utm_term=itch"), "Current enhanced link needs per-store attribution");
 }
 const campaignBookLink = defaultDocument.links.at(-1);
-check(campaignBookLink.dataset.storefrontState === "unavailable", "Campaign book must fail closed");
-check(campaignBookLink.hidden === true, "Campaign-book pending control must remain hidden");
-check(campaignBookLink.href === "", "Campaign book must expose no buyer URL");
+check(campaignBookLink.dataset.storefrontState === "single-public", "Campaign book must use its verified store");
+check(campaignBookLink.dataset.storeId === "itch", "Campaign book must identify itch.io");
+check(campaignBookLink.hidden === false, "Campaign-book control must be visible");
+check(campaignBookLink.href.includes("utm_term=itch"), "Campaign book needs itch attribution");
 
 const noPublicStore = JSON.parse(JSON.stringify(registry.offers));
 for (const storeId of Object.keys(noPublicStore.item.stores)) {
@@ -372,6 +379,7 @@ check(
 const singleStoreRegistry = JSON.parse(JSON.stringify(registry.offers));
 const singleStorePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
 const singleStoreUrl = "https://loottableworks.gumroad.com/l/gullwatch-harbor";
+singleStoreRegistry.gullwatch_harbor.stores.itch = { status: "pending", url: null };
 singleStoreRegistry.gullwatch_harbor.stores.gumroad = {
   status: "public",
   url: singleStoreUrl
@@ -481,5 +489,5 @@ for (const invalid of [
 }
 
 console.log(
-  `Validated multi-store funnel v3: ${checks} checks; twelve channels are explicit, six itch fallbacks are public, and all pending channels remain fail-closed.`
+  `Validated multi-store funnel v3: ${checks} checks; twelve channels are explicit, seven itch storefronts are public, and all pending channels remain fail-closed.`
 );

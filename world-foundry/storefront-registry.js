@@ -27,7 +27,8 @@
         "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit",
         "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit",
         "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit",
-        "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit"
+        "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit",
+        "https://loot-table-works.itch.io/gullwatch-harbor"
       ])
     }),
     gumroad: Object.freeze({
@@ -239,7 +240,10 @@
       attributionContent: "gullwatch_harbor_campaign_book",
       attributionCampaign: "gullwatch_harbor_book_v1",
       stores: Object.freeze({
-        itch: Object.freeze({ status: "not_applicable", url: null }),
+        itch: Object.freeze({
+          status: "public",
+          url: "https://loot-table-works.itch.io/gullwatch-harbor"
+        }),
         gumroad: Object.freeze({ status: "pending", url: null }),
         kofi: Object.freeze({ status: "pending", url: null }),
         payhip: Object.freeze({ status: "pending", url: null }),
