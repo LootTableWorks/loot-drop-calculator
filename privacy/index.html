@@ -21,15 +21,16 @@
       <section class="intro">
         <p class="eyebrow">A narrow measurement boundary</p>
         <h1>Aggregate counts, not player profiles.</h1>
-        <p>Loot Table Works measures a small set of public acquisition pages so we can tell whether people reach a useful tool, download the free kit, or inspect a paid module. The generators and campaign data remain local to your browser.</p>
+        <p>Loot Table Works measures a small set of public funnel pages so we can tell whether people reach a useful tool, download the free kit, inspect a paid offer, or continue to a verified storefront. The generators and campaign data remain local to your browser.</p>
       </section>
 
       <section aria-labelledby="collect-title">
         <h2 id="collect-title">What is counted</h2>
         <ul>
-          <li>Aggregate views of seven public acquisition pages.</li>
-          <li>A fixed source label such as Pinterest, Mastodon, YouTube, GitHub, or direct.</li>
-          <li>Fixed events for the Gullwatch download, a workflow handoff, or one of six paid-module links.</li>
+          <li>Aggregate views of eleven public funnel pages, including the checkout router, One-Shot Forge, and Campaign Workspace.</li>
+          <li>Allowlisted source, campaign, and content labels such as Pinterest, GitHub, a scheduled release campaign, or direct.</li>
+          <li>Fixed events for downloads, workflow handoffs, paid intent across seven paid offers, verified-store exits, and automatic checkout redirects.</li>
+          <li>A paid-intent, store-exit, or redirect event does not prove a purchase. Sales are verified only in the storefront payment record.</li>
           <li>Coarse browser, system, country, language, and screen-width totals supplied by GoatCounter.</li>
         </ul>
       </section>
@@ -38,16 +39,16 @@
         <h2 id="exclude-title">What is not collected</h2>
         <ul>
           <li>No cookies, advertising pixels, cross-site profiles, email addresses, account IDs, or user-entered names.</li>
-          <li>No campaign text, imported JSON or CSV, generated adventure, saved state, search term, seed, or exported file.</li>
-          <li>No raw query string or free-form campaign label. Unknown sources are reduced to a generic external label.</li>
-          <li>No analytics on the Campaign Workspace field-test route or inside the core generators.</li>
+          <li>No campaign text, imported JSON or CSV, generated adventure, saved state, search term, seed, workspace ID, or exported file.</li>
+          <li>No raw query string or free-form campaign label. Unknown attribution values are discarded, and unknown referrers are reduced to a generic external label.</li>
+          <li>No generator inputs, output contents, workspace interactions, form fields, local-save activity, or purchase details.</li>
           <li>No individual-pageview storage in GoatCounter; that optional setting must remain disabled.</li>
         </ul>
       </section>
 
       <section aria-labelledby="control-title">
         <h2 id="control-title">Control on this device</h2>
-        <p>Do Not Track is honored. You can also exclude this browser from Loot Table Works measurement. This preference is stored only in this browser.</p>
+        <p>Do Not Track is honored, and common crawler or automated-browser signatures are excluded. You can also exclude this browser from Loot Table Works measurement. This preference is stored only in this browser.</p>
         <div class="controls">
           <button type="button" id="disable-metrics">Exclude this browser</button>
           <button type="button" id="enable-metrics" class="secondary">Allow aggregate counts</button>

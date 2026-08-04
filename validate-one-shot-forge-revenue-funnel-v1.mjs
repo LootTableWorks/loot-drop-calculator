@@ -27,7 +27,7 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
-check(manifest.version === "1.2.2", "One-Shot Forge version drift");
+check(manifest.version === "1.2.3", "One-Shot Forge version drift");
 check(manifest.status === "approved_public_release", "Release status drift");
 check(manifest.publication_allowed === true, "Publication gate closed");
 check(manifest.live_standalone_destinations === 6, "Standalone destination count drift");
@@ -35,6 +35,11 @@ check(manifest.visible_standalone_recommendations === 6, "Visible recommendation
 check(manifest.live_campaign_destinations === 1, "Campaign destination count drift");
 check(manifest.checkout_router_destinations === 7, "Checkout route count drift");
 check(manifest.bundle_destinations === 0, "Bundle route must remain closed");
+check(manifest.measurement_candidate === "activation_gated", "Measurement gate drift");
+check(
+  manifest.measurement_collects_generated_content === false,
+  "Generated-content privacy boundary drift"
+);
 
 for (const entry of manifest.files) {
   const absolute = path.join(forgeRoot, entry.path);

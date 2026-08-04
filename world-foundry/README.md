@@ -16,6 +16,8 @@ A dependency-free static learning and catalog hub for Loot Table Works / World F
   choice when multiple stores are verified;
 - substantive guides to dependency-closed world seeds, merchant economies, and engine data contracts;
 - canonical, Open Graph, X card, JSON-LD, sitemap, and crawl metadata;
+- activation-gated aggregate route and fixed-action measurement with a public
+  privacy disclosure, owner exclusion, Do Not Track support, and no campaign data;
 - a copied, reviewed World Seed Studio v2 screenshot;
 - deterministic file hashing and archive validation.
 

@@ -690,7 +690,7 @@
         </div>
         <p class="local-ledger-note">
           Milestone data stays on this device under a separate local key until you explicitly copy or download a receipt.
-          There is no account, hosted analytics, or automatic submission.
+          There is no account or automatic submission. Aggregate page and fixed-action counts never include campaign data.
         </p>
         <div class="closeout-field-report">
           <button type="button" data-action="return-field-report">Return to field report</button>
@@ -1049,7 +1049,7 @@
         </div>
         <div class="privacy-note">
           <strong>Private by default</strong>
-          <p>No analytics run here. Progress and report text stay on your device until you explicitly copy, download, or open a prefilled email. No workspace ID is included.</p>
+          <p>Aggregate page measurement never reads this workspace. Progress and report text stay on your device until you explicitly copy, download, or open a prefilled email. No workspace ID is included.</p>
         </div>
       </section>
       <section class="activation-rail" aria-labelledby="activation-rail-title">

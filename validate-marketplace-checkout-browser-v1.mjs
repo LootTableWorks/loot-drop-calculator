@@ -72,6 +72,14 @@ async function inspectViewport(viewport, screenshotName) {
     await page.locator(".store-option strong").innerText() === "itch.io",
     "Current verified store label drift"
   );
+  check(
+    await page.locator(".store-option").getAttribute("data-offer-id") === "item",
+    "Store option offer identity missing"
+  );
+  check(
+    await page.locator(".store-option").getAttribute("data-store-id") === "itch",
+    "Store option storefront identity missing"
+  );
   const href = new URL(await page.locator(".store-option").getAttribute("href"));
   check(href.searchParams.get("utm_source") === "integration_guides", "Source attribution lost");
   check(href.searchParams.get("utm_medium") === "seo_guide", "Medium attribution lost");

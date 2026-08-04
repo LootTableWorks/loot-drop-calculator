@@ -32,6 +32,10 @@ const routes = [
   "/choose-world-foundry-module/",
   "/connected-record-proof/",
   "/press-kit/",
+  "/run-one-shot-tonight/",
+  "/one-shot-forge/",
+  "/campaign-workspace/",
+  "/buy/",
   "/privacy/"
 ];
 
@@ -112,8 +116,17 @@ try {
         }
       });
 
-      const qaUrl =
-        route === "/privacy/" ? `${baseUrl}${route}` : `${baseUrl}${route}?ltw_qa=1`;
+      if (route === "/buy/") {
+        await page.addInitScript(() => {
+          window.setTimeout = () => 0;
+        });
+      }
+
+      const qaUrl = route === "/privacy/"
+        ? `${baseUrl}${route}`
+        : route === "/buy/"
+          ? `${baseUrl}${route}?offer=item&ltw_qa=1`
+          : `${baseUrl}${route}?ltw_qa=1`;
       const response = await page.goto(qaUrl, {
         waitUntil: "networkidle"
       });
@@ -193,5 +206,5 @@ try {
 }
 
 console.log(
-  `Privacy measurement browser QA passed: ${checks} checks across 16 desktop/mobile page renders plus control-state verification.`
+  `Privacy measurement browser QA passed: ${checks} checks across 24 desktop/mobile page renders plus control-state verification.`
 );

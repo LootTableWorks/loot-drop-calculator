@@ -1,6 +1,6 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -20,6 +20,8 @@
   "checkout_router_destinations": 7,
   "bundle_destinations": 0,
   "external_runtime_dependencies": 0,
+  "measurement_candidate": "activation_gated",
+  "measurement_collects_generated_content": false,
   "files": [
     {
       "path": "README.md",
@@ -63,8 +65,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 16097,
-      "sha256": "1bdab36f47718aa30ae7f70d04b22a71e3c7c81a9c93aff88d2a526096bdfa0f"
+      "bytes": 16363,
+      "sha256": "f09bc0a31961f0d05ea3bb7edd8f8f82a1158d257c85f702216b26e681e18074"
     },
     {
       "path": "one-shot-core.js",

@@ -10,3 +10,10 @@ pages to public marketplace listings.
 - The inbound `utm_source`, `utm_medium`, `utm_campaign`, and `utm_content`
   values are preserved; `utm_term` records the selected storefront.
 - Unknown offers, invalid registries, and zero-store offers open no destination.
+- An activation-gated privacy loader can count fixed paid-intent, storefront-exit,
+  and checkout-redirect events without storing raw query strings or purchase data.
+- Automatic routing waits no more than 600 ms for the fixed redirect event and
+  proceeds even when measurement is unavailable.
+
+A checkout event is funnel evidence only. It never counts as a verified sale;
+sales and gross revenue come only from the storefront payment record.

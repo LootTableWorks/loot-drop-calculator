@@ -143,28 +143,35 @@ for (const [file, html] of pageHtml) {
     `Public bundle link detected: ${file}`,
   );
 }
-const expectedPaidSlugs = [
-  "fantasy-encounter-room-data-kit",
-  "fantasy-quest-contract-reward-data-kit",
-  "enemy-loot-table-drop-profile-kit",
-];
+const expectedPaidOffers = ["encounter", "quest", "loot"];
 const gullwatchPaidLinks = [
   ...gullwatchHtml.matchAll(
-    /href="(https:\/\/loot-table-works\.itch\.io\/[^"]+)"[^>]*>View the \$3 pack<\/a>/g,
+    /data-offer-id="([^"]+)"[^>]*href="([^"]+)"[^>]*>View the \$3 pack<\/a>/g,
   ),
-].map((match) => match[1].replaceAll("&amp;", "&"));
+].map((match) => ({
+  marker: match[1],
+  url: new URL(
+    match[2].replaceAll("&amp;", "&"),
+    "https://loottableworks.github.io/loot-drop-calculator/gullwatch-beacon/",
+  ),
+}));
 check(gullwatchPaidLinks.length === 3, "Gullwatch paid-link count drift.");
-for (const [index, slug] of expectedPaidSlugs.entries()) {
-  const paidUrl = new URL(gullwatchPaidLinks[index]);
-  check(paidUrl.pathname === `/${slug}`, `Paid slug drift: ${slug}`);
+for (const [index, offerId] of expectedPaidOffers.entries()) {
+  const { marker, url: paidUrl } = gullwatchPaidLinks[index];
+  check(marker === offerId, `Paid offer marker drift: ${offerId}`);
+  check(
+    paidUrl.pathname === "/loot-drop-calculator/buy/",
+    `Checkout route drift: ${offerId}`,
+  );
+  check(paidUrl.searchParams.get("offer") === offerId, `Paid offer drift: ${offerId}`);
   check(
     paidUrl.searchParams.get("utm_source") === "gullwatch_kit",
-    `Paid source drift: ${slug}`,
+    `Paid source drift: ${offerId}`,
   );
   check(
     paidUrl.searchParams.get("utm_campaign") ===
       "play_tonight_gullwatch_v1",
-    `Paid campaign drift: ${slug}`,
+    `Paid campaign drift: ${offerId}`,
   );
 }
 

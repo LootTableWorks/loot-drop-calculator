@@ -7,7 +7,13 @@
   }
 
   root.LTWCheckoutPage = api;
-  api.start(root.document, root.location, root.LTWStorefrontRegistry, root.setTimeout);
+  api.start(
+    root.document,
+    root.location,
+    root.LTWStorefrontRegistry,
+    root.setTimeout,
+    root.LTWPrivacyMetrics
+  );
 })(typeof window !== "undefined" ? window : globalThis, function createCheckoutPage() {
   "use strict";
 
@@ -73,12 +79,13 @@
     };
   }
 
-  function createStoreLink(documentRef, offer, store) {
+  function createStoreLink(documentRef, offerId, offer, store) {
     const link = documentRef.createElement("a");
     link.className = "store-option";
     link.href = store.url;
     link.rel = "noopener";
     link.dataset.storeId = store.id;
+    link.dataset.offerId = offerId;
     link.setAttribute(
       "aria-label",
       `Continue to ${store.label} for ${offer.label}, ${priceLabel(store.priceUsd)}`
@@ -88,7 +95,7 @@
     const name = documentRef.createElement("strong");
     name.textContent = store.label;
     const detail = documentRef.createElement("small");
-    detail.textContent = `Verified product page · ${priceLabel(store.priceUsd)}`;
+    detail.textContent = `Verified product page | ${priceLabel(store.priceUsd)}`;
     copy.append(name, detail);
 
     const arrow = documentRef.createElement("b");
@@ -122,22 +129,46 @@
         ? "One verified storefront is available. Opening its exact public product page."
         : "Choose a verified storefront. Prices shown are the current channel prices.";
     for (const store of resolution.stores) {
-      options.append(createStoreLink(documentRef, resolution.offer, store));
+      options.append(
+        createStoreLink(documentRef, resolution.offerId, resolution.offer, store)
+      );
     }
     status.textContent = `${resolution.stores.length} verified storefront${
       resolution.stores.length === 1 ? "" : "s"
-    } · attribution preserved`;
+    } | attribution preserved`;
     status.dataset.state = "verified";
   }
 
-  function start(documentRef, locationRef, registry, schedule) {
+  function completeRedirect(measurement, locationRef, destination, schedule) {
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      locationRef.replace(destination);
+    };
+    const timeout = typeof schedule === "function" ? schedule : setTimeout;
+    timeout(finish, 600);
+    if (measurement && typeof measurement.then === "function") {
+      measurement.then(finish, finish);
+    } else {
+      finish();
+    }
+  }
+
+  function start(documentRef, locationRef, registry, schedule, metrics) {
     if (!documentRef || !locationRef) return { state: "blocked", reason: "Page unavailable." };
     const resolution = resolveRequest(locationRef, registry);
     render(documentRef, resolution);
 
     if (resolution.state === "single" && typeof locationRef.replace === "function") {
       const redirect = typeof schedule === "function" ? schedule : (callback) => callback();
-      redirect(() => locationRef.replace(resolution.stores[0].url), 180);
+      redirect(() => {
+        const store = resolution.stores[0];
+        const measurement = metrics && typeof metrics.recordCheckoutRedirect === "function"
+          ? metrics.recordCheckoutRedirect(store.id, resolution.offerId, registry)
+          : null;
+        completeRedirect(measurement, locationRef, store.url, schedule);
+      }, 180);
     }
     return resolution;
   }
@@ -149,6 +180,7 @@
     resolveRequest,
     createStoreLink,
     render,
+    completeRedirect,
     start
   });
 });

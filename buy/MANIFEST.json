@@ -1,6 +1,6 @@
 {
   "product_id": "verified-marketplace-checkout-router",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "approved_for_deployment",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -8,8 +8,8 @@
   "release_authority": "delegated_internal_aaa_qa",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/buy/",
   "indexed": false,
-  "paid_routes": 70,
-  "routed_pages": 14,
+  "paid_routes": 71,
+  "routed_pages": 15,
   "offer_definitions": 7,
   "storefront_policies": 12,
   "public_storefronts": [
@@ -29,21 +29,23 @@
     "fab"
   ],
   "draft_storefront_urls_exposed": 0,
+  "measurement_candidate": "activation_gated",
+  "checkout_event_counts_as_verified_sale": false,
   "files": [
     {
       "path": "README.md",
-      "bytes": 637,
-      "sha256": "58e73036ced61a190cd36746f15bfacb04acb944a23f3d7b5ec51c9626745cc4"
+      "bytes": 1080,
+      "sha256": "85bbf09c63b2a49a963f337f45bfd59641ac96f9e610ceb9ed7e380d2a8d3e80"
     },
     {
       "path": "app.js",
-      "bytes": 4962,
-      "sha256": "95b23e1cd9378d5adbb5551f009a57c7d0fbb6b697b30dce988e28a7f0a95642"
+      "bytes": 5871,
+      "sha256": "d7a25983d06db6cb040e885a52042bfd2d0f13a26a36f51efb571d42c1c4f527"
     },
     {
       "path": "index.html",
-      "bytes": 1913,
-      "sha256": "3d3ccf3a6547478cafab9b017b265337124d947e28cefb0ac7c8b60e4e404c42"
+      "bytes": 2070,
+      "sha256": "59836d645c62bc70b121955a7dc5ee7da66ba1117a7a0ba2bf48cd7fee1f0fb6"
     },
     {
       "path": "robots.txt",

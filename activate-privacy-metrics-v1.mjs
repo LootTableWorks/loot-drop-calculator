@@ -12,7 +12,11 @@ const measuredPages = [
   "gullwatch-aftermath/index.html",
   "choose-world-foundry-module/index.html",
   "connected-record-proof/index.html",
-  "press-kit/index.html"
+  "press-kit/index.html",
+  "run-one-shot-tonight/index.html",
+  "one-shot-forge/index.html",
+  "campaign-workspace/index.html",
+  "buy/index.html"
 ];
 
 function fail(message) {

@@ -139,7 +139,9 @@ check((html.match(/data-link-kind="paid-module"/g) || []).length === 7, "Seven p
 check((html.match(/Buy on itch\.io/g) || []).length === 6, "Static fallbacks must name itch.io");
 check(css.includes(".storefront-picker"), "Storefront picker styles missing");
 check(css.includes(".storefront-menu"), "Storefront menu styles missing");
-check(manifest.version === "1.10.0", "World Foundry manifest version drift");
+check(manifest.version === "1.10.1", "World Foundry manifest version drift");
+check(manifest.measurement_candidate === "activation_gated", "Measurement gate drift");
+check(manifest.measurement_collects_campaign_content === false, "Campaign privacy drift");
 check(manifest.storefront_registry_version === "3.0.1", "Storefront registry version drift");
 check(
   readme.includes(`Status: \`${manifest.status}\``),

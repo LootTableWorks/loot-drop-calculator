@@ -48,7 +48,7 @@ All tools run in the browser without an account. Data is not uploaded or analyze
 
 ## Privacy and Measurement
 
-Seven public acquisition pages use privacy-focused aggregate measurement to distinguish reach from fixed funnel actions. The measurement boundary excludes the core generators, Campaign Workspace field-test route, imported files, campaign text, generated content, saved state, seeds, and exports. It uses no cookies or persistent user identifiers, honors Do Not Track, reduces unknown sources to a generic label, and offers a browser-level opt-out. See the public [privacy and measurement page](https://loottableworks.github.io/loot-drop-calculator/privacy/) for the exact boundary.
+Eleven public funnel pages use privacy-focused aggregate measurement to distinguish reach, paid intent, verified-store exits, and checkout redirects. Measurement covers the page route and fixed allowlisted actions only; it excludes generator inputs and outputs, imported files, campaign text, workspace interactions, saved state, seeds, form fields, purchase details, and exports. It uses no cookies or persistent user identifiers, honors Do Not Track, excludes common crawler signatures, discards unknown attribution values, and offers a browser-level opt-out. A paid-intent or checkout event does not prove a purchase; sales remain storefront-verified only. See the public [privacy and measurement page](https://loottableworks.github.io/loot-drop-calculator/privacy/) for the exact boundary.
 
 The measurement endpoint remains fail-closed until a human creates the GoatCounter account. After that manual gate, activate only the exact returned endpoint with:
 
@@ -57,7 +57,7 @@ node .\activate-privacy-metrics-v1.mjs https://<account>.goatcounter.com/count -
 node .\activate-privacy-metrics-v1.mjs https://<account>.goatcounter.com/count
 ```
 
-The activation command preflights all seven pages before writing, rejects conflicting endpoints, and is idempotent. Run `validate-privacy-metrics-v1.mjs`, `validate-privacy-metrics-activation-v1.mjs`, and `validate-privacy-metrics-browser-v1.mjs` before deployment. Individual-pageview storage must remain disabled in GoatCounter.
+The activation command preflights all eleven pages before writing, rejects conflicting endpoints, and is idempotent. Run `validate-privacy-metrics-v1.mjs`, `validate-privacy-metrics-activation-v1.mjs`, and `validate-privacy-metrics-browser-v1.mjs` before deployment. Individual-pageview storage must remain disabled in GoatCounter.
 
 ## Integration Guides
 

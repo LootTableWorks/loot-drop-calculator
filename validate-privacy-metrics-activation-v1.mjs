@@ -15,7 +15,11 @@ const measuredPages = [
   "gullwatch-aftermath/index.html",
   "choose-world-foundry-module/index.html",
   "connected-record-proof/index.html",
-  "press-kit/index.html"
+  "press-kit/index.html",
+  "run-one-shot-tonight/index.html",
+  "one-shot-forge/index.html",
+  "campaign-workspace/index.html",
+  "buy/index.html"
 ];
 
 let checks = 0;
@@ -104,7 +108,7 @@ try {
   const secondActivation = run([endpoint, "--root", testRoot]);
   assert(
     secondActivation.status === 0 &&
-      secondActivation.stdout.includes("0 changed, 7 already exact"),
+      secondActivation.stdout.includes("0 changed, 11 already exact"),
     "Exact reactivation was not idempotent"
   );
 

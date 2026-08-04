@@ -10,6 +10,9 @@ const registry = require("./world-foundry/storefront-registry.js");
 const checkout = require("./buy/app.js");
 const buyHtml = fs.readFileSync(path.join(root, "buy", "index.html"), "utf8");
 const buyCss = fs.readFileSync(path.join(root, "buy", "styles.css"), "utf8");
+const buyManifest = JSON.parse(
+  fs.readFileSync(path.join(root, "buy", "MANIFEST.json"), "utf8")
+);
 
 let checks = 0;
 function check(condition, message) {
@@ -31,9 +34,18 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.0.0"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.0"), "Checkout app version drift");
+check(
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.0"),
+  "Measurement handshake must load before checkout auto-redirect"
+);
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
+check(buyManifest.version === "1.1.0", "Checkout manifest version drift");
+check(buyManifest.paid_routes === 71, "Checkout paid-route manifest drift");
+check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
+check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
+check(buyManifest.checkout_event_counts_as_verified_sale === false, "Checkout sale boundary drift");
 check(checkout.priceLabel(3) === "$3", "Whole-dollar label drift");
 check(checkout.priceLabel(2.99) === "$2.99", "Decimal price label drift");
 
@@ -111,6 +123,20 @@ const gullwatch = checkout.resolveRequest(
 check(gullwatch.state === "single", "Gullwatch Harbor must resolve to one verified store");
 check(gullwatch.stores.length === 1, "Gullwatch Harbor store count drift");
 check(gullwatch.stores[0].id === "itch", "Gullwatch Harbor must resolve to itch.io");
+
+const redirected = [];
+const scheduled = [];
+checkout.completeRedirect(
+  Promise.resolve(true),
+  { replace: (url) => redirected.push(url) },
+  "https://example.com/verified",
+  (callback, delay) => scheduled.push({ callback, delay })
+);
+await Promise.resolve();
+check(redirected.length === 1, "Resolved measurement must release checkout redirect");
+check(scheduled[0].delay === 600, "Checkout fallback timeout drift");
+scheduled[0].callback();
+check(redirected.length === 1, "Fallback must not duplicate a completed redirect");
 
 const futureOffers = JSON.parse(JSON.stringify(registry.offers));
 const futurePolicies = JSON.parse(JSON.stringify(registry.STORE_POLICIES));
