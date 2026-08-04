@@ -138,32 +138,41 @@ const CHECKOUT_OFFER_IDS = Object.freeze({
   encounters: "encounter"
 });
 
-function safeAttributionValue(value) {
-  return (value || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "_")
-    .replace(/^_+|_+$/g, "")
-    .slice(0, 40);
-}
+const ACQUISITION_SOURCE_CONTRACTS = Object.freeze({
+  gamestruction: Object.freeze({
+    medium: "tool_directory",
+    campaign: "ltw_data_pack_discovery_v1",
+    content: "item_catalog_demo_upgrade"
+  })
+});
 
-function incomingAttributionTerm() {
+function incomingAcquisition() {
   const query = new URLSearchParams(window.location.search);
-  const source = safeAttributionValue(query.get("utm_source"));
-  const content = safeAttributionValue(query.get("utm_content"));
-
-  if (!source || source === "module_selector") {
-    return "";
+  const source = String(query.get("utm_source") || "").trim().toLowerCase();
+  if (!Object.hasOwn(ACQUISITION_SOURCE_CONTRACTS, source)) return null;
+  const contract = ACQUISITION_SOURCE_CONTRACTS[source];
+  if (
+    query.get("utm_medium") !== contract.medium ||
+    query.get("utm_campaign") !== contract.campaign ||
+    query.get("utm_content") !== contract.content
+  ) {
+    return null;
   }
-
-  return `origin_${[source, content].filter(Boolean).join("_")}`;
+  return Object.freeze({ source, ...contract });
 }
 
-const attributionTerm = incomingAttributionTerm();
+const acquisition = incomingAcquisition();
 
 function attributedPaidUrl(rawUrl) {
   const url = new URL(rawUrl, window.location.href);
-  if (attributionTerm) {
-    url.searchParams.set("utm_term", attributionTerm);
+  if (acquisition) {
+    url.searchParams.set("utm_source", acquisition.source);
+    url.searchParams.set("utm_medium", acquisition.medium);
+    url.searchParams.set("utm_campaign", acquisition.campaign);
+    url.searchParams.set(
+      "utm_term",
+      `origin_${acquisition.source}_${acquisition.content}`
+    );
   }
   return url.toString();
 }

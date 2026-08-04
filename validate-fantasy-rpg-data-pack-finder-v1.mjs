@@ -9,6 +9,12 @@ const html = fs.readFileSync(path.join(pageRoot, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(pageRoot, "styles.css"), "utf8");
 const app = fs.readFileSync(path.join(pageRoot, "app.js"), "utf8");
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
+const harborAcquisition = JSON.parse(
+  fs.readFileSync(path.join(root, "gullwatch-harbor-acquisition-v1.json"), "utf8"),
+);
+const harborManifest = JSON.parse(
+  fs.readFileSync(path.join(root, "gullwatch-harbor", "MANIFEST.json"), "utf8"),
+);
 
 let checks = 0;
 function check(condition, message) {
@@ -29,6 +35,7 @@ check(html.includes('id="selector-title">Choose production-ready fantasy RPG dat
 check(html.includes("JSON and CSV"), "Visible JSON and CSV intent missing");
 check(html.includes("Unity, Godot 4, TypeScript, JavaScript"), "Visible integration intent missing");
 check(html.includes("Inspect 100 free records"), "Primary demo trust CTA missing");
+check(html.includes('app.js?v=1.1.1'), "Finder runtime cache key drift");
 
 const jsonLd = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
 const graph = jsonLd.flatMap((entry) => entry["@graph"] ?? [entry]);
@@ -66,6 +73,25 @@ check(css.includes("@media (max-width: 470px)"), "Narrow-mobile styling missing"
 check(app.includes("const MODULES ="), "Interactive selector runtime missing");
 check(Object.keys({ item: 1, merchant: 1, recipe: 1, loot: 1, quest: 1, encounter: 1 }).every((offer) => app.includes(`../buy/?offer=${offer}`)), "Interactive checkout routes drift");
 check(app.includes('querySelectorAll(\'a[data-link-kind="marketplace-checkout"]\')'), "All static checkout routes must preserve incoming attribution");
+check(app.includes("const ACQUISITION_SOURCE_CONTRACTS"), "Qualified acquisition allowlist missing");
+check(app.includes('gamestruction: Object.freeze({'), "Gamestruction source contract missing");
+check(app.includes('medium: "tool_directory"'), "Gamestruction medium contract missing");
+check(app.includes('campaign: "ltw_data_pack_discovery_v1"'), "Gamestruction campaign contract missing");
+check(app.includes('if (!Object.hasOwn(ACQUISITION_SOURCE_CONTRACTS, source)) return null;'), "Unknown acquisition sources must fail closed");
+check(
+  JSON.stringify(harborAcquisition.commerce_boundary.verified_public_storefronts) ===
+    JSON.stringify(harborManifest.verified_public_storefronts),
+  "Gullwatch public storefront manifests disagree",
+);
+check(
+  harborAcquisition.commerce_boundary.checkout_links_exposed ===
+    harborManifest.checkout_links_exposed,
+  "Gullwatch checkout-link manifests disagree",
+);
+check(
+  harborAcquisition.commerce_boundary.purchase_available_claimed === true,
+  "Gullwatch acquisition packet still denies public commerce",
+);
 check(sitemap.includes("choose-world-foundry-module/</loc>\n    <lastmod>2026-08-04</lastmod>"), "Selector sitemap date not refreshed");
 
 console.log(`Fantasy RPG data-pack finder v1 passed ${checks} static discovery, product, pricing, checkout, disclosure, and responsive-contract checks.`);

@@ -187,9 +187,9 @@ try {
     );
     check(campaignUrl.pathname.endsWith("/buy/"), `${name}: campaign route bypassed checkout`);
     check(campaignUrl.searchParams.get("offer") === "gullwatch_harbor", `${name}: campaign offer drifted`);
-    check(campaignUrl.searchParams.get("utm_source") === "data_pack_finder", `${name}: campaign source drifted`);
-    check(campaignUrl.searchParams.get("utm_medium") === "owned_web", `${name}: campaign medium drifted`);
-    check(campaignUrl.searchParams.get("utm_campaign") === "fantasy_rpg_data_packs_v1", `${name}: campaign name drifted`);
+    check(campaignUrl.searchParams.get("utm_source") === "gamestruction", `${name}: campaign source drifted`);
+    check(campaignUrl.searchParams.get("utm_medium") === "tool_directory", `${name}: campaign medium drifted`);
+    check(campaignUrl.searchParams.get("utm_campaign") === "ltw_data_pack_discovery_v1", `${name}: campaign name drifted`);
     check(campaignUrl.searchParams.get("utm_content") === "gullwatch_harbor_campaign", `${name}: campaign content drifted`);
     check(
       campaignUrl.searchParams.get("utm_term") ===
@@ -209,12 +209,37 @@ try {
       check((await page.locator("#result-title").innerText()) === title, `${name}: ${problem} result drifted`);
       const resultUrl = new URL(await page.locator("#result-link").getAttribute("href"));
       check(resultUrl.searchParams.get("offer") === offerId, `${name}: ${problem} offer drifted`);
+      check(resultUrl.searchParams.get("utm_source") === "gamestruction", `${name}: ${problem} source drifted`);
+      check(resultUrl.searchParams.get("utm_medium") === "tool_directory", `${name}: ${problem} medium drifted`);
+      check(resultUrl.searchParams.get("utm_campaign") === "ltw_data_pack_discovery_v1", `${name}: ${problem} campaign drifted`);
       check(
         resultUrl.searchParams.get("utm_term") ===
           "origin_gamestruction_item_catalog_demo_upgrade",
         `${name}: ${problem} origin attribution drifted`,
       );
     }
+
+    await page.locator('input[name="problem"][value="items"]').check();
+    const itemCheckoutUrl = await page.locator("#result-link").getAttribute("href");
+    const checkoutPage = await browser.newPage({ viewport });
+    await checkoutPage.addInitScript(() => {
+      window.setTimeout = () => 0;
+    });
+    const checkoutResponse = await checkoutPage.goto(itemCheckoutUrl, {
+      waitUntil: "networkidle",
+    });
+    check(checkoutResponse?.status() === 200, `${name}: checkout did not return 200`);
+    check((await checkoutPage.locator(".store-option").count()) === 1, `${name}: verified store count drifted`);
+    const storefrontUrl = new URL(
+      await checkoutPage.locator(".store-option").getAttribute("href"),
+    );
+    check(storefrontUrl.hostname === "loot-table-works.itch.io", `${name}: final storefront drifted`);
+    check(storefrontUrl.searchParams.get("utm_source") === "gamestruction", `${name}: final source attribution was lost`);
+    check(storefrontUrl.searchParams.get("utm_medium") === "tool_directory", `${name}: final medium attribution was lost`);
+    check(storefrontUrl.searchParams.get("utm_campaign") === "ltw_data_pack_discovery_v1", `${name}: final campaign attribution was lost`);
+    check(storefrontUrl.searchParams.get("utm_content") === "item_catalog", `${name}: final item offer content drifted`);
+    check(storefrontUrl.searchParams.get("utm_term") === "itch", `${name}: final store attribution drifted`);
+    await checkoutPage.close();
 
     check(browserIssues.length === 0, `${name}: ${browserIssues.join(" | ")}`);
     check(missingResources.length === 0, `${name}: missing ${missingResources.join(", ")}`);
@@ -229,6 +254,25 @@ try {
     check(screenshot.length > 40000, `${name}: screenshot is unexpectedly small`);
     await page.close();
   }
+
+  const rejectedOriginPage = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+  });
+  await rejectedOriginPage.goto(
+    `${baseUrl}/choose-world-foundry-module/?utm_source=gamestruction&utm_medium=private_customer&utm_campaign=internal_project&utm_content=contact_data&ltw_qa=1`,
+    { waitUntil: "networkidle" },
+  );
+  const rejectedResult = new URL(
+    await rejectedOriginPage.locator("#result-link").getAttribute("href"),
+  );
+  const rejectedCampaign = new URL(
+    await rejectedOriginPage.locator(".campaign-primary").getAttribute("href"),
+  );
+  check(rejectedResult.searchParams.get("utm_source") === "module_selector", "Rejected source reached module checkout");
+  check(rejectedResult.searchParams.get("utm_term") === null, "Rejected source leaked into module term");
+  check(rejectedCampaign.searchParams.get("utm_source") === "data_pack_finder", "Rejected source reached campaign checkout");
+  check(rejectedCampaign.searchParams.get("utm_term") === null, "Rejected source leaked into campaign term");
+  await rejectedOriginPage.close();
 
   console.log(
     `Fantasy RPG data-pack finder browser QA passed ${checks} responsive, media, selector, checkout, and attribution checks. Screenshots: ${screenshotRoot}`,

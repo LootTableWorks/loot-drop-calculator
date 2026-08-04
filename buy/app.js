@@ -29,6 +29,7 @@
       "connected_record_proof",
       "data_pack_finder",
       "free_rpg_tools",
+      "gamestruction",
       "gullwatch_kit",
       "integration_guides",
       "loot_drop_calculator",
@@ -37,13 +38,14 @@
       "run_one_shot_guide",
       "shop_inventory_generator"
     ]),
-    utm_medium: new Set(["catalog", "free_tool", "html", "owned_web", "seo_guide"]),
+    utm_medium: new Set(["catalog", "free_tool", "html", "owned_web", "seo_guide", "tool_directory"]),
     utm_campaign: new Set([
       "game_economy_shop_data_integration",
       "fantasy_rpg_data_packs_v1",
       "godot_4_resource_data_import",
       "integration_guides_index",
       "item_catalog",
+      "ltw_data_pack_discovery_v1",
       "loot_table_validation",
       "one_shot_value_launch",
       "play_tonight_gullwatch_v1",

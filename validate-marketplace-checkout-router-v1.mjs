@@ -34,14 +34,14 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.1.2"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.3"), "Checkout app version drift");
 check(
-  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.2"),
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.3"),
   "Measurement handshake must load before checkout auto-redirect"
 );
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
-check(buyManifest.version === "1.1.2", "Checkout manifest version drift");
+check(buyManifest.version === "1.1.3", "Checkout manifest version drift");
 check(buyManifest.paid_routes === 72, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
@@ -125,6 +125,20 @@ check(
   "Content attribution lost"
 );
 check(singleUrl.searchParams.get("utm_term") === "itch", "Store attribution missing");
+
+const gamestruction = checkout.resolveRequest(
+  {
+    href: `${ownedBase}buy/?offer=item&utm_source=gamestruction&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog&utm_term=origin_gamestruction_item_catalog_demo_upgrade`
+  },
+  registry
+);
+const gamestructionUrl = new URL(gamestruction.stores[0].url);
+check(gamestruction.state === "single", "Gamestruction checkout must resolve to one store");
+check(gamestructionUrl.searchParams.get("utm_source") === "gamestruction", "Gamestruction source attribution lost");
+check(gamestructionUrl.searchParams.get("utm_medium") === "tool_directory", "Gamestruction medium attribution lost");
+check(gamestructionUrl.searchParams.get("utm_campaign") === "ltw_data_pack_discovery_v1", "Gamestruction campaign attribution lost");
+check(gamestructionUrl.searchParams.get("utm_content") === "item_catalog", "Gamestruction offer content lost");
+check(gamestructionUrl.searchParams.get("utm_term") === "itch", "Gamestruction storefront attribution lost");
 
 const sensitiveLocation = {
   href: `${ownedBase}buy/?offer=item&utm_source=private_customer_123&utm_medium=secret_channel&utm_campaign=internal_project_42&utm_content=contact_5551234567`

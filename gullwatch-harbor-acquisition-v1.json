@@ -47,9 +47,11 @@
     "sample_pdf_pages": 12
   },
   "commerce_boundary": {
-    "verified_public_storefronts": [],
-    "checkout_links_exposed": 0,
-    "purchase_available_claimed": false
+    "verified_public_storefronts": [
+      "itch"
+    ],
+    "checkout_links_exposed": 1,
+    "purchase_available_claimed": true
   },
   "demand_integrity": {
     "qualified_external_sessions": 0,
