@@ -176,6 +176,7 @@ for (const requiredText of [
   "No cookies",
   "No campaign text",
   "No raw query string",
+  "only allowlisted source, medium, campaign, and content labels are forwarded",
   "eleven public funnel pages",
   "seven paid offers",
   "does not prove a purchase",
@@ -261,6 +262,33 @@ assert(
     "source.external",
   "Unknown referrers must be reduced to a generic label"
 );
+
+const routedAttribution = [];
+for (const filePath of allHtmlFiles(root)) {
+  const relativePath = path.relative(root, filePath).replaceAll("\\", "/");
+  const pageUrl = new URL(relativePath, "https://loottableworks.github.io/loot-drop-calculator/");
+  const html = fs.readFileSync(filePath, "utf8");
+  for (const match of html.matchAll(/href="([^"]*\/buy\/\?offer=[^"]+)"/g)) {
+    routedAttribution.push(
+      new URL(match[1].replaceAll("&amp;", "&"), pageUrl)
+    );
+  }
+}
+assert(routedAttribution.length === 71, "Paid-route attribution inventory drifted");
+for (const route of routedAttribution) {
+  const reduced = api.fixedAttribution(route.search, "");
+  for (const [key, prefix] of [
+    ["utm_source", "source"],
+    ["utm_campaign", "campaign"],
+    ["utm_content", "content"]
+  ]) {
+    const expected = route.searchParams.get(key).replaceAll("_", "-");
+    assert(
+      reduced.split("/").includes(`${prefix}.${expected}`),
+      `${key}=${route.searchParams.get(key)} is missing from measurement allowlists`
+    );
+  }
+}
 
 for (const offerId of Object.keys(registry.offers)) {
   const event = api.classifyLink(

@@ -24,6 +24,109 @@
     "utm_content"
   ]);
 
+  const ATTRIBUTION_ALLOWLISTS = Object.freeze({
+    utm_source: new Set([
+      "connected_record_proof",
+      "free_rpg_tools",
+      "gullwatch_kit",
+      "integration_guides",
+      "loot_drop_calculator",
+      "module_selector",
+      "one_shot_forge",
+      "run_one_shot_guide",
+      "shop_inventory_generator"
+    ]),
+    utm_medium: new Set(["catalog", "free_tool", "html", "owned_web", "seo_guide"]),
+    utm_campaign: new Set([
+      "game_economy_shop_data_integration",
+      "godot_4_resource_data_import",
+      "integration_guides_index",
+      "item_catalog",
+      "loot_table_validation",
+      "one_shot_value_launch",
+      "play_tonight_gullwatch_v1",
+      "rpg_json_schema_design",
+      "standalone_modules",
+      "typescript_rpg_data_models",
+      "unity_jsonutility_stable_id_import",
+      "wf4w_revenue_v1",
+      "world_foundry_proof_v1",
+      "world_foundry_traffic_test"
+    ]),
+    utm_content: new Set([
+      "crafting_recipes",
+      "crafting_recipes_compare",
+      "economy_crafting_recipes",
+      "economy_encounter_threats",
+      "economy_enemy_loot",
+      "economy_item_catalog",
+      "economy_merchant_shop",
+      "economy_quest_contracts",
+      "encounter",
+      "encounter_threats",
+      "encounter_threats_compare",
+      "enemy_loot",
+      "enemy_loot_compare",
+      "godot_crafting_recipes",
+      "godot_encounter_threats",
+      "godot_enemy_loot",
+      "godot_item_catalog",
+      "godot_merchant_shop",
+      "godot_quest_contracts",
+      "gullwatch_harbor_featured_campaign",
+      "header",
+      "index_crafting_recipes",
+      "index_encounter_threats",
+      "index_enemy_loot",
+      "index_item_catalog",
+      "index_merchant_shop",
+      "index_quest_contracts",
+      "item_catalog",
+      "item_catalog_compare",
+      "loot",
+      "loot_crafting_recipes",
+      "loot_encounter_threats",
+      "loot_enemy_loot",
+      "loot_item_catalog",
+      "loot_merchant_shop",
+      "loot_quest_contracts",
+      "merchant_shop",
+      "merchant_shop_compare",
+      "paid_encounter",
+      "paid_kit",
+      "paid_loot",
+      "paid_quest",
+      "proof_crafting_recipe",
+      "proof_encounter_threat",
+      "proof_enemy_loot",
+      "proof_item_catalog",
+      "proof_merchant_shop",
+      "proof_quest_contract",
+      "quest",
+      "quest_contracts",
+      "quest_contracts_compare",
+      "results",
+      "schema_crafting_recipes",
+      "schema_encounter_threats",
+      "schema_enemy_loot",
+      "schema_item_catalog",
+      "schema_merchant_shop",
+      "schema_quest_contracts",
+      "typescript_crafting_recipes",
+      "typescript_encounter_threats",
+      "typescript_enemy_loot",
+      "typescript_item_catalog",
+      "typescript_merchant_shop",
+      "typescript_quest_contracts",
+      "unity_crafting_recipes",
+      "unity_encounter_threats",
+      "unity_enemy_loot",
+      "unity_item_catalog",
+      "unity_merchant_shop",
+      "unity_quest_contracts"
+    ])
+  });
+
   function priceLabel(value) {
     const price = Number(value);
     return `$${price.toFixed(Number.isInteger(price) ? 0 : 2)}`;
@@ -33,8 +136,10 @@
     const requestUrl = new URL(locationRef.href);
     const attribution = {};
     for (const key of ATTRIBUTION_KEYS) {
-      const value = requestUrl.searchParams.get(key);
-      if (value) attribution[key] = value;
+      const value = String(requestUrl.searchParams.get(key) || "")
+        .trim()
+        .toLowerCase();
+      if (ATTRIBUTION_ALLOWLISTS[key].has(value)) attribution[key] = value;
     }
     return {
       offerId: requestUrl.searchParams.get("offer") || "",
@@ -135,7 +240,7 @@
     }
     status.textContent = `${resolution.stores.length} verified storefront${
       resolution.stores.length === 1 ? "" : "s"
-    } | attribution preserved`;
+    } | allowlisted attribution preserved`;
     status.dataset.state = "verified";
   }
 
@@ -175,6 +280,7 @@
 
   return Object.freeze({
     ATTRIBUTION_KEYS,
+    ATTRIBUTION_ALLOWLISTS,
     priceLabel,
     readRequest,
     resolveRequest,

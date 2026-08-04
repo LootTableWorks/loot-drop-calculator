@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -21,6 +22,12 @@ const measuredPages = [
   "campaign-workspace/index.html",
   "buy/index.html"
 ];
+const manifestBindings = [
+  ["world-foundry/MANIFEST.json", "world-foundry/index.html", "index.html"],
+  ["one-shot-forge/MANIFEST.json", "one-shot-forge/index.html", "index.html"],
+  ["campaign-workspace/PACKAGE-MANIFEST.json", "campaign-workspace/index.html", "index.html"],
+  ["buy/MANIFEST.json", "buy/index.html", "index.html"]
+];
 
 let checks = 0;
 function assert(condition, message) {
@@ -41,15 +48,36 @@ function readPage(testRoot, relativePath) {
   return fs.readFileSync(path.join(testRoot, relativePath), "utf8");
 }
 
+function copyFile(testRoot, relativePath) {
+  const destination = path.join(testRoot, relativePath);
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  fs.copyFileSync(path.join(root, relativePath), destination);
+}
+
+function manifestMatches(testRoot, manifestPath) {
+  const directory = path.dirname(manifestPath);
+  const manifest = JSON.parse(readPage(testRoot, manifestPath));
+  return manifest.files.every((record) => {
+    const bytes = fs.readFileSync(path.join(testRoot, directory, record.path));
+    return (
+      bytes.length === record.bytes &&
+      crypto.createHash("sha256").update(bytes).digest("hex") === record.sha256
+    );
+  });
+}
+
 const testRoot = fs.mkdtempSync(
   path.join(os.tmpdir(), "ltw-privacy-activation-")
 );
 
 try {
-  for (const relativePath of measuredPages) {
-    const destination = path.join(testRoot, relativePath);
-    fs.mkdirSync(path.dirname(destination), { recursive: true });
-    fs.copyFileSync(path.join(root, relativePath), destination);
+  for (const relativePath of measuredPages) copyFile(testRoot, relativePath);
+  for (const [manifestPath] of manifestBindings) {
+    const manifest = JSON.parse(readPage(root, manifestPath));
+    copyFile(testRoot, manifestPath);
+    for (const record of manifest.files) {
+      copyFile(testRoot, path.join(path.dirname(manifestPath), record.path));
+    }
   }
 
   const invalid = run([
@@ -73,6 +101,20 @@ try {
     ),
     "Dry run changed a measured page"
   );
+
+  const staleManifestPath = path.join(testRoot, "buy", "MANIFEST.json");
+  const staleManifest = JSON.parse(fs.readFileSync(staleManifestPath, "utf8"));
+  staleManifest.files.find((record) => record.path === "index.html").bytes += 1;
+  fs.writeFileSync(staleManifestPath, `${JSON.stringify(staleManifest, null, 2)}\n`, "utf8");
+  const staleManifestRun = run([endpoint, "--root", testRoot]);
+  assert(staleManifestRun.status !== 0, "Stale manifest was accepted");
+  assert(
+    measuredPages.every((relativePath) =>
+      readPage(testRoot, relativePath).includes(placeholder)
+    ),
+    "Manifest preflight failure partially activated pages"
+  );
+  copyFile(testRoot, "buy/MANIFEST.json");
 
   const conflictPath = path.join(testRoot, measuredPages.at(-1));
   const conflictSource = fs
@@ -103,6 +145,10 @@ try {
       );
     }),
     "Activation did not set the exact endpoint on every measured page"
+  );
+  assert(
+    manifestBindings.every(([manifestPath]) => manifestMatches(testRoot, manifestPath)),
+    "Activation invalidated a package manifest"
   );
 
   const secondActivation = run([endpoint, "--root", testRoot]);

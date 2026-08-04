@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,6 +18,28 @@ const measuredPages = [
   "one-shot-forge/index.html",
   "campaign-workspace/index.html",
   "buy/index.html"
+];
+const manifestBindings = [
+  {
+    page: "world-foundry/index.html",
+    manifest: "world-foundry/MANIFEST.json",
+    record: "index.html"
+  },
+  {
+    page: "one-shot-forge/index.html",
+    manifest: "one-shot-forge/MANIFEST.json",
+    record: "index.html"
+  },
+  {
+    page: "campaign-workspace/index.html",
+    manifest: "campaign-workspace/PACKAGE-MANIFEST.json",
+    record: "index.html"
+  },
+  {
+    page: "buy/index.html",
+    manifest: "buy/MANIFEST.json",
+    record: "index.html"
+  }
 ];
 
 function fail(message) {
@@ -67,6 +90,14 @@ function parseArguments(argv) {
 const { dryRun, endpoint, root } = parseArguments(process.argv.slice(2));
 const prepared = [];
 
+function fileRecord(relativePath, bytes) {
+  return {
+    path: relativePath,
+    bytes: bytes.length,
+    sha256: crypto.createHash("sha256").update(bytes).digest("hex")
+  };
+}
+
 for (const relativePath of measuredPages) {
   const filePath = path.join(root, relativePath);
   if (!fs.existsSync(filePath)) {
@@ -104,17 +135,94 @@ for (const relativePath of measuredPages) {
   });
 }
 
+const preparedByPath = new Map(
+  prepared.map((record) => [record.relativePath, record])
+);
+const preparedManifests = [];
+
+for (const binding of manifestBindings) {
+  const page = preparedByPath.get(binding.page);
+  const manifestPath = path.join(root, binding.manifest);
+  if (!page || !fs.existsSync(manifestPath)) {
+    fail(`Manifest binding is incomplete: ${binding.manifest} -> ${binding.page}`);
+  }
+
+  const manifestSource = fs.readFileSync(manifestPath, "utf8");
+  let manifest;
+  try {
+    manifest = JSON.parse(manifestSource);
+  } catch {
+    fail(`Manifest is not valid JSON: ${binding.manifest}`);
+  }
+
+  const records = Array.isArray(manifest.files)
+    ? manifest.files.filter((record) => record.path === binding.record)
+    : [];
+  if (records.length !== 1) {
+    fail(
+      `${binding.manifest} must contain exactly one ${binding.record} record; found ${records.length}.`
+    );
+  }
+
+  const currentRecord = fileRecord(
+    binding.record,
+    Buffer.from(page.source, "utf8")
+  );
+  if (
+    records[0].bytes !== currentRecord.bytes ||
+    records[0].sha256 !== currentRecord.sha256
+  ) {
+    fail(
+      `${binding.manifest} does not match ${binding.page}; no files were changed.`
+    );
+  }
+
+  if (page.source === page.updated) continue;
+  const nextRecord = fileRecord(
+    binding.record,
+    Buffer.from(page.updated, "utf8")
+  );
+  manifest.files = manifest.files.map((record) =>
+    record.path === binding.record ? nextRecord : record
+  );
+  preparedManifests.push({
+    filePath: manifestPath,
+    relativePath: binding.manifest,
+    source: manifestSource,
+    updated: `${JSON.stringify(manifest, null, 2)}\n`
+  });
+}
+
 const changed = prepared.filter(({ source, updated }) => source !== updated);
+const writes = [...changed, ...preparedManifests];
 if (!dryRun) {
-  for (const record of changed) {
-    const temporaryPath = `${record.filePath}.privacy-activation.tmp`;
-    fs.writeFileSync(temporaryPath, record.updated, "utf8");
-    fs.renameSync(temporaryPath, record.filePath);
+  const staged = [];
+  const replaced = [];
+  try {
+    for (const record of writes) {
+      const temporaryPath = `${record.filePath}.privacy-activation.tmp`;
+      fs.writeFileSync(temporaryPath, record.updated, "utf8");
+      staged.push({ ...record, temporaryPath });
+    }
+    for (const record of staged) {
+      fs.renameSync(record.temporaryPath, record.filePath);
+      replaced.push(record);
+    }
+  } catch (error) {
+    for (const record of replaced.reverse()) {
+      const rollbackPath = `${record.filePath}.privacy-activation.rollback.tmp`;
+      fs.writeFileSync(rollbackPath, record.source, "utf8");
+      fs.renameSync(rollbackPath, record.filePath);
+    }
+    for (const record of staged) {
+      if (fs.existsSync(record.temporaryPath)) fs.rmSync(record.temporaryPath);
+    }
+    fail(`Activation failed and was rolled back: ${error.message}`);
   }
 }
 
 console.log(
   `${dryRun ? "Dry run passed" : "Privacy measurement endpoint activated"}: ` +
     `${changed.length} changed, ${prepared.length - changed.length} already exact, ` +
-    `${measuredPages.length} measured pages checked.`
+    `${measuredPages.length} measured pages and ${manifestBindings.length} package manifests checked.`
 );

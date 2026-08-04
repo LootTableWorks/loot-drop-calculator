@@ -62,7 +62,7 @@ async function inspectViewport(viewport, screenshotName) {
     window.setTimeout = () => 0;
   });
   await page.goto(
-    `${baseUrl}/buy/?offer=item&utm_source=integration_guides&utm_medium=seo_guide&utm_campaign=schema_design&utm_content=item_upgrade`,
+    `${baseUrl}/buy/?offer=item&utm_source=integration_guides&utm_medium=seo_guide&utm_campaign=rpg_json_schema_design&utm_content=schema_item_catalog`,
     { waitUntil: "networkidle" }
   );
 
@@ -83,8 +83,14 @@ async function inspectViewport(viewport, screenshotName) {
   const href = new URL(await page.locator(".store-option").getAttribute("href"));
   check(href.searchParams.get("utm_source") === "integration_guides", "Source attribution lost");
   check(href.searchParams.get("utm_medium") === "seo_guide", "Medium attribution lost");
-  check(href.searchParams.get("utm_campaign") === "schema_design", "Campaign attribution lost");
-  check(href.searchParams.get("utm_content") === "item_upgrade", "Content attribution lost");
+  check(
+    href.searchParams.get("utm_campaign") === "rpg_json_schema_design",
+    "Campaign attribution lost"
+  );
+  check(
+    href.searchParams.get("utm_content") === "schema_item_catalog",
+    "Content attribution lost"
+  );
   check(href.searchParams.get("utm_term") === "itch", "Store attribution lost");
   check(pageErrors.length === 0, `Browser errors: ${pageErrors.join("; ")}`);
 

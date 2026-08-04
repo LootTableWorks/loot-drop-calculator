@@ -34,14 +34,14 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.1.0"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.1"), "Checkout app version drift");
 check(
-  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.0"),
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.1"),
   "Measurement handshake must load before checkout auto-redirect"
 );
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
-check(buyManifest.version === "1.1.0", "Checkout manifest version drift");
+check(buyManifest.version === "1.1.1", "Checkout manifest version drift");
 check(buyManifest.paid_routes === 71, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
@@ -95,9 +95,19 @@ check(new Set(routeLinks.map((entry) => entry.file)).size === 15, "Routed page c
 for (const offerId of ["item", "merchant", "recipe", "loot", "quest", "encounter"]) {
   check(routeLinks.some((entry) => entry.offerId === offerId), `${offerId}: no routed buyer path`);
 }
+for (const route of routeLinks) {
+  const request = checkout.readRequest({ href: route.href });
+  const routeUrl = new URL(route.href);
+  for (const key of checkout.ATTRIBUTION_KEYS) {
+    check(
+      request.attribution[key] === routeUrl.searchParams.get(key),
+      `${route.file}: ${key} is not in the checkout allowlist`
+    );
+  }
+}
 
 const singleLocation = {
-  href: `${ownedBase}buy/?offer=item&utm_source=integration_guides&utm_medium=seo_guide&utm_campaign=schema_design&utm_content=item_upgrade`
+  href: `${ownedBase}buy/?offer=item&utm_source=integration_guides&utm_medium=seo_guide&utm_campaign=rpg_json_schema_design&utm_content=schema_item_catalog`
 };
 const single = checkout.resolveRequest(singleLocation, registry);
 check(single.state === "single", "Current item checkout must resolve to one verified store");
@@ -106,9 +116,39 @@ check(single.stores[0].id === "itch", "Current item checkout must retain itch fa
 const singleUrl = new URL(single.stores[0].url);
 check(singleUrl.searchParams.get("utm_source") === "integration_guides", "Source attribution lost");
 check(singleUrl.searchParams.get("utm_medium") === "seo_guide", "Medium attribution lost");
-check(singleUrl.searchParams.get("utm_campaign") === "schema_design", "Campaign attribution lost");
-check(singleUrl.searchParams.get("utm_content") === "item_upgrade", "Content attribution lost");
+check(
+  singleUrl.searchParams.get("utm_campaign") === "rpg_json_schema_design",
+  "Campaign attribution lost"
+);
+check(
+  singleUrl.searchParams.get("utm_content") === "schema_item_catalog",
+  "Content attribution lost"
+);
 check(singleUrl.searchParams.get("utm_term") === "itch", "Store attribution missing");
+
+const sensitiveLocation = {
+  href: `${ownedBase}buy/?offer=item&utm_source=private_customer_123&utm_medium=secret_channel&utm_campaign=internal_project_42&utm_content=contact_5551234567`
+};
+check(
+  Object.keys(checkout.readRequest(sensitiveLocation).attribution).length === 0,
+  "Unknown attribution reached the storefront registry"
+);
+const sanitized = checkout.resolveRequest(sensitiveLocation, registry);
+const sanitizedUrl = new URL(sanitized.stores[0].url);
+check(
+  sanitizedUrl.searchParams.get("utm_source") === "world_foundry_hub" &&
+    sanitizedUrl.searchParams.get("utm_medium") === "storefront_selector" &&
+    sanitizedUrl.searchParams.get("utm_campaign") === "standalone_modules" &&
+    sanitizedUrl.searchParams.get("utm_content") === "item_catalog",
+  "Unknown attribution did not fall back to fixed offer-safe labels"
+);
+check(
+  !sanitizedUrl.toString().includes("private_customer_123") &&
+    !sanitizedUrl.toString().includes("secret_channel") &&
+    !sanitizedUrl.toString().includes("internal_project_42") &&
+    !sanitizedUrl.toString().includes("contact_5551234567"),
+  "Unknown attribution leaked to the storefront URL"
+);
 
 const unknown = checkout.resolveRequest(
   { href: `${ownedBase}buy/?offer=unknown&utm_source=test` },

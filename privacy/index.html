@@ -40,7 +40,8 @@
         <ul>
           <li>No cookies, advertising pixels, cross-site profiles, email addresses, account IDs, or user-entered names.</li>
           <li>No campaign text, imported JSON or CSV, generated adventure, saved state, search term, seed, workspace ID, or exported file.</li>
-          <li>No raw query string or free-form campaign label. Unknown attribution values are discarded, and unknown referrers are reduced to a generic external label.</li>
+          <li>No raw query string or free-form campaign label is collected. Only fixed, allowlisted source, campaign, and content labels are counted; unknown values are discarded, and unknown referrers are reduced to a generic external label.</li>
+          <li>When checkout opens a storefront, only allowlisted source, medium, campaign, and content labels are forwarded. Unknown values are replaced with fixed offer defaults before the storefront URL is created.</li>
           <li>No generator inputs, output contents, workspace interactions, form fields, local-save activity, or purchase details.</li>
           <li>No individual-pageview storage in GoatCounter; that optional setting must remain disabled.</li>
         </ul>
