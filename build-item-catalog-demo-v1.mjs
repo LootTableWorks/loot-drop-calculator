@@ -6,9 +6,21 @@ import { fileURLToPath } from "node:url";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const demoRoot = path.join(root, "item-catalog-demo");
 const manifestPath = path.join(demoRoot, "MANIFEST.json");
+const deployedTextExtensions = new Set([
+  ".cs", ".css", ".csv", ".gd", ".html", ".js", ".json", ".md",
+  ".mjs", ".py", ".ts", ".txt", ".xml",
+]);
+
+function deployedBytes(absolutePath) {
+  const bytes = fs.readFileSync(absolutePath);
+  if (!deployedTextExtensions.has(path.extname(absolutePath).toLowerCase())) {
+    return bytes;
+  }
+  return Buffer.from(bytes.toString("utf8").replace(/\r\n?/g, "\n"), "utf8");
+}
 
 function fileRecord(absolutePath) {
-  const bytes = fs.readFileSync(absolutePath);
+  const bytes = deployedBytes(absolutePath);
   return {
     path: path.relative(demoRoot, absolutePath).replaceAll("\\", "/"),
     bytes: bytes.length,
@@ -45,14 +57,14 @@ if (items.length !== 100 || new Set(items.map((item) => item.id)).size !== 100) 
 const archivePath = path.join(
   demoRoot,
   "downloads",
-  "world-foundry-item-catalog-demo-v2-rc4.zip",
+  "world-foundry-item-catalog-demo-v2-rc7.zip",
 );
 const archive = fs.readFileSync(archivePath);
 const archiveSha256 = crypto.createHash("sha256").update(archive).digest("hex");
 if (
-  archive.length !== 3630049 ||
+  archive.length !== 3715503 ||
   archiveSha256 !==
-    "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
+    "63737e1a18aa4d05cac3603d1808773f613dce1f1aba0e878d75c9618adb995d"
 ) {
   throw new Error("Hosted demo archive drift");
 }
@@ -60,7 +72,7 @@ if (
 const manifest = {
   schema_version: "1.0.0",
   product: "World Foundry Item Catalog free demo",
-  version: "2.0.0-rc4",
+  version: "2.0.0-rc7",
   canonical_url:
     "https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/",
   publication_allowed: true,
@@ -75,15 +87,29 @@ const manifest = {
   paid_upgrade_price_usd: 3,
   paid_upgrade_campaign: "paid_catalog_feature_v1",
   acquisition_attribution: {
-    approved_sources: ["the_compendium"],
-    approved_referrer_hosts: ["compendium.tools"],
+    approved_sources: ["the_compendium", "gamestruction"],
+    approved_referrer_hosts: [
+      "compendium.tools",
+      "gamestruction.com",
+      "www.gamestruction.com",
+    ],
     downstream_campaign: "ltw_free_tool_directory_v1",
+    source_contracts: {
+      the_compendium: {
+        medium: "referral_directory",
+        campaign: "ltw_free_tool_directory_v1",
+      },
+      gamestruction: {
+        medium: "tool_directory",
+        campaign: "ltw_data_pack_discovery_v1",
+      },
+    },
     downstream_content: "item_catalog_demo_upgrade",
     analytics_used: false,
     storage_used: false,
   },
   archive: {
-    path: "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
+    path: "downloads/world-foundry-item-catalog-demo-v2-rc7.zip",
     bytes: archive.length,
     sha256: archiveSha256,
   },

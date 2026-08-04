@@ -5,6 +5,10 @@ import { fileURLToPath } from "node:url";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const demoRoot = path.join(root, "item-catalog-demo");
+const deployedTextExtensions = new Set([
+  ".cs", ".css", ".csv", ".gd", ".html", ".js", ".json", ".md",
+  ".mjs", ".py", ".ts", ".txt", ".xml",
+]);
 let checks = 0;
 
 function assert(condition, message) {
@@ -22,19 +26,34 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
+function deployedBytes(absolutePath) {
+  const bytes = fs.readFileSync(absolutePath);
+  if (!deployedTextExtensions.has(path.extname(absolutePath).toLowerCase())) {
+    return bytes;
+  }
+  return Buffer.from(bytes.toString("utf8").replace(/\r\n?/g, "\n"), "utf8");
+}
+
 const index = read("item-catalog-demo/index.html");
 const launchpad = read("item-catalog-demo/START-HERE.html");
 const selector = read("choose-world-foundry-module/index.html");
 const selectorScript = read("choose-world-foundry-module/app.js");
 const selectorStyles = read("choose-world-foundry-module/styles.css");
 const sitemap = read("sitemap.xml");
+const gitAttributes = read(".gitattributes");
 const manifest = JSON.parse(read("item-catalog-demo/MANIFEST.json"));
 const acquisition = JSON.parse(read("item-catalog-demo/ACQUISITION.json"));
+const gamestructionAcquisition = JSON.parse(
+  read("item-catalog-demo/ACQUISITION-GAMESTRUCTION.json"),
+);
 const packageManifest = JSON.parse(read("item-catalog-demo/PACKAGE-MANIFEST.json"));
 const iconMap = JSON.parse(read("item-catalog-demo/item-icons/icon-map.json"));
 const items = JSON.parse(read("item-catalog-demo/items.json"));
 
 assert(index === launchpad, "Hosted index and package launchpad differ");
+for (const rule of ["*.cs text eol=lf", "*.csv text eol=lf", "*.gd text eol=lf", "*.ts text eol=lf"]) {
+  assert(gitAttributes.includes(rule), `Deployed-byte line-ending rule missing: ${rule}`);
+}
 assert(
   index.includes("<title>World Foundry Item Catalog | Free 100-Item Demo</title>"),
   "Hosted demo title changed",
@@ -68,17 +87,20 @@ assert(
 );
 assert(index.includes('id="paid-upgrade"'), "Hosted paid-upgrade hook missing");
 assert(
-  index.includes('source !== "the_compendium"'),
+  index.includes('the_compendium: {') &&
+    index.includes('gamestruction: {') &&
+    index.includes('if (!Object.hasOwn(sourceContracts, source))'),
   "Hosted demo source allowlist changed",
 );
 assert(
-  index.includes('hostname === "compendium.tools"'),
+  index.includes('"compendium.tools": "the_compendium"') &&
+    index.includes('"gamestruction.com": "gamestruction"') &&
+    index.includes('"www.gamestruction.com": "gamestruction"'),
   "Hosted demo referrer allowlist changed",
 );
 assert(
-  index.includes(
-    'destination.searchParams.set("utm_campaign", "ltw_free_tool_directory_v1")',
-  ),
+  index.includes('destination.searchParams.set("utm_medium", contract.medium)') &&
+    index.includes('destination.searchParams.set("utm_campaign", contract.campaign)'),
   "Hosted demo downstream directory campaign changed",
 );
 assert(
@@ -98,7 +120,7 @@ assert(new Set(items.map((item) => item.category)).size === 10, "Hosted demo cat
 assert(new Set(items.map((item) => item.tier)).size === 5, "Hosted demo tier count changed");
 
 assert(manifest.schema_version === "1.0.0", "Hosted manifest schema changed");
-assert(manifest.version === "2.0.0-rc4", "Hosted demo release changed");
+assert(manifest.version === "2.0.0-rc7", "Hosted demo release changed");
 assert(manifest.publication_allowed === true, "Hosted demo publication gate changed");
 assert(manifest.item_count === 100 && manifest.unique_item_ids === 100, "Hosted manifest item contract changed");
 assert(manifest.family_count === 26, "Hosted manifest family count changed");
@@ -111,12 +133,12 @@ assert(manifest.paid_upgrade_price_usd === 3, "Hosted demo upgrade price changed
 assert(manifest.paid_upgrade_campaign === "paid_catalog_feature_v1", "Hosted demo paid campaign changed");
 assert(
   manifest.acquisition_attribution.approved_sources.join("|") ===
-    "the_compendium",
+    "the_compendium|gamestruction",
   "Hosted demo source allowlist manifest changed",
 );
 assert(
   manifest.acquisition_attribution.approved_referrer_hosts.join("|") ===
-    "compendium.tools",
+    "compendium.tools|gamestruction.com|www.gamestruction.com",
   "Hosted demo referrer allowlist manifest changed",
 );
 assert(
@@ -130,14 +152,25 @@ assert(
   "Hosted demo directory content manifest changed",
 );
 assert(
+  manifest.acquisition_attribution.source_contracts.the_compendium.medium ===
+    "referral_directory" &&
+    manifest.acquisition_attribution.source_contracts.the_compendium.campaign ===
+      "ltw_free_tool_directory_v1" &&
+    manifest.acquisition_attribution.source_contracts.gamestruction.medium ===
+      "tool_directory" &&
+    manifest.acquisition_attribution.source_contracts.gamestruction.campaign ===
+      "ltw_data_pack_discovery_v1",
+  "Hosted demo source-specific acquisition contract changed",
+);
+assert(
   manifest.acquisition_attribution.analytics_used === false &&
     manifest.acquisition_attribution.storage_used === false,
   "Hosted demo acquisition privacy boundary changed",
 );
-assert(manifest.archive.bytes === 3630049, "Hosted archive byte count changed");
+assert(manifest.archive.bytes === 3715503, "Hosted archive byte count changed");
 assert(
   manifest.archive.sha256 ===
-    "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf",
+    "63737e1a18aa4d05cac3603d1808773f613dce1f1aba0e878d75c9618adb995d",
   "Hosted archive SHA-256 changed",
 );
 
@@ -148,11 +181,11 @@ for (const record of manifest.files) {
   manifested.add(record.path);
   const absolutePath = path.join(demoRoot, ...record.path.split("/"));
   assert(fs.existsSync(absolutePath), `Manifest file is missing: ${record.path}`);
-  const bytes = fs.readFileSync(absolutePath);
+  const bytes = deployedBytes(absolutePath);
   assert(bytes.length === record.bytes, `Manifest byte count changed: ${record.path}`);
   assert(sha256(bytes) === record.sha256, `Manifest SHA-256 changed: ${record.path}`);
 }
-assert(manifest.files.length === 45, "Hosted manifest file count changed");
+assert(manifest.files.length === 47, "Hosted manifest file count changed");
 
 assert(
   acquisition.release_id ===
@@ -183,6 +216,32 @@ assert(
   "Hosted acquisition rejection boundary changed",
 );
 assert(
+  gamestructionAcquisition.release_id ===
+    "item-catalog-demo-gamestruction-attribution-v1" &&
+    gamestructionAcquisition.publication_allowed === true &&
+    gamestructionAcquisition.approved_source === "gamestruction" &&
+    gamestructionAcquisition.approved_referrer_hosts.join("|") ===
+      "gamestruction.com|www.gamestruction.com",
+  "Gamestruction acquisition identity contract changed",
+);
+assert(
+  gamestructionAcquisition.entry_campaign ===
+    "ltw_data_pack_discovery_v1" &&
+    gamestructionAcquisition.entry_content === "item_catalog_demo" &&
+    gamestructionAcquisition.downstream_content ===
+      "item_catalog_demo_upgrade" &&
+    gamestructionAcquisition.paid_handoff_term ===
+      "origin_gamestruction_item_catalog_demo_upgrade",
+  "Gamestruction acquisition routing contract changed",
+);
+assert(
+  gamestructionAcquisition.unknown_sources_discarded === true &&
+    gamestructionAcquisition.unapproved_referrer_hosts_discarded === true &&
+    gamestructionAcquisition.email_like_values_discarded === true &&
+    gamestructionAcquisition.submission_or_acceptance_counted_as_demand === false,
+  "Gamestruction acquisition safety boundary changed",
+);
+assert(
   acquisition.path_or_user_identifier_preserved === false &&
     acquisition.analytics_used === false &&
     acquisition.storage_used === false,
@@ -196,12 +255,12 @@ assert(
 );
 
 assert(
-  packageManifest.package_id === "world-foundry-item-catalog-demo-v2-rc4",
+  packageManifest.package_id === "world-foundry-item-catalog-demo-v2-rc7",
   "Embedded package ID changed",
 );
 assert(packageManifest.price_usd === 0, "Embedded demo price changed");
 assert(packageManifest.item_count === 100, "Embedded package item count changed");
-assert(packageManifest.publication_allowed === false, "Embedded package publication boundary changed");
+assert(packageManifest.publication_allowed === true, "Embedded package publication approval changed");
 assert(iconMap.icon_count === 20, "Embedded demo icon count changed");
 assert(iconMap.atlas_count === 1, "Embedded demo atlas count changed");
 assert(iconMap.coverage.catalog_demo_count === 100, "Embedded icon catalog boundary changed");
@@ -210,7 +269,7 @@ assert(iconMap.coverage.illustrated_sample_count === 20, "Embedded icon sample b
 const archivePath = path.join(
   demoRoot,
   "downloads",
-  "world-foundry-item-catalog-demo-v2-rc4.zip",
+  "world-foundry-item-catalog-demo-v2-rc7.zip",
 );
 const archive = fs.readFileSync(archivePath);
 assert(archive.length === manifest.archive.bytes, "Archive byte count does not match manifest");
@@ -222,6 +281,7 @@ for (const localHref of [
   "FIELD-GUIDE.pdf",
   "QUICKSTART.md",
   "USAGE-TERMS.md",
+  "downloads/world-foundry-item-catalog-demo-v2-rc7.zip",
 ]) {
   assert(index.includes(`href="${localHref}"`), `Launchpad link changed: ${localHref}`);
   assert(fs.existsSync(path.join(demoRoot, localHref)), `Launchpad destination missing: ${localHref}`);
@@ -239,7 +299,7 @@ assert(
 );
 assert(
   selector.includes(
-    "item-catalog-demo/downloads/world-foundry-item-catalog-demo-v2-rc4.zip?utm_source=world_foundry_selector&amp;utm_medium=owned_web&amp;utm_campaign=item_catalog_demo_v1&amp;utm_content=download_demo_zip",
+    "item-catalog-demo/downloads/world-foundry-item-catalog-demo-v2-rc7.zip?utm_source=world_foundry_selector&amp;utm_medium=owned_web&amp;utm_campaign=item_catalog_demo_v1&amp;utm_content=download_demo_zip",
   ),
   "Selector demo-download attribution changed",
 );

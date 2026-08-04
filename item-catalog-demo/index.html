@@ -28,7 +28,7 @@
   </div></header>
   <main class="main">
     <div class="hero">
-      <section><p class="eyebrow">FREE SCHEMA-V2 DEMO</p><h1>ITEM CATALOG<span>&amp; ECONOMY KIT</span></h1><p>One hundred system-neutral records, twenty mapped inventory icons, illustrated offline tools, and the same engine-loader workflow as the 500-item paid edition.</p></section>
+      <section><p class="eyebrow">FREE SCHEMA-V2 DEMO</p><h1>ITEM CATALOG<span>&amp; ECONOMY KIT</span></h1><p>One hundred exact records from the paid catalog, twenty mapped inventory icons, illustrated offline tools, and the same engine-loader workflow as the 500-item edition.</p></section>
       <section class="proof" aria-label="Demo catalog counts"><div><strong>100</strong><span>STABLE DEMO ITEM IDS</span></div><div><strong>20</strong><span>MAPPED SAMPLE ICONS</span></div><div><strong>10</strong><span>CANONICAL BIOMES</span></div><div><strong>5</strong><span>PROGRESSION TIERS</span></div></section>
     </div>
     <section class="icon-preview" aria-label="Ten included inventory icon samples">
@@ -48,14 +48,14 @@
       <a class="action action-primary" href="item-explorer.html"><span class="icon">01</span><span><strong>Open Illustrated Explorer</strong><span>Search, inspect, randomize, copy, and export real records.</span></span></a>
       <a class="action" href="item-collection-builder.html"><span class="icon">02</span><span><strong>Build a Collection</strong><span>Create seeded loot, shop, crafting, or quest-item sets.</span></span></a>
       <a class="action" href="FIELD-GUIDE.pdf"><span class="icon">03</span><span><strong>Read the Field Guide</strong><span>Catalog structure, workflows, biomes, and integration patterns.</span></span></a>
-      <a class="action" href="QUICKSTART.md"><span class="icon">04</span><span><strong>Developer Quickstart</strong><span>JSON, CSV, schema, loaders, migration, and license map.</span></span></a>
+      <a class="action" href="downloads/world-foundry-item-catalog-demo-v2-rc7.zip" download="world-foundry-item-catalog-demo-v2-rc7.zip"><span class="icon">04</span><span><strong>Download the Complete Demo</strong><span>JSON, CSV, schema, four loaders, tools, 20 icons, and commercial terms.</span></span></a>
     </section>
     <aside class="upgrade">
-      <p><strong>Need the complete production catalog?</strong>The $3 edition expands this contract to 500 records, 100 mapped icons, four sprite sheets, and the complete loader workflow. Inspect the current files and terms before buying.</p>
+      <p><strong>Need the complete production catalog?</strong>The $3 edition keeps these exact 100 records, adds 400 more records and 80 more mapped icons, expands the included atlas set from one sheet to four, and retains the same four-loader workflow. Inspect the current files and terms before buying.</p>
       <a id="paid-upgrade" href="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/?utm_source=item_catalog_demo&amp;utm_medium=product_launchpad&amp;utm_campaign=paid_catalog_feature_v1&amp;utm_content=upgrade_to_500">Inspect the $3 edition</a>
     </aside>
   </main>
-  <footer class="footer"><strong>Commercial use included.</strong> No attribution required. See <a href="USAGE-TERMS.md">USAGE-TERMS.md</a> for the complete terms.</footer>
+  <footer class="footer"><strong>Commercial use included.</strong> No attribution required. Review the <a href="QUICKSTART.md">developer quickstart</a> and <a href="USAGE-TERMS.md">complete terms</a>. Inventory icon artwork is AI-assisted and human-directed.</footer>
   <script>
     (() => {
       const upgrade = document.querySelector("#paid-upgrade");
@@ -65,16 +65,32 @@
         .replace(/[^a-z0-9_-]+/g, "_")
         .replace(/^_+|_+$/g, "")
         .slice(0, 40);
+      const sourceContracts = Object.freeze({
+        the_compendium: {
+          medium: "referral_directory",
+          campaign: "ltw_free_tool_directory_v1",
+        },
+        gamestruction: {
+          medium: "tool_directory",
+          campaign: "ltw_data_pack_discovery_v1",
+        },
+      });
+      const referrerSources = Object.freeze({
+        "compendium.tools": "the_compendium",
+        "gamestruction.com": "gamestruction",
+        "www.gamestruction.com": "gamestruction",
+      });
       let source = safe(query.get("utm_source"));
 
-      if (source !== "the_compendium") {
+      if (!Object.hasOwn(sourceContracts, source)) {
         source = "";
       }
       if (!source && document.referrer) {
         try {
-          if (new URL(document.referrer).hostname === "compendium.tools") {
-            source = "the_compendium";
-          }
+          const referrerHost = new URL(document.referrer).hostname;
+          source = Object.hasOwn(referrerSources, referrerHost)
+            ? referrerSources[referrerHost]
+            : "";
         } catch {
           source = "";
         }
@@ -84,9 +100,10 @@
       }
 
       const destination = new URL(upgrade.href);
+      const contract = sourceContracts[source];
       destination.searchParams.set("utm_source", source);
-      destination.searchParams.set("utm_medium", "referral_directory");
-      destination.searchParams.set("utm_campaign", "ltw_free_tool_directory_v1");
+      destination.searchParams.set("utm_medium", contract.medium);
+      destination.searchParams.set("utm_campaign", contract.campaign);
       destination.searchParams.set("utm_content", "item_catalog_demo_upgrade");
       upgrade.href = destination.toString();
     })();

@@ -30,7 +30,7 @@ Use `integrations/items.ts` for typed projects or `integrations/JavaScriptItemLo
 ## Schema V2 And Migration
 
 - Preserve `pitm-####` item IDs and `itm-fam-###` family IDs when adding local fields.
-- Use migration-v1-to-v2.json to update saved names and biome labels without breaking foreign keys.
+- The paid edition includes `migration-v1-to-v2.json` for updating saved v1 names and biome labels without breaking foreign keys. The free demo starts at schema v2 and does not include that migration file.
 - Prefer `mechanical_hook`, `suggested_value`, and `weight_class`; `effect`, `value`, and numeric `weight` are compatibility aliases.
 - Select recipe ingredients by `crafting_roles` and `compatible_disciplines`, not by noun or category alone.
 - Economy values and mechanical hooks should be balanced for the target project.

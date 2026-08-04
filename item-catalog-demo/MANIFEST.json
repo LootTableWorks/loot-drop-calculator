@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "product": "World Foundry Item Catalog free demo",
-  "version": "2.0.0-rc4",
+  "version": "2.0.0-rc7",
   "canonical_url": "https://loottableworks.github.io/loot-drop-calculator/item-catalog-demo/",
   "publication_allowed": true,
   "item_count": 100,
@@ -16,22 +16,40 @@
   "paid_upgrade_campaign": "paid_catalog_feature_v1",
   "acquisition_attribution": {
     "approved_sources": [
-      "the_compendium"
+      "the_compendium",
+      "gamestruction"
     ],
     "approved_referrer_hosts": [
-      "compendium.tools"
+      "compendium.tools",
+      "gamestruction.com",
+      "www.gamestruction.com"
     ],
     "downstream_campaign": "ltw_free_tool_directory_v1",
+    "source_contracts": {
+      "the_compendium": {
+        "medium": "referral_directory",
+        "campaign": "ltw_free_tool_directory_v1"
+      },
+      "gamestruction": {
+        "medium": "tool_directory",
+        "campaign": "ltw_data_pack_discovery_v1"
+      }
+    },
     "downstream_content": "item_catalog_demo_upgrade",
     "analytics_used": false,
     "storage_used": false
   },
   "archive": {
-    "path": "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
-    "bytes": 3630049,
-    "sha256": "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
+    "path": "downloads/world-foundry-item-catalog-demo-v2-rc7.zip",
+    "bytes": 3715503,
+    "sha256": "63737e1a18aa4d05cac3603d1808773f613dce1f1aba0e878d75c9618adb995d"
   },
   "files": [
+    {
+      "path": "ACQUISITION-GAMESTRUCTION.json",
+      "bytes": 949,
+      "sha256": "f756b60bf9b753e228161c6a7c18b7e19a17f04d24824173d1222c863b376ece"
+    },
     {
       "path": "ACQUISITION.json",
       "bytes": 871,
@@ -39,13 +57,18 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 1352,
-      "sha256": "f05355131e0d2f7a906916ef59b668286a347d791ebe78fec3d3df11a6817e8c"
+      "bytes": 2854,
+      "sha256": "5869bad232a350aa152e22ae2601a5d38bdf821dc268b187643685634598b444"
     },
     {
       "path": "downloads/world-foundry-item-catalog-demo-v2-rc4.zip",
       "bytes": 3630049,
       "sha256": "907b85adb668b1ca18ff8ffa3d355a64395f0edf08f2de3843985948ab7515bf"
+    },
+    {
+      "path": "downloads/world-foundry-item-catalog-demo-v2-rc7.zip",
+      "bytes": 3715503,
+      "sha256": "63737e1a18aa4d05cac3603d1808773f613dce1f1aba0e878d75c9618adb995d"
     },
     {
       "path": "examples.md",
@@ -59,13 +82,13 @@
     },
     {
       "path": "index.html",
-      "bytes": 11223,
-      "sha256": "e17f825db41d5d70fe1c9e23bbeeae4b9aaaa0af47bc252070dc3f0de00b3e88"
+      "bytes": 12122,
+      "sha256": "05933348482e440643b283bb5b3dc11d6ceb6c0e8919122822bbfc2509d40423"
     },
     {
       "path": "INTEGRATION-GUIDE.md",
-      "bytes": 1683,
-      "sha256": "c4c179c06a93a97f464b0558d8315f4df448638999e9b1a897befc8c28014c4a"
+      "bytes": 1789,
+      "sha256": "cc263880905feb898c160068af6e82ce05f05cfdfcb776e2089aa5e9ce0c7f95"
     },
     {
       "path": "integrations/GodotItemDatabase.gd",
@@ -89,13 +112,13 @@
     },
     {
       "path": "item-collection-builder.html",
-      "bytes": 223529,
-      "sha256": "f05b56c5219d5539a774a2055706cf8625a4dde6d39d5c25a1b2a49fd4d4b699"
+      "bytes": 323705,
+      "sha256": "7bfe73d68324adf8c53d571904d8c46d92412212ea52fe78af9cc8f0377b8332"
     },
     {
       "path": "item-explorer.html",
-      "bytes": 233979,
-      "sha256": "4fa5b3df8c568fd7c64190d3d9bbbdbbae1ce2edbe066898d26fdcee111fff84"
+      "bytes": 334155,
+      "sha256": "aa7c17b3be624fdd45cb233d7352f6695c8b071e34dfc9459f31f5cb6caec3a9"
     },
     {
       "path": "item-icons/atlases/demo-sample-atlas.png",
@@ -104,8 +127,8 @@
     },
     {
       "path": "item-icons/icon-map.json",
-      "bytes": 7196,
-      "sha256": "641f14517b438bd5861f89462fb48ef327c5f21de4869632e2d37d3816929ffe"
+      "bytes": 10843,
+      "sha256": "b1e160092bfd07c00317cf414a41f1d880b54a9df20e659235d42ebdf2543e6c"
     },
     {
       "path": "item-icons/icons/pitm-0008-brineworn-bottle.png",
@@ -209,23 +232,23 @@
     },
     {
       "path": "item-icons/README.md",
-      "bytes": 620,
-      "sha256": "3f898c46715a338f8e688cfba18884404eb797dbdd3f780218a237f685a48099"
+      "bytes": 608,
+      "sha256": "7a2b722b80da7ef56b4829badd7da8799d2e29c2546ae7b0fb45469bb29a2ff8"
     },
     {
       "path": "items.csv",
-      "bytes": 163991,
-      "sha256": "1367b098ac6bc06d403df362c30e7d153c436fead948e699a4907f39ca92d221"
+      "bytes": 264167,
+      "sha256": "08e2decfa9934cdcd95c70eb61ec71ace8d3b63fd5e4617f832fca130d43fce4"
     },
     {
       "path": "items.json",
-      "bytes": 249250,
-      "sha256": "e2197e8b3e456eef2d434a844c473a27cdd2ece4cf345e988299d91824773bc9"
+      "bytes": 349426,
+      "sha256": "484a888267ea5822dc38a6d9d6994236416e3ddcce4ad9a98e4e35d628517679"
     },
     {
       "path": "PACKAGE-MANIFEST.json",
-      "bytes": 10428,
-      "sha256": "a0d4561f7dad56a86c206ea4b387777bbc945e9b391a09f0bad2e6bd49162073"
+      "bytes": 10431,
+      "sha256": "56289e3f06f15466be0f8511db848f7dd6c53dfb1501baaa908aaceac67ccb3f"
     },
     {
       "path": "QUICKSTART.md",
@@ -234,8 +257,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 827,
-      "sha256": "f79f59b880f6da83dbf92bcbcbd7972e6c60258770d3d40181d9b70cfed3bb96"
+      "bytes": 846,
+      "sha256": "95c8fb15abb5c63dc2d3e45fb7782d0b8b298db4b5761618df7255bc9cca60bf"
     },
     {
       "path": "schema-version.json",
@@ -249,8 +272,8 @@
     },
     {
       "path": "START-HERE.html",
-      "bytes": 11223,
-      "sha256": "e17f825db41d5d70fe1c9e23bbeeae4b9aaaa0af47bc252070dc3f0de00b3e88"
+      "bytes": 12122,
+      "sha256": "05933348482e440643b283bb5b3dc11d6ceb6c0e8919122822bbfc2509d40423"
     },
     {
       "path": "USAGE-TERMS.md",

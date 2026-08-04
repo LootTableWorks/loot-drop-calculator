@@ -258,6 +258,19 @@ assert(
   "Current paid-catalog attribution must remain observable"
 );
 assert(
+  api.fixedAttribution(
+    "?utm_source=gamestruction&utm_medium=tool_directory&utm_campaign=ltw_data_pack_discovery_v1&utm_content=item_catalog_demo_upgrade",
+    ""
+  ) ===
+    "source.gamestruction/campaign.ltw-data-pack-discovery-v1/content.item-catalog-demo-upgrade",
+  "Gamestruction paid handoff attribution must remain observable"
+);
+assert(
+  api.fixedAttribution("", "https://www.gamestruction.com/tools/item-catalog") ===
+    "source.gamestruction",
+  "Gamestruction referrers must reduce to the fixed source label"
+);
+assert(
   api.fixedAttribution("", "https://unexpected.example/private/path?email=a@b.com") ===
     "source.external",
   "Unknown referrers must be reduced to a generic label"

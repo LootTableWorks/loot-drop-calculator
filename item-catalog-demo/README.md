@@ -14,6 +14,6 @@ The 100 schema-v2 demo items cover all ten canonical biomes, all ten categories,
 - Unity, Godot 4, TypeScript, and JavaScript loaders
 - Commercial usage terms
 
-The premium pack expands the same stable schema to 500 records and 50 item
-families without changing the integration contract, and includes 100 mapped
-icons across the complete Brineworn and Mossbound families.
+The premium pack keeps these exact 100 records, adds 400 more records across 50
+complete item families without changing the integration contract, and includes
+100 mapped icons across the complete Brineworn and Mossbound families.
