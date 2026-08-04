@@ -132,6 +132,28 @@
     ])
   });
 
+  const ATTRIBUTION_SOURCE_CONTRACTS = Object.freeze({
+    gamestruction: Object.freeze({
+      medium: "tool_directory",
+      campaign: "ltw_data_pack_discovery_v1",
+      contents: new Set([
+        "crafting_recipes",
+        "crafting_recipes_compare",
+        "encounter_threats",
+        "encounter_threats_compare",
+        "enemy_loot",
+        "enemy_loot_compare",
+        "gullwatch_harbor_campaign",
+        "item_catalog",
+        "item_catalog_compare",
+        "merchant_shop",
+        "merchant_shop_compare",
+        "quest_contracts",
+        "quest_contracts_compare"
+      ])
+    })
+  });
+
   function priceLabel(value) {
     const price = Number(value);
     return `$${price.toFixed(Number.isInteger(price) ? 0 : 2)}`;
@@ -140,11 +162,32 @@
   function readRequest(locationRef) {
     const requestUrl = new URL(locationRef.href);
     const attribution = {};
+    const requestedSource = String(requestUrl.searchParams.get("utm_source") || "")
+      .trim()
+      .toLowerCase();
+    if (!ATTRIBUTION_ALLOWLISTS.utm_source.has(requestedSource)) {
+      return {
+        offerId: requestUrl.searchParams.get("offer") || "",
+        attribution
+      };
+    }
     for (const key of ATTRIBUTION_KEYS) {
       const value = String(requestUrl.searchParams.get(key) || "")
         .trim()
         .toLowerCase();
       if (ATTRIBUTION_ALLOWLISTS[key].has(value)) attribution[key] = value;
+    }
+    const sourceContract = ATTRIBUTION_SOURCE_CONTRACTS[attribution.utm_source];
+    if (
+      sourceContract &&
+      (attribution.utm_medium !== sourceContract.medium ||
+        attribution.utm_campaign !== sourceContract.campaign ||
+        !sourceContract.contents.has(attribution.utm_content))
+    ) {
+      return {
+        offerId: requestUrl.searchParams.get("offer") || "",
+        attribution: {}
+      };
     }
     return {
       offerId: requestUrl.searchParams.get("offer") || "",
@@ -286,6 +329,7 @@
   return Object.freeze({
     ATTRIBUTION_KEYS,
     ATTRIBUTION_ALLOWLISTS,
+    ATTRIBUTION_SOURCE_CONTRACTS,
     priceLabel,
     readRequest,
     resolveRequest,
