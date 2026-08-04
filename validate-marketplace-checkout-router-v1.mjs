@@ -90,9 +90,9 @@ for (const file of htmlFiles(root)) {
   }
 }
 
-check(routeLinks.length === 71, `Expected 71 routed paid links, found ${routeLinks.length}`);
+check(routeLinks.length === 72, `Expected 72 routed paid links, found ${routeLinks.length}`);
 check(new Set(routeLinks.map((entry) => entry.file)).size === 15, "Routed page count drift");
-for (const offerId of ["item", "merchant", "recipe", "loot", "quest", "encounter"]) {
+for (const offerId of ["item", "merchant", "recipe", "loot", "quest", "encounter", "gullwatch_harbor"]) {
   check(routeLinks.some((entry) => entry.offerId === offerId), `${offerId}: no routed buyer path`);
 }
 for (const route of routeLinks) {

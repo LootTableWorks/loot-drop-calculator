@@ -3,26 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Choose the right $3 World Foundry data module for items, shops, crafting, loot, quests, or encounters. Compare exact contents, tools, dependencies, and product limits.">
+    <meta name="description" content="Compare six $3 fantasy RPG data packs with JSON and CSV for items, shops, crafting, loot, quests, and encounters. Inspect a free 100-item demo before buying.">
     <meta name="theme-color" content="#171a1d">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="icon" href="data:,">
     <link rel="canonical" href="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Loot Table Works">
-    <meta property="og:title" content="Choose Your World Foundry Module">
-    <meta property="og:description" content="Match one production problem to the focused $3 data module built to solve it.">
+    <meta property="og:title" content="Fantasy RPG Data Packs | JSON + CSV for Unity and Godot">
+    <meta property="og:description" content="Compare six focused $3 fantasy RPG data packs, inspect 100 free item records, and choose by exact contents, tools, dependencies, and limits.">
     <meta property="og:url" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/">
     <meta property="og:image" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/assets/world-foundry-selector-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Loot Table Works World Foundry module selector comparing six focused fantasy game data packs.">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Choose Your World Foundry Module">
-    <meta name="twitter:description" content="Compare six focused $3 fantasy game data modules by outcome, contents, tools, and dependencies.">
+    <meta name="twitter:title" content="Fantasy RPG Data Packs | JSON + CSV">
+    <meta name="twitter:description" content="Compare six focused $3 fantasy RPG data packs for Unity, Godot, TypeScript, JavaScript, and tabletop preparation.">
     <meta name="twitter:image" content="https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/assets/world-foundry-selector-preview.png">
-    <title>Choose Your World Foundry Module | Loot Table Works</title>
-    <link rel="stylesheet" href="styles.css?v=1.1.0">
+    <title>Fantasy RPG Data Packs (JSON + CSV) for Unity &amp; Godot</title>
+    <link rel="stylesheet" href="styles.css?v=1.2.0">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -30,7 +30,8 @@
           {
             "@type": "WebApplication",
             "@id": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/#application",
-            "name": "World Foundry Module Selector",
+            "name": "Fantasy RPG Data Pack Finder",
+            "alternateName": "World Foundry Module Selector",
             "url": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/",
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "Any",
@@ -40,13 +41,13 @@
               "price": "0",
               "priceCurrency": "USD"
             },
-            "description": "A free local-first selector that matches an RPG production problem to one of six focused World Foundry data modules."
+            "description": "A free local-first finder that compares six focused fantasy RPG data packs with JSON, CSV, documented schemas, offline tools, and optional Unity, Godot 4, TypeScript, and JavaScript starters."
           },
           {
             "@type": "ItemList",
             "@id": "https://loottableworks.github.io/loot-drop-calculator/choose-world-foundry-module/#catalog",
-            "name": "World Foundry standalone data modules",
-            "numberOfItems": 6,
+            "name": "World Foundry fantasy RPG data packs and tabletop campaign",
+            "numberOfItems": 7,
             "itemListElement": [
               {
                 "@type": "ListItem",
@@ -107,6 +108,16 @@
                   "url": "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit",
                   "offers": {"@type": "Offer", "price": "3", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
                 }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "Product",
+                  "name": "Gullwatch Harbor",
+                  "url": "https://loot-table-works.itch.io/gullwatch-harbor",
+                  "offers": {"@type": "Offer", "price": "2.99", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}
+                }
               }
             ]
           },
@@ -153,6 +164,14 @@
                   "@type": "Answer",
                   "text": "No. These are original system-neutral structured data and offline workflow products. They do not include battle maps, tokens, character art, audio, or rules-specific stat blocks."
                 }
+              },
+              {
+                "@type": "Question",
+                "name": "What if I need a playable tabletop campaign instead of production data?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Choose Gullwatch Harbor for a ready-to-run four-session system-neutral campaign with a 61-page PDF, EPUB, nineteen scenes, continuity records, and a free sample. It is a separate $2.99 product, not a data module."
+                }
               }
             ]
           }
@@ -169,21 +188,52 @@
         <span><strong>Loot Table Works</strong><small>World Foundry</small></span>
       </a>
       <nav aria-label="Primary navigation">
-        <a href="#selector">Choose</a>
-        <a href="#compare">Compare all six</a>
+        <a href="#selector">Find a data pack</a>
+        <a href="#compare">Compare six packs</a>
+        <a href="#campaign-route">Campaign</a>
         <a href="#faq">FAQ</a>
         <a href="../world-foundry/">Free tools</a>
       </nav>
-      <span class="price-lock">Standalone price <strong>$3</strong></span>
+      <span class="price-lock">Data packs <strong>$3</strong></span>
     </header>
 
     <main>
       <section class="selector-shell" id="selector" aria-labelledby="selector-title">
         <div class="selector-heading">
-          <p class="eyebrow">World Foundry module selector</p>
-          <h1 id="selector-title">Buy the system you need next.</h1>
-          <p>Choose one production problem. We will show the focused module, its exact contents, what it depends on, and what it does not include.</p>
+          <p class="eyebrow">Fantasy RPG data pack finder</p>
+          <h1 id="selector-title">Choose production-ready fantasy RPG data without rebuilding it.</h1>
+          <p>Compare six focused $3 packs for items, shops, crafting, loot, quests, and encounters. Inspect the JSON and CSV, offline tools, engine paths, dependencies, and exact limits before opening a store.</p>
+          <div class="selector-heading-actions">
+            <a class="heading-primary" href="../item-catalog-demo/?utm_source=data_pack_finder&amp;utm_medium=owned_web&amp;utm_campaign=fantasy_rpg_data_packs_v1&amp;utm_content=inspect_100_free_records">Inspect 100 free records</a>
+            <a href="#compare">Compare all six $3 packs</a>
+          </div>
         </div>
+
+        <dl class="intent-proof" aria-label="Data pack formats and workflows">
+          <div><dt>Formats</dt><dd>JSON + CSV</dd></div>
+          <div><dt>Integration</dt><dd>Unity, Godot 4, TypeScript, JavaScript</dd></div>
+          <div><dt>Workflow</dt><dd>Offline browsers, simulators, and exports</dd></div>
+          <div><dt>Trust</dt><dd>Stable IDs, documented schemas, real demo records</dd></div>
+        </dl>
+
+        <section class="campaign-route" id="campaign-route" aria-labelledby="campaign-route-title">
+          <img src="../gullwatch-harbor/assets/gullwatch-harbor-cover-v1.jpg" width="1600" height="2560" alt="Gullwatch Harbor campaign cover showing a storm-lit beacon above a coastal harbor.">
+          <div class="campaign-route-copy">
+            <p class="eyebrow">Need a campaign, not production data?</p>
+            <h2 id="campaign-route-title">Run Gullwatch Harbor as a four-session campaign.</h2>
+            <p>Get a 61-page PDF, reflowable EPUB, nineteen linked scenes, maps, continuity records, and ready-to-import Campaign Workspace saves for 3-6 players.</p>
+            <ul aria-label="Gullwatch Harbor contents">
+              <li>System-neutral and low-prep</li>
+              <li>Four opening outcomes</li>
+              <li>Free sample before purchase</li>
+            </ul>
+          </div>
+          <div class="campaign-route-actions">
+            <strong>$2.99</strong>
+            <a class="campaign-primary" data-link-kind="marketplace-checkout" data-offer-id="gullwatch_harbor" href="../buy/?offer=gullwatch_harbor&amp;utm_source=data_pack_finder&amp;utm_medium=owned_web&amp;utm_campaign=fantasy_rpg_data_packs_v1&amp;utm_content=gullwatch_harbor_campaign">Choose a verified store</a>
+            <a href="../gullwatch-harbor/?utm_source=data_pack_finder&amp;utm_medium=owned_web&amp;utm_campaign=fantasy_rpg_data_packs_v1&amp;utm_content=gullwatch_harbor_sample">Preview the free sample</a>
+          </div>
+        </section>
 
         <div class="selector-grid">
           <form class="selector-controls" aria-label="Module selection controls">
@@ -308,7 +358,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Exact standalone catalog</p>
-            <h2 id="compare-title">Six focused modules. One shared ID system.</h2>
+            <h2 id="compare-title">Six production data packs. One shared ID system.</h2>
           </div>
           <p>Each module costs $3. Start at the row matching your immediate bottleneck; add connected modules only when your project needs those relationships.</p>
         </div>
@@ -375,13 +425,14 @@
           <p><strong>Shared format:</strong> original system-neutral fantasy content, structured JSON/CSV, documented schemas, stable IDs, commercial-use terms, and offline operation.</p>
           <p><strong>Shared boundary:</strong> these are production data and preparation tools, not visual asset, battle-map, token, audio, or rules-engine packs.</p>
         </div>
+        <p class="catalog-disclosure"><strong>Creation disclosure:</strong> Loot Table Works products are AI-assisted and human-reviewed. Engine starters and specialized utilities vary by pack; the routed product page is the final authority for current files, licenses, terms, and compatibility.</p>
       </section>
 
       <section class="faq" id="faq" aria-labelledby="faq-title">
         <div class="section-heading">
           <div>
             <p class="eyebrow">Before you choose</p>
-            <h2 id="faq-title">World Foundry module questions</h2>
+            <h2 id="faq-title">Fantasy RPG data pack questions</h2>
           </div>
           <p>Use the selector for a recommendation. Use these answers to confirm the catalog boundary before opening a product page.</p>
         </div>
@@ -407,6 +458,10 @@
             <summary>Are these art, map, token, audio, or rules packs?</summary>
             <p>No. These are original system-neutral structured data and offline workflow products. They do not include battle maps, tokens, character art, audio, or rules-specific stat blocks.</p>
           </details>
+          <details>
+            <summary>What if I need a playable tabletop campaign instead of production data?</summary>
+            <p>Choose Gullwatch Harbor for a ready-to-run four-session system-neutral campaign with a 61-page PDF, EPUB, nineteen scenes, continuity records, and a free sample. It is a separate $2.99 product, not a data module.</p>
+          </details>
         </div>
       </section>
 
@@ -427,7 +482,7 @@
       <a href="../privacy/">Privacy</a>
     </footer>
 
-    <script src="app.js?v=1.0.1"></script>
+    <script src="app.js?v=1.1.0"></script>
     <script src="../world-foundry/storefront-registry.js?v=3.0.1"></script>
     <script src="../assets/privacy-metrics-v1.js" data-goatcounter-endpoint="__LTW_GOATCOUNTER_ENDPOINT__"></script>
   </body>

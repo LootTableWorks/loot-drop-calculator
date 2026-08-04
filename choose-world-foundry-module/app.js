@@ -217,7 +217,7 @@ function renderRecommendation() {
   elements.itemDemo.hidden = selectedValue("problem") !== "items";
 }
 
-document.querySelectorAll('#compare a[data-link-kind="marketplace-checkout"]').forEach((link) => {
+document.querySelectorAll('a[data-link-kind="marketplace-checkout"]').forEach((link) => {
   link.href = attributedPaidUrl(link.href);
 });
 document.querySelector(".selector-controls").addEventListener("change", renderRecommendation);
