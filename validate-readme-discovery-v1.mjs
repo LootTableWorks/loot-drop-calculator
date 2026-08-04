@@ -92,7 +92,7 @@ for (const [name, route, content] of tools) {
 
 const tableRows = readme
   .split(/\r?\n/)
-  .filter((line) => line.startsWith("| [") && line.includes("loottableworks.github.io"));
+  .filter((line) => line.startsWith("| [") && line.includes("utm_campaign=free_tools_v1"));
 assert.equal(tableRows.length, 12, `Expected 12 tool rows, found ${tableRows.length}`);
 checks += 1;
 
@@ -107,27 +107,33 @@ assert.ok(!readme.includes("bundle"), "README must not expose a bundle before th
 checks += 1;
 
 const paidRoutes = [
-  ["itch_profile", "https://loot-table-works.itch.io/"],
-  ["item_catalog", "https://loot-table-works.itch.io/original-fantasy-item-data-pack"],
-  ["merchant_shop", "https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit"],
-  ["crafting_recipe", "https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit"],
-  ["enemy_loot", "https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit"],
-  ["quest_contract", "https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit"],
-  ["encounter_threat", "https://loot-table-works.itch.io/fantasy-encounter-room-data-kit"],
+  ["item", "item_catalog"],
+  ["merchant", "merchant_shop"],
+  ["recipe", "crafting_recipe"],
+  ["loot", "enemy_loot"],
+  ["quest", "quest_contract"],
+  ["encounter", "encounter_threat"],
 ];
 
-for (const [content, baseUrl] of paidRoutes) {
+for (const [offer, content] of paidRoutes) {
   includes(
-    `${baseUrl}?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=${content}`,
+    `https://loottableworks.github.io/loot-drop-calculator/buy/?offer=${offer}&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=${content}`,
     `Paid route ${content} is missing or untracked`,
   );
 }
 
 assert.equal(
-  (readme.match(/utm_campaign=paid_catalog_v1&utm_content=/g) ?? []).length,
-  7,
-  "Expected one profile route and six direct paid-module routes",
+  (readme.match(/utm_campaign=standalone_modules&utm_content=/g) ?? []).length,
+  6,
+  "Expected six verified-router paid-module routes",
+);
+checks += 1;
+assert.ok(!readme.includes("loot-table-works.itch.io"), "README bypasses the verified checkout router");
+checks += 1;
+assert.ok(
+  readme.includes("through its currently verified storefront"),
+  "README verified-store boundary is missing",
 );
 checks += 1;
 
-console.log(`PASS validate-readme-discovery-v1.mjs (${checks} checks): canonical 12-tool catalog, one-shot idea acquisition path, valid preview, accurate storage disclosure, and attributed free and paid routes.`);
+console.log(`PASS validate-readme-discovery-v1.mjs (${checks} checks): canonical 12-tool catalog, one-shot idea acquisition path, valid preview, accurate storage disclosure, and attributed free and verified-router paid routes.`);

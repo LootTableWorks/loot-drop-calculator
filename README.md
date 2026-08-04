@@ -52,16 +52,16 @@ The public guide cluster covers RPG JSON schema design, Unity JsonUtility import
 
 ## Original `$3` Data Modules
 
-The paid modules contain structured production data, offline workflow tools, documented schemas, free demos, and engine integration starters. Each module is sold independently for `$3` on [itch.io](https://loot-table-works.itch.io/?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=itch_profile).
+The paid modules contain structured production data, offline workflow tools, documented schemas, free demos, and engine integration starters. Each module is sold independently for `$3` through its currently verified storefront. The checkout route shows only public product pages whose price and destination have passed release QA.
 
 | Module | Production boundary |
 |---|---|
-| [Item Catalog & Economy Kit](https://loot-table-works.itch.io/original-fantasy-item-data-pack?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=item_catalog) | 500 stable item records, 100 mapped icons, four sprite sheets, and two offline tools |
-| [Merchant & Shop Kit](https://loot-table-works.itch.io/fantasy-merchant-shop-generator-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=merchant_shop) | 150 merchants and 1,500 stock relationships |
-| [Crafting & Recipe Kit](https://loot-table-works.itch.io/fantasy-crafting-alchemy-recipe-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=crafting_recipe) | 300 recipes and 900 ingredient relationships |
-| [Enemy Loot & Reward Kit](https://loot-table-works.itch.io/enemy-loot-table-drop-profile-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=enemy_loot) | 250 profiles and 2,000 reward records |
-| [Quest, Contract & Reward Kit](https://loot-table-works.itch.io/fantasy-quest-contract-reward-data-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=quest_contract) | 240 quests arranged into 40 connected arcs |
-| [Encounter & Threat Kit](https://loot-table-works.itch.io/fantasy-encounter-room-data-kit?utm_source=github&utm_medium=repository_readme&utm_campaign=paid_catalog_v1&utm_content=encounter_threat) | 180 encounters and 540 phases |
+| [Item Catalog & Economy Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=item&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=item_catalog) | 500 stable item records, 100 mapped icons, four sprite sheets, and two offline tools |
+| [Merchant & Shop Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=merchant&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=merchant_shop) | 150 merchants and 1,500 stock relationships |
+| [Crafting & Recipe Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=recipe&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=crafting_recipe) | 300 recipes and 900 ingredient relationships |
+| [Enemy Loot & Reward Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=loot&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=enemy_loot) | 250 profiles and 2,000 reward records |
+| [Quest, Contract & Reward Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=quest&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=quest_contract) | 240 quests arranged into 40 connected arcs |
+| [Encounter & Threat Kit](https://loottableworks.github.io/loot-drop-calculator/buy/?offer=encounter&utm_source=github&utm_medium=repository_readme&utm_campaign=standalone_modules&utm_content=encounter_threat) | 180 encounters and 540 phases |
 
 ## Data Principles
 
@@ -76,4 +76,4 @@ The paid modules contain structured production data, offline workflow tools, doc
 
 Loot Table Works products contain original AI-assisted structured data, text, code, and marketing artwork. They do not include copyrighted characters, branded settings, protected game text, or rules-specific content from another publisher.
 
-This repository hosts the public static tools. Individual product archives and their commercial-use terms are distributed through their verified itch.io pages.
+This repository hosts the public static tools. Individual product archives and their commercial-use terms are distributed through the verified product pages exposed by the checkout router.
