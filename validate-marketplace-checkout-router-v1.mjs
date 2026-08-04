@@ -34,14 +34,14 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.1.5"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.7"), "Checkout app version drift");
 check(
-  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.5"),
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.7"),
   "Measurement handshake must load before checkout auto-redirect"
 );
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
-check(buyManifest.version === "1.1.5", "Checkout manifest version drift");
+check(buyManifest.version === "1.1.7", "Checkout manifest version drift");
 check(buyManifest.paid_routes === 72, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
@@ -161,6 +161,56 @@ for (const [label, href] of [
       fallbackUrl.searchParams.get("utm_campaign") === "standalone_modules" &&
       fallbackUrl.searchParams.get("utm_content") === "item_catalog",
     `Mismatched Gamestruction ${label} tuple did not use fixed fallback attribution`
+  );
+}
+
+const oneShotContract = checkout.ATTRIBUTION_SOURCE_CONTRACTS.one_shot_forge;
+const oneShotOfferContents = [
+  ["gullwatch_harbor", "gullwatch_harbor_featured_campaign"],
+  ["quest", "quests_recommended"],
+  ["encounter", "encounters_recommended"],
+  ["loot", "loot_profiles_recommended"],
+  ["item", "items_recommended"],
+  ["merchant", "merchants_recommended"],
+  ["recipe", "recipes_recommended"]
+];
+for (const origin of ["", ...oneShotContract.origins]) {
+  for (const [offerId, baseContent] of oneShotOfferContents) {
+    const content = origin ? `${baseContent}_origin_${origin}` : baseContent;
+    const href = `${ownedBase}buy/?offer=${offerId}&utm_source=one_shot_forge&utm_medium=free_tool&utm_campaign=one_shot_value_launch&utm_content=${content}`;
+    const request = checkout.readRequest({ href });
+    check(request.attribution.utm_source === "one_shot_forge", `${offerId}/${origin || "direct"}: source lost`);
+    check(request.attribution.utm_medium === "free_tool", `${offerId}/${origin || "direct"}: medium lost`);
+    check(request.attribution.utm_campaign === "one_shot_value_launch", `${offerId}/${origin || "direct"}: campaign lost`);
+    check(request.attribution.utm_content === content, `${offerId}/${origin || "direct"}: content lost`);
+    const resolution = checkout.resolveRequest({ href }, registry);
+    check(resolution.state === "single", `${offerId}/${origin || "direct"}: checkout did not resolve`);
+    const destination = new URL(resolution.stores[0].url);
+    check(destination.searchParams.get("utm_source") === "one_shot_forge", `${offerId}/${origin || "direct"}: final source lost`);
+    check(destination.searchParams.get("utm_medium") === "free_tool", `${offerId}/${origin || "direct"}: final medium lost`);
+    check(destination.searchParams.get("utm_campaign") === "one_shot_value_launch", `${offerId}/${origin || "direct"}: final campaign lost`);
+    check(destination.searchParams.get("utm_content") === content, `${offerId}/${origin || "direct"}: final content lost`);
+    check(destination.searchParams.get("utm_term") === "itch", `${offerId}/${origin || "direct"}: final store lost`);
+  }
+}
+
+for (const [label, href] of [
+  ["source", `${ownedBase}buy/?offer=item&utm_source=module_selector&utm_medium=free_tool&utm_campaign=one_shot_value_launch&utm_content=items_recommended_origin_awesome_dnd`],
+  ["medium", `${ownedBase}buy/?offer=item&utm_source=one_shot_forge&utm_medium=owned_web&utm_campaign=one_shot_value_launch&utm_content=items_recommended_origin_awesome_dnd`],
+  ["campaign", `${ownedBase}buy/?offer=item&utm_source=one_shot_forge&utm_medium=free_tool&utm_campaign=standalone_modules&utm_content=items_recommended_origin_awesome_dnd`],
+  ["content", `${ownedBase}buy/?offer=item&utm_source=one_shot_forge&utm_medium=free_tool&utm_campaign=one_shot_value_launch&utm_content=schema_item_catalog`],
+  ["origin", `${ownedBase}buy/?offer=item&utm_source=one_shot_forge&utm_medium=free_tool&utm_campaign=one_shot_value_launch&utm_content=items_recommended_origin_private_customer`],
+  ["exclusive_content", `${ownedBase}buy/?offer=item&utm_source=module_selector&utm_medium=owned_web&utm_campaign=standalone_modules&utm_content=items_recommended_origin_awesome_dnd`]
+]) {
+  const request = checkout.readRequest({ href });
+  check(Object.keys(request.attribution).length === 0, `Mismatched One-Shot ${label} tuple did not fail closed`);
+  const fallback = new URL(checkout.resolveRequest({ href }, registry).stores[0].url);
+  check(
+    fallback.searchParams.get("utm_source") === "world_foundry_hub" &&
+      fallback.searchParams.get("utm_medium") === "storefront_selector" &&
+      fallback.searchParams.get("utm_campaign") === "standalone_modules" &&
+      fallback.searchParams.get("utm_content") === "item_catalog",
+    `Mismatched One-Shot ${label} tuple did not use fixed fallback attribution`
   );
 }
 

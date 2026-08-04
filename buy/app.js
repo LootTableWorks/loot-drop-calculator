@@ -24,6 +24,42 @@
     "utm_content"
   ]);
 
+  const ONE_SHOT_ATTRIBUTION_ORIGINS = Object.freeze([
+    "awesome_dnd",
+    "bluesky",
+    "gamingtrend",
+    "github",
+    "instagram",
+    "itch_io",
+    "mastodon",
+    "organic_search",
+    "owned_site",
+    "pinterest",
+    "press_kit",
+    "rpggen_dev",
+    "run_one_shot_guide",
+    "the_compendium",
+    "tiktok",
+    "tribality",
+    "user_share",
+    "youtube"
+  ]);
+  const ONE_SHOT_CONTENT_BASES = Object.freeze([
+    "gullwatch_harbor_featured_campaign",
+    "quests_recommended",
+    "encounters_recommended",
+    "loot_profiles_recommended",
+    "items_recommended",
+    "merchants_recommended",
+    "recipes_recommended"
+  ]);
+  const ONE_SHOT_ATTRIBUTION_CONTENTS = new Set(
+    ONE_SHOT_CONTENT_BASES.flatMap((base) => [
+      base,
+      ...ONE_SHOT_ATTRIBUTION_ORIGINS.map((origin) => `${base}_origin_${origin}`)
+    ])
+  );
+
   const ATTRIBUTION_ALLOWLISTS = Object.freeze({
     utm_source: new Set([
       "connected_record_proof",
@@ -58,6 +94,7 @@
       "world_foundry_traffic_test"
     ]),
     utm_content: new Set([
+      ...ONE_SHOT_ATTRIBUTION_CONTENTS,
       "crafting_recipes",
       "crafting_recipes_compare",
       "economy_crafting_recipes",
@@ -136,6 +173,8 @@
     gamestruction: Object.freeze({
       medium: "tool_directory",
       campaign: "ltw_data_pack_discovery_v1",
+      protectMedium: true,
+      exclusiveContents: false,
       contents: new Set([
         "crafting_recipes",
         "crafting_recipes_compare",
@@ -151,6 +190,14 @@
         "quest_contracts",
         "quest_contracts_compare"
       ])
+    }),
+    one_shot_forge: Object.freeze({
+      medium: "free_tool",
+      campaign: "one_shot_value_launch",
+      protectMedium: false,
+      exclusiveContents: true,
+      origins: new Set(ONE_SHOT_ATTRIBUTION_ORIGINS),
+      contents: ONE_SHOT_ATTRIBUTION_CONTENTS
     })
   });
 
@@ -182,8 +229,11 @@
     ).some(([source, contract]) => {
       const protectedMarkerPresent =
         attribution.utm_source === source ||
-        attribution.utm_medium === contract.medium ||
-        attribution.utm_campaign === contract.campaign;
+        (contract.protectMedium !== false &&
+          attribution.utm_medium === contract.medium) ||
+        attribution.utm_campaign === contract.campaign ||
+        (contract.exclusiveContents === true &&
+          contract.contents.has(attribution.utm_content));
       return (
         protectedMarkerPresent &&
         (attribution.utm_source !== source ||

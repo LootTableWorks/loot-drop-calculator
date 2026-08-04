@@ -13,15 +13,48 @@
     "instagram",
     "itch_io",
     "mastodon",
+    "organic_search",
     "owned_site",
     "pinterest",
     "press_kit",
+    "rpggen_dev",
     "run_one_shot_guide",
     "the_compendium",
     "tiktok",
     "tribality",
     "user_share",
     "youtube"
+  ]);
+  const allowedInboundMediums = new Set([
+    "community_test",
+    "free_tool",
+    "organic_social",
+    "organic_video",
+    "owned_search",
+    "referral_directory"
+  ]);
+  const allowedInboundCampaigns = new Set([
+    "ltw_free_tool_directory_v1",
+    "ltw_instagram_7d_v1",
+    "ltw_one_shot_intent_v1",
+    "ltw_pinterest_launch_v1",
+    "ltw_youtube_editorial_batch_v1",
+    "one_shot_forge_share",
+    "one_shot_ideas_v1",
+    "one_shot_value_launch",
+    "wf4w_revenue_v1"
+  ]);
+  const allowedInboundContents = new Set([
+    "complete_one_shot_generator",
+    "d04_one_shot_forge",
+    "generated_one_shot",
+    "hero_generate_one_shot",
+    "one_shot_field_test",
+    "one_shot_forge",
+    "one_shot_forge_generator",
+    "route_one_shot_forge",
+    "ytb1_short_01_gullwatch_ready_tonight",
+    "ytb1_short_02_connected_record_trace"
   ]);
   const allowedReferrerOrigins = new Map([
     ["bsky.app", "bluesky"],
@@ -37,6 +70,7 @@
     ["youtu.be", "youtube"]
   ]);
   const acquisitionOrigin = readAcquisitionOrigin();
+  const preservedInboundParams = readPreservedInboundParams();
   const state = {
     tone: "heroic",
     threat: "standard",
@@ -130,6 +164,25 @@
     return "";
   }
 
+  function readPreservedInboundParams() {
+    const incoming = new URLSearchParams(window.location.search);
+    const preserved = new URLSearchParams();
+    const source = attributionToken(incoming.get("utm_source"));
+    if (allowedCampaignOrigins.has(source)) {
+      preserved.set("utm_source", source);
+      for (const [key, allowlist] of [
+        ["utm_medium", allowedInboundMediums],
+        ["utm_campaign", allowedInboundCampaigns],
+        ["utm_content", allowedInboundContents]
+      ]) {
+        const value = attributionToken(incoming.get(key));
+        if (allowlist.has(value)) preserved.set(key, value);
+      }
+    }
+    if (incoming.get("ltw_qa") === "1") preserved.set("ltw_qa", "1");
+    return preserved;
+  }
+
   function showToast(message) {
     elements.toast.textContent = message;
     elements.toast.classList.add("visible");
@@ -167,6 +220,7 @@
     });
     if (state.campaignScope) params.set("scope", state.campaignScope);
     if (state.campaignSpotlight) params.set("spotlight", state.campaignSpotlight);
+    preservedInboundParams.forEach((value, key) => params.set(key, value));
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }
 

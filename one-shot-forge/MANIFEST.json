@@ -1,6 +1,6 @@
 {
   "product_id": "one-shot-forge",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "status": "approved_public_release",
   "publication_allowed": true,
   "deployment_allowed": true,
@@ -35,8 +35,8 @@
     },
     {
       "path": "app.js",
-      "bytes": 20522,
-      "sha256": "55a311bac436a27c251749e7a291bc7688095a8c4d60c733b2219d8dccd7b20e"
+      "bytes": 22287,
+      "sha256": "fe372d0d3ea578c0b546c87b271082a1ce7b93176abbf441e1d303d7ed7c1176"
     },
     {
       "path": "assets/gullwatch-harbor-cover-v1.jpg",
@@ -65,8 +65,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 16363,
-      "sha256": "f09bc0a31961f0d05ea3bb7edd8f8f82a1158d257c85f702216b26e681e18074"
+      "bytes": 16827,
+      "sha256": "c95c2fb2f8d342d6ce9417415c859ac3641720c7a974ecbab36f06955a4d7add"
     },
     {
       "path": "one-shot-core.js",
@@ -80,8 +80,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 20356,
-      "sha256": "0e197468820c5c4b481e321bedbc62ff66eca4d762e0f1bafb348583170ac661"
+      "bytes": 20784,
+      "sha256": "ed1e411a8ebba17d06889812fb9fedfa243fe581751b78c2e94ecb865cee589a"
     }
   ]
 }

@@ -54,6 +54,7 @@
     mastodon: "mastodon",
     module_selector: "module-selector",
     one_shot_forge: "one-shot-forge",
+    organic_search: "organic-search",
     owlcat_learning: "owlcat-learning",
     owned_site: "owned-site",
     owned_web: "owned-web",
@@ -61,6 +62,7 @@
     play_tonight_page: "play-tonight-page",
     pinterest: "pinterest",
     press_kit: "press-kit",
+    rpggen_dev: "rpggen-dev",
     run_one_shot_guide: "run-one-shot-guide",
     shop_inventory_generator: "shop-inventory-generator",
     tabletop_gaming_news: "tabletop-gaming-news",
@@ -89,6 +91,7 @@
     ltw_data_pack_discovery_v1: "ltw-data-pack-discovery-v1",
     ltw_free_tool_directory_v1: "ltw-free-tool-directory-v1",
     ltw_instagram_7d_v1: "ltw-instagram-7d-v1",
+    ltw_one_shot_intent_v1: "ltw-one-shot-intent-v1",
     ltw_paid_catalog_proof_v1: "ltw-paid-catalog-proof-v1",
     ltw_pinterest_launch_v1: "ltw-pinterest-launch-v1",
     ltw_recovery_2026_07: "ltw-recovery-2026-07",
@@ -125,12 +128,31 @@
     return Object.freeze(output);
   }
 
+  var oneShotAttributionOrigins = Object.freeze([
+    "awesome_dnd", "bluesky", "gamingtrend", "github", "instagram",
+    "itch_io", "mastodon", "organic_search", "owned_site", "pinterest",
+    "press_kit", "rpggen_dev", "run_one_shot_guide", "the_compendium",
+    "tiktok", "tribality", "user_share", "youtube"
+  ]);
+  var oneShotCheckoutContentBases = Object.freeze([
+    "gullwatch_harbor_featured_campaign", "quests_recommended",
+    "encounters_recommended", "loot_profiles_recommended",
+    "items_recommended", "merchants_recommended", "recipes_recommended"
+  ]);
+  var oneShotCheckoutContents = [];
+  oneShotCheckoutContentBases.forEach(function (base) {
+    oneShotCheckoutContents.push(base);
+    oneShotAttributionOrigins.forEach(function (origin) {
+      oneShotCheckoutContents.push(base + "_origin_" + origin);
+    });
+  });
+
   var allowedContents = allowlist([
     "adventure_pdf", "aftermath_story_handoff", "builder_choose_module",
     "builder_connected_trace", "campaign_arc_forge", "campaign_book",
     "campaign_continuity_tool", "campaign_launchpad", "campaign_workspace",
     "character_foundry", "compare_modules", "complete_kit",
-    "connected_record_proof_owned_route", "connected_record_six_module_trace",
+    "complete_one_shot_generator", "connected_record_proof_owned_route", "connected_record_six_module_trace",
     "continue_four_session_campaign", "continuity_campaign_book",
     "continuity_field_test", "continuity_workspace", "crafting_recipes",
     "crafting_recipes_compare", "d04_one_shot_forge", "download_demo_zip",
@@ -188,7 +210,7 @@
     "w1_workspace_field_test", "worked_example_gullwatch", "world_seed_studio",
     "ytb1_short_01_gullwatch_ready_tonight",
     "ytb1_short_02_connected_record_trace"
-  ]);
+  ].concat(oneShotCheckoutContents));
 
   var referrerSources = Object.freeze({
     "bsky.app": "bluesky",
@@ -200,6 +222,8 @@
     "mastodon.social": "mastodon",
     "pinterest.com": "pinterest",
     "www.pinterest.com": "pinterest",
+    "rpggen.dev": "rpggen-dev",
+    "www.rpggen.dev": "rpggen-dev",
     "tiktok.com": "tiktok",
     "www.tiktok.com": "tiktok",
     "youtube.com": "youtube",

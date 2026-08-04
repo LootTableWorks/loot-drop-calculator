@@ -266,9 +266,30 @@ assert(
   "Gamestruction paid handoff attribution must remain observable"
 );
 assert(
+  api.fixedAttribution(
+    "?utm_source=organic_search&utm_medium=owned_search&utm_campaign=ltw_one_shot_intent_v1&utm_content=complete_one_shot_generator",
+    ""
+  ) ===
+    "source.organic-search/campaign.ltw-one-shot-intent-v1/content.complete-one-shot-generator",
+  "One-Shot Forge search-intent attribution must remain observable"
+);
+assert(
+  api.fixedAttribution(
+    "?utm_source=one_shot_forge&utm_medium=free_tool&utm_campaign=one_shot_value_launch&utm_content=quests_recommended_origin_awesome_dnd",
+    ""
+  ) ===
+    "source.one-shot-forge/campaign.one-shot-value-launch/content.quests-recommended-origin-awesome-dnd",
+  "One-Shot Forge checkout-origin attribution must remain observable"
+);
+assert(
   api.fixedAttribution("", "https://www.gamestruction.com/tools/item-catalog") ===
     "source.gamestruction",
   "Gamestruction referrers must reduce to the fixed source label"
+);
+assert(
+  api.fixedAttribution("", "https://rpggen.dev/generators/one-shot") ===
+    "source.rpggen-dev",
+  "RPGGen referrers must reduce to the fixed source label"
 );
 assert(
   api.fixedAttribution("", "https://unexpected.example/private/path?email=a@b.com") ===

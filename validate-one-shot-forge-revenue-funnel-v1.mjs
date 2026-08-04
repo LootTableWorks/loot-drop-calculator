@@ -27,7 +27,7 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
-check(manifest.version === "1.2.3", "One-Shot Forge version drift");
+check(manifest.version === "1.3.0", "One-Shot Forge version drift");
 check(manifest.status === "approved_public_release", "Release status drift");
 check(manifest.publication_allowed === true, "Publication gate closed");
 check(manifest.live_standalone_destinations === 6, "Standalone destination count drift");
@@ -76,6 +76,23 @@ check(html.includes("$2.99"), "Campaign price claim drift");
 check(html.includes("assets/gullwatch-harbor-cover-v1.jpg"), "Self-contained campaign cover missing");
 check(fs.existsSync(path.join(forgeRoot, "assets", "gullwatch-harbor-cover-v1.jpg")), "Campaign cover target missing");
 check(html.includes("Run a complete coastal campaign next"), "Campaign positioning drift");
+check(
+  html.includes("Free TTRPG One-Shot Generator - No Sign-Up"),
+  "High-intent search title missing"
+);
+check(
+  html.includes("Build a complete 2-4 hour adventure with five timed scenes"),
+  "First-screen outcome promise missing"
+);
+check(html.includes("No sign-up"), "No-signup trust marker missing");
+check(html.includes("No prompt writing"), "No-prompt trust marker missing");
+check(html.includes("Runs locally"), "Local-runtime trust marker missing");
+check(html.includes("app.js?v=1.3.0"), "One-Shot runtime cache version drift");
+check(html.includes("privacy-metrics-v1.js?v=2.3.1"), "Privacy measurement cache version drift");
+check(
+  html.includes("Generate complete one-shot"),
+  "Outcome-led generate command missing"
+);
 check(html.includes('role="tablist"'), "Tablist semantics missing");
 check((html.match(/role="tab"/g) || []).length === 5, "Tab role count drift");
 check((html.match(/role="tabpanel"/g) || []).length === 5, "Tab panel role count drift");
@@ -83,10 +100,15 @@ check(app.includes('id: "gullwatch_harbor"'), "Campaign runtime offer missing");
 check(app.includes('`_origin_${acquisitionOrigin}`'), "Acquisition origin marker missing");
 check(app.includes('`${product.id}_${placement}${originSuffix}`'), "Acquisition origin is not preserved through content attribution");
 check(app.includes('trackedCampaignUrl()'), "Campaign attribution helper missing");
+check(app.includes('"organic_search"'), "Organic-search acquisition source missing");
+check(app.includes("readPreservedInboundParams()"), "Inbound attribution preservation missing");
+check(app.includes('incoming.get("ltw_qa") === "1"'), "QA exclusion preservation missing");
+check(app.includes("preservedInboundParams.forEach"), "Generator URL rewrite still erases fixed attribution");
 check(app.includes("core.recommendProducts(6)"), "All six standalone recommendations must render");
 check(app.includes('tab.setAttribute("aria-selected", String(selected))'), "Tab selection state missing");
 check(app.includes('event.key === "ArrowRight"'), "Keyboard tab navigation missing");
 check(css.includes(".campaign-continuation"), "Campaign card styling missing");
+check(css.includes(".control-trust"), "First-screen trust styling missing");
 check(css.includes("height: auto"), "Campaign cover aspect-ratio correction missing");
 check(css.includes("@media (max-width: 420px)"), "Narrow-mobile repair missing");
 check(!css.includes("html { min-width: 320px"), "Hard mobile minimum width remains");
