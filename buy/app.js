@@ -40,6 +40,7 @@
     "run_one_shot_guide",
     "the_compendium",
     "tiktok",
+    "tinytools",
     "tribality",
     "user_share",
     "youtube"

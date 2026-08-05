@@ -34,14 +34,14 @@ function htmlFiles(directory) {
 check(buyHtml.includes('id="checkout-title"'), "Checkout title region missing");
 check(buyHtml.includes('id="store-options"'), "Store option region missing");
 check(buyHtml.includes("../world-foundry/storefront-registry.js?v=3.0.1"), "Registry version drift");
-check(buyHtml.includes("app.js?v=1.1.7"), "Checkout app version drift");
+check(buyHtml.includes("app.js?v=1.1.8"), "Checkout app version drift");
 check(
-  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.7"),
+  buyHtml.indexOf("privacy-metrics-v1.js") < buyHtml.indexOf("app.js?v=1.1.8"),
   "Measurement handshake must load before checkout auto-redirect"
 );
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
-check(buyManifest.version === "1.1.7", "Checkout manifest version drift");
+check(buyManifest.version === "1.1.8", "Checkout manifest version drift");
 check(buyManifest.paid_routes === 73, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");

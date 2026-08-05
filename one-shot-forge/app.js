@@ -21,6 +21,7 @@
     "run_one_shot_guide",
     "the_compendium",
     "tiktok",
+    "tinytools",
     "tribality",
     "user_share",
     "youtube"
@@ -66,6 +67,7 @@
     ["pinterest.com", "pinterest"],
     ["rpggen.dev", "rpggen_dev"],
     ["tiktok.com", "tiktok"],
+    ["tinytools.directory", "tinytools"],
     ["youtube.com", "youtube"],
     ["youtu.be", "youtube"]
   ]);

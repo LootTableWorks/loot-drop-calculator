@@ -292,6 +292,19 @@ assert(
   "RPGGen referrers must reduce to the fixed source label"
 );
 assert(
+  api.fixedAttribution(
+    "?utm_source=tinytools&utm_medium=referral_directory&utm_campaign=ltw_free_tool_directory_v1&utm_content=one_shot_forge_generator",
+    ""
+  ) ===
+    "source.tinytools/campaign.ltw-free-tool-directory-v1/content.one-shot-forge-generator",
+  "Tiny Tools directory attribution must remain observable"
+);
+assert(
+  api.fixedAttribution("", "https://tinytools.directory/games") ===
+    "source.tinytools",
+  "Tiny Tools referrers must reduce to the fixed source label"
+);
+assert(
   api.fixedAttribution("", "https://unexpected.example/private/path?email=a@b.com") ===
     "source.external",
   "Unknown referrers must be reduced to a generic label"

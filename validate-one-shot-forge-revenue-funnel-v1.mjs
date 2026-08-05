@@ -27,7 +27,7 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
-check(manifest.version === "1.3.1", "One-Shot Forge version drift");
+check(manifest.version === "1.3.2", "One-Shot Forge version drift");
 check(manifest.status === "approved_public_release", "Release status drift");
 check(manifest.publication_allowed === true, "Publication gate closed");
 check(manifest.live_standalone_destinations === 6, "Standalone destination count drift");
@@ -87,8 +87,8 @@ check(
 check(html.includes("No sign-up"), "No-signup trust marker missing");
 check(html.includes("No prompt writing"), "No-prompt trust marker missing");
 check(html.includes("Runs locally"), "Local-runtime trust marker missing");
-check(html.includes("app.js?v=1.3.1"), "One-Shot runtime cache version drift");
-check(html.includes("privacy-metrics-v1.js?v=2.3.1"), "Privacy measurement cache version drift");
+check(html.includes("app.js?v=1.3.2"), "One-Shot runtime cache version drift");
+check(html.includes("privacy-metrics-v1.js?v=2.3.2"), "Privacy measurement cache version drift");
 check(
   html.includes("Generate complete one-shot"),
   "Outcome-led generate command missing"

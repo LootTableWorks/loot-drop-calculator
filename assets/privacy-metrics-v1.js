@@ -68,6 +68,7 @@
     tabletop_gaming_news: "tabletop-gaming-news",
     the_compendium: "the-compendium",
     tiktok: "tiktok",
+    tinytools: "tinytools",
     tribality: "tribality",
     user_share: "user-share",
     world_foundry_hub: "world-foundry-hub",
@@ -132,7 +133,7 @@
     "awesome_dnd", "bluesky", "gamingtrend", "github", "instagram",
     "itch_io", "mastodon", "organic_search", "owned_site", "pinterest",
     "press_kit", "rpggen_dev", "run_one_shot_guide", "the_compendium",
-    "tiktok", "tribality", "user_share", "youtube"
+    "tiktok", "tinytools", "tribality", "user_share", "youtube"
   ]);
   var oneShotCheckoutContentBases = Object.freeze([
     "gullwatch_harbor_featured_campaign", "quests_recommended",
@@ -225,7 +226,9 @@
     "rpggen.dev": "rpggen-dev",
     "www.rpggen.dev": "rpggen-dev",
     "tiktok.com": "tiktok",
+    "tinytools.directory": "tinytools",
     "www.tiktok.com": "tiktok",
+    "www.tinytools.directory": "tinytools",
     "youtube.com": "youtube",
     "www.youtube.com": "youtube"
   });

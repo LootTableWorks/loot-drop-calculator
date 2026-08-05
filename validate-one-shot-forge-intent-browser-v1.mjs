@@ -524,6 +524,55 @@ try {
   await rpggenCheckout.close();
   await rpggenPage.close();
 
+  const tinyToolsPage = await attributionContext.newPage();
+  await tinyToolsPage.goto(
+    `${baseUrl}/one-shot-forge/?seed=tinytools-47&utm_source=tinytools&utm_medium=referral_directory&utm_campaign=ltw_free_tool_directory_v1&utm_content=one_shot_forge_generator`,
+    { waitUntil: "networkidle" },
+  );
+  const tinyToolsUrl = new URL(tinyToolsPage.url());
+  check(tinyToolsUrl.searchParams.get("utm_source") === "tinytools", "Tiny Tools source was erased");
+  check(tinyToolsUrl.searchParams.get("utm_medium") === "referral_directory", "Tiny Tools medium was erased");
+  check(tinyToolsUrl.searchParams.get("utm_campaign") === "ltw_free_tool_directory_v1", "Tiny Tools campaign was erased");
+  check(tinyToolsUrl.searchParams.get("utm_content") === "one_shot_forge_generator", "Tiny Tools content was erased");
+  check(
+    await tinyToolsPage.evaluate(() =>
+      window.LTWPrivacyMetrics.fixedAttribution(window.location.search, "") ===
+      "source.tinytools/campaign.ltw-free-tool-directory-v1/content.one-shot-forge-generator"
+    ),
+    "Tiny Tools measurement labels drifted",
+  );
+  const tinyToolsRecommendation = new URL(
+    await tinyToolsPage.locator(".recommendation-card a").first().getAttribute("href"),
+  );
+  check(
+    tinyToolsRecommendation.searchParams.get("utm_content") ===
+      "quests_recommended_origin_tinytools",
+    "Tiny Tools recommendation origin was not preserved",
+  );
+  const tinyToolsCheckout = await attributionContext.newPage();
+  await tinyToolsCheckout.addInitScript(() => {
+    window.setTimeout = () => 0;
+  });
+  await tinyToolsCheckout.goto(
+    `${baseUrl}${tinyToolsRecommendation.pathname.replace(/^\/loot-drop-calculator/, "")}${tinyToolsRecommendation.search}`,
+    { waitUntil: "networkidle" },
+  );
+  const tinyToolsStorefront = new URL(
+    await tinyToolsCheckout.locator(".store-option").getAttribute("href"),
+  );
+  check(tinyToolsStorefront.hostname === "loot-table-works.itch.io", "Tiny Tools final store drifted");
+  check(tinyToolsStorefront.searchParams.get("utm_source") === "one_shot_forge", "Tiny Tools final source was lost");
+  check(tinyToolsStorefront.searchParams.get("utm_medium") === "free_tool", "Tiny Tools final medium was lost");
+  check(tinyToolsStorefront.searchParams.get("utm_campaign") === "one_shot_value_launch", "Tiny Tools final campaign was lost");
+  check(
+    tinyToolsStorefront.searchParams.get("utm_content") ===
+      "quests_recommended_origin_tinytools",
+    "Tiny Tools final acquisition origin was lost",
+  );
+  check(tinyToolsStorefront.searchParams.get("utm_term") === "itch", "Tiny Tools final store marker was lost");
+  await tinyToolsCheckout.close();
+  await tinyToolsPage.close();
+
   const rejectedPage = await attributionContext.newPage();
   await rejectedPage.goto(
     `${baseUrl}/one-shot-forge/?utm_source=private_customer&utm_medium=secret&utm_campaign=internal&utm_content=email_address&ltw_qa=1`,
@@ -538,7 +587,7 @@ try {
   await attributionContext.close();
 
   console.log(
-    `Validated One-Shot Forge v1.3.1 intent funnel in ${checks} browser checks across desktop, mobile, and narrow; screenshots: ${screenshotRoot}`,
+    `Validated One-Shot Forge v1.3.2 intent funnel in ${checks} browser checks across desktop, mobile, and narrow; screenshots: ${screenshotRoot}`,
   );
 } finally {
   await browser.close();
