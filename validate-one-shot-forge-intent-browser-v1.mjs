@@ -92,12 +92,12 @@ async function inspectLayout(page) {
     };
     const bounded = [
       ...document.querySelectorAll(
-        ".app-header,.control-rail,.adventure-stage,.adventure-actions,.stats-band,.adventure-overview,.result-tabs,.campaign-continuation,.marketplace-heading,.recommendation-card,.site-footer",
+        ".app-header,.control-rail,.adventure-stage,.adventure-actions,.stats-band,.adventure-overview,.contextual-item-offer,.result-tabs,.campaign-continuation,.marketplace-heading,.recommendation-card,.site-footer",
       ),
     ].filter(visible);
     const textNodes = [
       ...document.querySelectorAll(
-        ".control-heading,.control-trust li,.generate-button,.adventure-actions button,.stat,.result-tabs button,.campaign-continuation-action a,.recommendation-card a",
+        ".control-heading,.control-trust li,.generate-button,.adventure-actions button,.stat,.contextual-item-copy,.contextual-proof,.contextual-item-actions a,.result-tabs button,.campaign-continuation-action a,.recommendation-card a",
       ),
     ].filter(visible);
     return {
@@ -224,6 +224,42 @@ try {
       (await page.locator(".recommendation-card").count()) === 6,
       `${name}: paid recommendation count drifted`,
     );
+    const initialPacket = JSON.parse(await page.locator("#json-output").innerText());
+    const signatureItem = initialPacket.characters.find(
+      (character) => character.signature_item_name,
+    );
+    const expectedItemName =
+      initialPacket.rewards.item_name ||
+      signatureItem?.signature_item_name ||
+      "the reward";
+    const expectedItemId =
+      initialPacket.rewards.item_id ||
+      signatureItem?.signature_item_id ||
+      "stable item references";
+    check(await page.locator("#contextual-item-offer").isVisible(), `${name}: contextual item offer is hidden`);
+    check(
+      (await page.locator("#contextual-item-title").innerText()).includes(expectedItemName),
+      `${name}: generated reward name did not reach the item offer`,
+    );
+    check(
+      (await page.locator("#contextual-item-reason").innerText()).includes(expectedItemId),
+      `${name}: generated stable item ID did not reach the item offer`,
+    );
+    check(
+      (await page.locator(".contextual-proof dd").allInnerTexts())
+        .map((value) => value.replace(/\s+/g, ""))
+        .join("|") ===
+        "100500|20100|14|44",
+      `${name}: demo-to-paid proof counts drifted`,
+    );
+    check(
+      await page.evaluate(() => {
+        const offer = document.querySelector("#contextual-item-offer");
+        const tabs = document.querySelector(".result-tabs");
+        return Boolean(offer && tabs && (offer.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING));
+      }),
+      `${name}: contextual item offer no longer precedes the run-sheet tabs`,
+    );
     const preservedUrl = new URL(page.url());
     check(preservedUrl.searchParams.get("utm_source") === "awesome_dnd", `${name}: inbound source was erased`);
     check(preservedUrl.searchParams.get("utm_medium") === "referral_directory", `${name}: inbound medium was erased`);
@@ -252,6 +288,34 @@ try {
       `${name}: campaign acquisition origin was not preserved`,
     );
 
+    const contextualDemoUrl = new URL(
+      await page.locator("#contextual-item-demo").getAttribute("href"),
+    );
+    check(contextualDemoUrl.pathname.endsWith("/item-catalog-demo/"), `${name}: contextual demo destination drifted`);
+    check(contextualDemoUrl.searchParams.get("utm_source") === "one_shot_forge", `${name}: contextual demo source drifted`);
+    check(contextualDemoUrl.searchParams.get("utm_medium") === "free_tool", `${name}: contextual demo medium drifted`);
+    check(contextualDemoUrl.searchParams.get("utm_campaign") === "one_shot_value_launch", `${name}: contextual demo campaign drifted`);
+    check(
+      contextualDemoUrl.searchParams.get("utm_content") ===
+        "item_context_demo_origin_awesome_dnd",
+      `${name}: contextual demo acquisition origin drifted`,
+    );
+
+    const contextualBuyUrl = new URL(
+      await page.locator("#contextual-item-buy").getAttribute("href"),
+    );
+    check(contextualBuyUrl.pathname.endsWith("/buy/"), `${name}: contextual purchase bypassed checkout`);
+    check(contextualBuyUrl.searchParams.get("offer") === "item", `${name}: contextual purchase offer drifted`);
+    check(contextualBuyUrl.searchParams.get("utm_source") === "one_shot_forge", `${name}: contextual purchase source drifted`);
+    check(contextualBuyUrl.searchParams.get("utm_medium") === "free_tool", `${name}: contextual purchase medium drifted`);
+    check(contextualBuyUrl.searchParams.get("utm_campaign") === "one_shot_value_launch", `${name}: contextual purchase campaign drifted`);
+    check(
+      contextualBuyUrl.searchParams.get("utm_content") ===
+        "items_recommended_origin_awesome_dnd",
+      `${name}: contextual purchase acquisition origin drifted`,
+    );
+    check(contextualBuyUrl.searchParams.get("utm_term") === "direct", `${name}: contextual purchase checkout marker drifted`);
+
     const recommendationUrls = [];
     for (const link of await page.locator(".recommendation-card a").all()) {
       const url = new URL(await link.getAttribute("href"));
@@ -275,6 +339,7 @@ try {
         "gullwatch_harbor_featured_campaign_origin_awesome_dnd",
       ],
       ["recommendation", recommendationUrls[0], "quest", "quests_recommended_origin_awesome_dnd"],
+      ["contextual item", contextualBuyUrl, "item", "items_recommended_origin_awesome_dnd"],
     ]) {
       const checkoutPage = await context.newPage();
       await checkoutPage.addInitScript(() => {
@@ -473,7 +538,7 @@ try {
   await attributionContext.close();
 
   console.log(
-    `Validated One-Shot Forge v1.3.0 intent funnel in ${checks} browser checks across desktop, mobile, and narrow; screenshots: ${screenshotRoot}`,
+    `Validated One-Shot Forge v1.3.1 intent funnel in ${checks} browser checks across desktop, mobile, and narrow; screenshots: ${screenshotRoot}`,
   );
 } finally {
   await browser.close();

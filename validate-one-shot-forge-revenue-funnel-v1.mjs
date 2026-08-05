@@ -27,7 +27,7 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
-check(manifest.version === "1.3.0", "One-Shot Forge version drift");
+check(manifest.version === "1.3.1", "One-Shot Forge version drift");
 check(manifest.status === "approved_public_release", "Release status drift");
 check(manifest.publication_allowed === true, "Publication gate closed");
 check(manifest.live_standalone_destinations === 6, "Standalone destination count drift");
@@ -87,7 +87,7 @@ check(
 check(html.includes("No sign-up"), "No-signup trust marker missing");
 check(html.includes("No prompt writing"), "No-prompt trust marker missing");
 check(html.includes("Runs locally"), "Local-runtime trust marker missing");
-check(html.includes("app.js?v=1.3.0"), "One-Shot runtime cache version drift");
+check(html.includes("app.js?v=1.3.1"), "One-Shot runtime cache version drift");
 check(html.includes("privacy-metrics-v1.js?v=2.3.1"), "Privacy measurement cache version drift");
 check(
   html.includes("Generate complete one-shot"),
@@ -100,6 +100,27 @@ check(app.includes('id: "gullwatch_harbor"'), "Campaign runtime offer missing");
 check(app.includes('`_origin_${acquisitionOrigin}`'), "Acquisition origin marker missing");
 check(app.includes('`${product.id}_${placement}${originSuffix}`'), "Acquisition origin is not preserved through content attribution");
 check(app.includes('trackedCampaignUrl()'), "Campaign attribution helper missing");
+check(html.includes('id="contextual-item-offer"'), "Contextual Item Catalog offer missing");
+check(
+  html.indexOf('id="contextual-item-offer"') < html.indexOf('class="result-tabs"'),
+  "Contextual Item Catalog offer must appear before result tabs"
+);
+check(html.includes("Try the exact 100-record demo"), "Contextual free-proof CTA missing");
+check(html.includes("Get 500 records - $3"), "Contextual paid CTA missing");
+check(html.includes('data-offer-id="item"'), "Contextual Item Catalog offer marker missing");
+check(html.includes("100</span><strong>500"), "Contextual record delta missing");
+check(html.includes("20</span><strong>100"), "Contextual icon delta missing");
+check(html.includes("1</span><strong>4"), "Contextual sprite-sheet delta missing");
+check(app.includes("trackedItemProofUrl"), "Contextual Item Catalog attribution helper missing");
+check(app.includes('"item_context_demo"'), "Contextual demo attribution missing");
+check(app.includes('"items_recommended"'), "Contextual purchase attribution missing");
+check(app.includes("oneShot.rewards.item_name"), "Contextual recommendation does not use generated reward");
+check(app.includes("signature_item_name"), "Contextual recommendation does not use signature-item fallback");
+check(css.includes(".contextual-item-offer"), "Contextual Item Catalog styling missing");
+check(
+  css.includes("grid-template-columns: 118px minmax(0, 1fr)"),
+  "Contextual mobile layout missing"
+);
 check(app.includes('"organic_search"'), "Organic-search acquisition source missing");
 check(app.includes("readPreservedInboundParams()"), "Inbound attribution preservation missing");
 check(app.includes('incoming.get("ltw_qa") === "1"'), "QA exclusion preservation missing");

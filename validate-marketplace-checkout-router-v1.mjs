@@ -42,7 +42,7 @@ check(
 check(buyCss.includes(".store-option"), "Store option styling missing");
 check(buyCss.includes("@media (max-width: 620px)"), "Mobile checkout layout missing");
 check(buyManifest.version === "1.1.7", "Checkout manifest version drift");
-check(buyManifest.paid_routes === 72, "Checkout paid-route manifest drift");
+check(buyManifest.paid_routes === 73, "Checkout paid-route manifest drift");
 check(buyManifest.routed_pages === 15, "Checkout routed-page manifest drift");
 check(buyManifest.measurement_candidate === "activation_gated", "Checkout measurement gate drift");
 check(buyManifest.checkout_event_counts_as_verified_sale === false, "Checkout sale boundary drift");
@@ -90,7 +90,7 @@ for (const file of htmlFiles(root)) {
   }
 }
 
-check(routeLinks.length === 72, `Expected 72 routed paid links, found ${routeLinks.length}`);
+check(routeLinks.length === 73, `Expected 73 routed paid links, found ${routeLinks.length}`);
 check(new Set(routeLinks.map((entry) => entry.file)).size === 15, "Routed page count drift");
 for (const offerId of ["item", "merchant", "recipe", "loot", "quest", "encounter", "gullwatch_harbor"]) {
   check(routeLinks.some((entry) => entry.offerId === offerId), `${offerId}: no routed buyer path`);

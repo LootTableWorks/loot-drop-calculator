@@ -114,6 +114,10 @@
     countdownFinal: document.querySelector("#countdown-final"),
     rewardSummary: document.querySelector("#reward-summary"),
     contentNotes: document.querySelector("#content-notes"),
+    contextualItemName: document.querySelector("#contextual-item-name"),
+    contextualItemReason: document.querySelector("#contextual-item-reason"),
+    contextualItemDemo: document.querySelector("#contextual-item-demo"),
+    contextualItemBuy: document.querySelector("#contextual-item-buy"),
     runSheetPanel: document.querySelector("#run-sheet-panel"),
     scenesPanel: document.querySelector("#scenes-panel"),
     partyPanel: document.querySelector("#party-panel"),
@@ -267,6 +271,17 @@
     }, "featured_campaign");
   }
 
+  function trackedItemProofUrl(destination, placement) {
+    const url = new URL(destination, window.location.href);
+    const originSuffix = acquisitionOrigin ? `_origin_${acquisitionOrigin}` : "";
+    url.searchParams.set("utm_source", "one_shot_forge");
+    url.searchParams.set("utm_medium", "free_tool");
+    url.searchParams.set("utm_campaign", "one_shot_value_launch");
+    url.searchParams.set("utm_content", `${placement}${originSuffix}`);
+    if (url.pathname.endsWith("/buy/")) url.searchParams.set("utm_term", "direct");
+    return url.toString();
+  }
+
   function renderRunSheet() {
     const oneShot = state.oneShot;
     elements.runSheetPanel.innerHTML = `
@@ -372,6 +387,19 @@
     elements.countdownFinal.textContent = oneShot.countdown.final_state;
     elements.rewardSummary.textContent = `${oneShot.rewards.currency} currency${oneShot.rewards.item_name ? ` + ${oneShot.rewards.item_name}` : ""}`;
     elements.contentNotes.textContent = oneShot.content_notes.join(", ");
+    const signatureItem = oneShot.characters.find((character) => character.signature_item_name);
+    const itemName = oneShot.rewards.item_name || signatureItem?.signature_item_name || "the reward";
+    const itemId = oneShot.rewards.item_id || signatureItem?.signature_item_id || "stable item references";
+    elements.contextualItemName.textContent = itemName;
+    elements.contextualItemReason.textContent = `This packet references ${itemId}. The Item Catalog turns that same stable-ID workflow into inspectable economy fields, tags, loaders, and exports.`;
+    elements.contextualItemDemo.href = trackedItemProofUrl(
+      "../item-catalog-demo/",
+      "item_context_demo"
+    );
+    elements.contextualItemBuy.href = trackedItemProofUrl(
+      "../buy/?offer=item",
+      "items_recommended"
+    );
     elements.jsonOutput.textContent = JSON.stringify(oneShot, null, 2);
     renderRunSheet();
     renderScenes();
