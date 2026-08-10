@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Loot Table Works avatar</title>
+  <desc id="desc">The Loot Table Works maker&#x27;s mark reversed from a charcoal square.</desc>
+  <rect width="512" height="512" fill="#172023"/>
+  <g transform="translate(66 66) scale(0.742188)">
+    <path fill="#F4F1E8" d="M52 64H342L316 108H248V258L216 296L184 258V108H78L52 64ZM68 148H122V372H190L230 410L198 446H68V148ZM266 148H322V298L350 330L378 298V148H434V320L350 420L294 356L266 388L224 344L266 296V148Z"/>
+    <path fill="#D24B35" d="M304 64H342L316 108H278L304 64Z"/>
+  </g>
+</svg>
