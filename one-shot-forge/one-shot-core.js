@@ -284,12 +284,13 @@
     const roles = ordered(CHARACTER_ROLES, `${options.seed}|roles`, (role) => role.id).slice(0, options.partySize);
     const names = ordered(GIVEN_NAMES, `${options.seed}|given`, (name) => name);
     const bynames = ordered(BYNAMES, `${options.seed}|byname`, (name) => name);
+    const partyNames = roles.map((_, index) => `${names[index]} ${bynames[index]}`);
     return roles.map((role, index) => {
-      const nextName = `${names[(index + 1) % names.length]} ${bynames[(index + 2) % bynames.length]}`;
+      const nextName = partyNames[(index + 1) % partyNames.length];
       const signatureItem = itemRows[index % itemRows.length];
       return {
         character_id: `pc-${hexHash(`${options.seed}|${index}|${role.id}`)}`,
-        name: `${names[index]} ${bynames[index]}`,
+        name: partyNames[index],
         role: role.label,
         drive: pick(DRIVES, options.seed, `drive-${index}`),
         edge: role.edge,
